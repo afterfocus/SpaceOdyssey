@@ -1,0 +1,493 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		B514B014257BF08600F587B6 /* AnswerButtonCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B514B013257BF08600F587B6 /* AnswerButtonCollectionViewCell.swift */; };
+		B5153984257D279600907AD5 /* UILabelExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5153983257D279500907AD5 /* UILabelExtension.swift */; };
+		B5153987257D292400907AD5 /* WebVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5153986257D292400907AD5 /* WebVideoView.swift */; };
+		B51F50FA256302D300A9AA53 /* RouteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51F50F9256302D300A9AA53 /* RouteTableViewCell.swift */; };
+		B51F50FD2563030100A9AA53 /* ReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51F50FC2563030100A9AA53 /* ReusableView.swift */; };
+		B51F51012563040D00A9AA53 /* DifficultyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51F51002563040D00A9AA53 /* DifficultyView.swift */; };
+		B51F5104256305A700A9AA53 /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51F5103256305A700A9AA53 /* Question.swift */; };
+		B51F5107256305B800A9AA53 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51F5106256305B800A9AA53 /* Route.swift */; };
+		B51F510A2567C09900A9AA53 /* DataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51F51092567C09800A9AA53 /* DataProvider.swift */; };
+		B549E2092573D30E00260121 /* QuestionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B549E2082573D30E00260121 /* QuestionViewController.swift */; };
+		B5AD43B22568469400110AE8 /* UIImageViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5AD43B12568469400110AE8 /* UIImageViewExtension.swift */; };
+		B5ADEDB4258E0B3E007703C3 /* Author.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ADEDB3258E0B3E007703C3 /* Author.swift */; };
+		B5BDDC3A256828A60043737B /* QuestionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BDDC39256828A60043737B /* QuestionCollectionViewCell.swift */; };
+		B5BDDC3E256829DB0043737B /* QuestionListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BDDC3D256829DB0043737B /* QuestionListViewController.swift */; };
+		B5BDDC4125682A0F0043737B /* TopGradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BDDC4025682A0F0043737B /* TopGradientView.swift */; };
+		B5BF7AA5257BCF7D009AA0A3 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7AA4257BCF7D009AA0A3 /* UIColorExtension.swift */; };
+		B5BF7AA8257BD291009AA0A3 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7AA7257BD291009AA0A3 /* UIViewExtension.swift */; };
+		B5BF7AAB257BD2A5009AA0A3 /* CALayerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7AAA257BD2A5009AA0A3 /* CALayerExtension.swift */; };
+		B5EFD48F2562B95A00B0C5E7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EFD48E2562B95A00B0C5E7 /* AppDelegate.swift */; };
+		B5EFD4932562B95A00B0C5E7 /* RouteListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EFD4922562B95A00B0C5E7 /* RouteListViewController.swift */; };
+		B5EFD4962562B95A00B0C5E7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B5EFD4942562B95A00B0C5E7 /* Main.storyboard */; };
+		B5EFD4992562B95A00B0C5E7 /* SpaceQuest.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B5EFD4972562B95A00B0C5E7 /* SpaceQuest.xcdatamodeld */; };
+		B5EFD49B2562B97900B0C5E7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B5EFD49A2562B97900B0C5E7 /* Assets.xcassets */; };
+		B5EFD49E2562B97900B0C5E7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B5EFD49C2562B97900B0C5E7 /* LaunchScreen.storyboard */; };
+		B5F95352258884B100E4344E /* AnswerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F95351258884B100E4344E /* AnswerCollectionViewCell.swift */; };
+		B5F953552588853200E4344E /* AnswerStubCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F953542588853100E4344E /* AnswerStubCollectionViewCell.swift */; };
+		B5F95358258887E700E4344E /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F95357258887E600E4344E /* StringExtension.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		B514B013257BF08600F587B6 /* AnswerButtonCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerButtonCollectionViewCell.swift; sourceTree = "<group>"; };
+		B5153983257D279500907AD5 /* UILabelExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILabelExtension.swift; sourceTree = "<group>"; };
+		B5153986257D292400907AD5 /* WebVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebVideoView.swift; sourceTree = "<group>"; };
+		B51F50F9256302D300A9AA53 /* RouteTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteTableViewCell.swift; sourceTree = "<group>"; };
+		B51F50FC2563030100A9AA53 /* ReusableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReusableView.swift; sourceTree = "<group>"; };
+		B51F51002563040D00A9AA53 /* DifficultyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifficultyView.swift; sourceTree = "<group>"; };
+		B51F5103256305A700A9AA53 /* Question.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
+		B51F5106256305B800A9AA53 /* Route.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
+		B51F51092567C09800A9AA53 /* DataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataProvider.swift; sourceTree = "<group>"; };
+		B549E2082573D30E00260121 /* QuestionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionViewController.swift; sourceTree = "<group>"; };
+		B5AD43B12568469400110AE8 /* UIImageViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageViewExtension.swift; sourceTree = "<group>"; };
+		B5ADEDB3258E0B3E007703C3 /* Author.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Author.swift; sourceTree = "<group>"; };
+		B5BDDC39256828A60043737B /* QuestionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionCollectionViewCell.swift; sourceTree = "<group>"; };
+		B5BDDC3D256829DB0043737B /* QuestionListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionListViewController.swift; sourceTree = "<group>"; };
+		B5BDDC4025682A0F0043737B /* TopGradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopGradientView.swift; sourceTree = "<group>"; };
+		B5BF7AA4257BCF7D009AA0A3 /* UIColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
+		B5BF7AA7257BD291009AA0A3 /* UIViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
+		B5BF7AAA257BD2A5009AA0A3 /* CALayerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CALayerExtension.swift; sourceTree = "<group>"; };
+		B5EFD48B2562B95A00B0C5E7 /* SpaceQuest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpaceQuest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B5EFD48E2562B95A00B0C5E7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		B5EFD4922562B95A00B0C5E7 /* RouteListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteListViewController.swift; sourceTree = "<group>"; };
+		B5EFD4952562B95A00B0C5E7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		B5EFD4982562B95A00B0C5E7 /* SpaceQuest.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SpaceQuest.xcdatamodel; sourceTree = "<group>"; };
+		B5EFD49A2562B97900B0C5E7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B5EFD49D2562B97900B0C5E7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		B5EFD49F2562B97900B0C5E7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B5F95351258884B100E4344E /* AnswerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerCollectionViewCell.swift; sourceTree = "<group>"; };
+		B5F953542588853100E4344E /* AnswerStubCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerStubCollectionViewCell.swift; sourceTree = "<group>"; };
+		B5F95357258887E600E4344E /* StringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B5EFD4882562B95A00B0C5E7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		B5AD43B02568467D00110AE8 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				B5AD43B12568469400110AE8 /* UIImageViewExtension.swift */,
+				B5BF7AA4257BCF7D009AA0A3 /* UIColorExtension.swift */,
+				B5BF7AA7257BD291009AA0A3 /* UIViewExtension.swift */,
+				B5BF7AAA257BD2A5009AA0A3 /* CALayerExtension.swift */,
+				B5153983257D279500907AD5 /* UILabelExtension.swift */,
+				B5F95357258887E600E4344E /* StringExtension.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		B5BDDC4425682CCD0043737B /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				B51F50FC2563030100A9AA53 /* ReusableView.swift */,
+				B51F50F9256302D300A9AA53 /* RouteTableViewCell.swift */,
+				B51F51002563040D00A9AA53 /* DifficultyView.swift */,
+				B5BDDC39256828A60043737B /* QuestionCollectionViewCell.swift */,
+				B514B013257BF08600F587B6 /* AnswerButtonCollectionViewCell.swift */,
+				B5F95351258884B100E4344E /* AnswerCollectionViewCell.swift */,
+				B5F953542588853100E4344E /* AnswerStubCollectionViewCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		B5BDDC4525682CE90043737B /* SupplementaryViews */ = {
+			isa = PBXGroup;
+			children = (
+				B5BDDC4025682A0F0043737B /* TopGradientView.swift */,
+				B5153986257D292400907AD5 /* WebVideoView.swift */,
+			);
+			path = SupplementaryViews;
+			sourceTree = "<group>";
+		};
+		B5EFD4822562B95900B0C5E7 = {
+			isa = PBXGroup;
+			children = (
+				B5EFD48D2562B95A00B0C5E7 /* SpaceQuest */,
+				B5EFD48C2562B95A00B0C5E7 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		B5EFD48C2562B95A00B0C5E7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B5EFD48B2562B95A00B0C5E7 /* SpaceQuest.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		B5EFD48D2562B95A00B0C5E7 /* SpaceQuest */ = {
+			isa = PBXGroup;
+			children = (
+				B5EFD48E2562B95A00B0C5E7 /* AppDelegate.swift */,
+				B5EFD4A62562BDA300B0C5E7 /* Models */,
+				B5EFD4A72562BDA800B0C5E7 /* Views */,
+				B5EFD4A82562BDB500B0C5E7 /* Controllers */,
+				B5AD43B02568467D00110AE8 /* Extensions */,
+				B5EFD49A2562B97900B0C5E7 /* Assets.xcassets */,
+				B5EFD49F2562B97900B0C5E7 /* Info.plist */,
+				B5EFD4972562B95A00B0C5E7 /* SpaceQuest.xcdatamodeld */,
+			);
+			path = SpaceQuest;
+			sourceTree = "<group>";
+		};
+		B5EFD4A62562BDA300B0C5E7 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B5ADEDB3258E0B3E007703C3 /* Author.swift */,
+				B51F5103256305A700A9AA53 /* Question.swift */,
+				B51F5106256305B800A9AA53 /* Route.swift */,
+				B51F51092567C09800A9AA53 /* DataProvider.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		B5EFD4A72562BDA800B0C5E7 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				B5EFD49C2562B97900B0C5E7 /* LaunchScreen.storyboard */,
+				B5EFD4942562B95A00B0C5E7 /* Main.storyboard */,
+				B5BDDC4525682CE90043737B /* SupplementaryViews */,
+				B5BDDC4425682CCD0043737B /* Cells */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		B5EFD4A82562BDB500B0C5E7 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				B5EFD4922562B95A00B0C5E7 /* RouteListViewController.swift */,
+				B5BDDC3D256829DB0043737B /* QuestionListViewController.swift */,
+				B549E2082573D30E00260121 /* QuestionViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		B5EFD48A2562B95A00B0C5E7 /* SpaceQuest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B5EFD4A22562B97900B0C5E7 /* Build configuration list for PBXNativeTarget "SpaceQuest" */;
+			buildPhases = (
+				B5EFD4872562B95A00B0C5E7 /* Sources */,
+				B5EFD4882562B95A00B0C5E7 /* Frameworks */,
+				B5EFD4892562B95A00B0C5E7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SpaceQuest;
+			productName = SpaceQuest;
+			productReference = B5EFD48B2562B95A00B0C5E7 /* SpaceQuest.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B5EFD4832562B95900B0C5E7 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1200;
+				LastUpgradeCheck = 1200;
+				TargetAttributes = {
+					B5EFD48A2562B95A00B0C5E7 = {
+						CreatedOnToolsVersion = 12.0.1;
+					};
+				};
+			};
+			buildConfigurationList = B5EFD4862562B95A00B0C5E7 /* Build configuration list for PBXProject "SpaceQuest" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = B5EFD4822562B95900B0C5E7;
+			productRefGroup = B5EFD48C2562B95A00B0C5E7 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B5EFD48A2562B95A00B0C5E7 /* SpaceQuest */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		B5EFD4892562B95A00B0C5E7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B5EFD49E2562B97900B0C5E7 /* LaunchScreen.storyboard in Resources */,
+				B5EFD49B2562B97900B0C5E7 /* Assets.xcassets in Resources */,
+				B5EFD4962562B95A00B0C5E7 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B5EFD4872562B95A00B0C5E7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B514B014257BF08600F587B6 /* AnswerButtonCollectionViewCell.swift in Sources */,
+				B5BDDC4125682A0F0043737B /* TopGradientView.swift in Sources */,
+				B5BDDC3E256829DB0043737B /* QuestionListViewController.swift in Sources */,
+				B5153984257D279600907AD5 /* UILabelExtension.swift in Sources */,
+				B5BF7AA5257BCF7D009AA0A3 /* UIColorExtension.swift in Sources */,
+				B5153987257D292400907AD5 /* WebVideoView.swift in Sources */,
+				B549E2092573D30E00260121 /* QuestionViewController.swift in Sources */,
+				B5BDDC3A256828A60043737B /* QuestionCollectionViewCell.swift in Sources */,
+				B5EFD4932562B95A00B0C5E7 /* RouteListViewController.swift in Sources */,
+				B5BF7AA8257BD291009AA0A3 /* UIViewExtension.swift in Sources */,
+				B5F953552588853200E4344E /* AnswerStubCollectionViewCell.swift in Sources */,
+				B51F50FD2563030100A9AA53 /* ReusableView.swift in Sources */,
+				B51F50FA256302D300A9AA53 /* RouteTableViewCell.swift in Sources */,
+				B51F51012563040D00A9AA53 /* DifficultyView.swift in Sources */,
+				B5EFD4992562B95A00B0C5E7 /* SpaceQuest.xcdatamodeld in Sources */,
+				B5AD43B22568469400110AE8 /* UIImageViewExtension.swift in Sources */,
+				B51F5107256305B800A9AA53 /* Route.swift in Sources */,
+				B5F95352258884B100E4344E /* AnswerCollectionViewCell.swift in Sources */,
+				B5ADEDB4258E0B3E007703C3 /* Author.swift in Sources */,
+				B51F510A2567C09900A9AA53 /* DataProvider.swift in Sources */,
+				B51F5104256305A700A9AA53 /* Question.swift in Sources */,
+				B5EFD48F2562B95A00B0C5E7 /* AppDelegate.swift in Sources */,
+				B5F95358258887E700E4344E /* StringExtension.swift in Sources */,
+				B5BF7AAB257BD2A5009AA0A3 /* CALayerExtension.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		B5EFD4942562B95A00B0C5E7 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B5EFD4952562B95A00B0C5E7 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		B5EFD49C2562B97900B0C5E7 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B5EFD49D2562B97900B0C5E7 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		B5EFD4A02562B97900B0C5E7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		B5EFD4A12562B97900B0C5E7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		B5EFD4A32562B97900B0C5E7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 8TA67UG9J4;
+				INFOPLIST_FILE = SpaceQuest/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = MaximGolov.SpaceQuest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		B5EFD4A42562B97900B0C5E7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 8TA67UG9J4;
+				INFOPLIST_FILE = SpaceQuest/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = MaximGolov.SpaceQuest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		B5EFD4862562B95A00B0C5E7 /* Build configuration list for PBXProject "SpaceQuest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B5EFD4A02562B97900B0C5E7 /* Debug */,
+				B5EFD4A12562B97900B0C5E7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B5EFD4A22562B97900B0C5E7 /* Build configuration list for PBXNativeTarget "SpaceQuest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B5EFD4A32562B97900B0C5E7 /* Debug */,
+				B5EFD4A42562B97900B0C5E7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		B5EFD4972562B95A00B0C5E7 /* SpaceQuest.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				B5EFD4982562B95A00B0C5E7 /* SpaceQuest.xcdatamodel */,
+			);
+			currentVersion = B5EFD4982562B95A00B0C5E7 /* SpaceQuest.xcdatamodel */;
+			path = SpaceQuest.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = B5EFD4832562B95900B0C5E7 /* Project object */;
+}
