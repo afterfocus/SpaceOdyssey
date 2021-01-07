@@ -10,6 +10,11 @@ import UIKit
 extension UIColor {
     static let topViewGradient = UIColor(red: 40/255, green: 94/255, blue: 168/255, alpha: 0.85)
     static let unhighlightedStar = UIColor(red: 0, green: 0, blue: 54/255, alpha: 0.5)
+    
+    static let answerCellDefault = UIColor(red: 100/255, green: 180/255, blue: 240/255, alpha: 0.92)
+    static let answerCellRed = UIColor.systemRed.withAlphaComponent(0.92)
+    static let answerCellGreen = UIColor.systemGreen.withAlphaComponent(0.92)
+    
 }
 
 extension CGColor {

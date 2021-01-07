@@ -22,17 +22,29 @@ class Question {
     /// Правильный ответ (построчно)
     let answer: [String]
     /// Список букв, из которых пользователь может составлять ответ
-    let answerButtons: [Character]
+    let answerCharacters: [Character]
     /// Ссылка на видео с правильным ответом
     let answerVideoUrl: URL?
+    /// Завершен ли вопрос
+    var isComplete: Bool
     /// Количнство очков, заработанных пользователем за ответ
-    let score: Int
+    var score: Int
     /// Фамилия и инициалы автора
     var authorInitials: String {
         return "\(author.surname) \(author.name.first!)." + (author.patronymic.count > 0 ? " \(author.patronymic.first!)." : "")
     }
     
-    init(title: String, address: String, author: Author, questionText: String, questionVideoUrl: URL?, answerVideoUrl: URL?, answer: [String], answerButtons: String, score: Int) {
+    var answerLength: Int {
+        var count = 0
+        for row in answer {
+            Array(row).forEach {
+                if $0.isLetter || $0.isNumber { count += 1 }
+            }
+        }
+        return count
+    }
+    
+    init(title: String, address: String, author: Author, questionText: String, questionVideoUrl: URL?, answerVideoUrl: URL?, answer: [String], answerCharacters: String, isComplete: Bool, score: Int) {
         self.title = title
         self.address = address
         self.author = author
@@ -40,7 +52,8 @@ class Question {
         self.questionVideoUrl = questionVideoUrl
         self.answerVideoUrl = answerVideoUrl
         self.answer = answer
-        self.answerButtons = Array(answerButtons)
+        self.answerCharacters = Array(answerCharacters)
+        self.isComplete = isComplete
         self.score = score
     }
 }

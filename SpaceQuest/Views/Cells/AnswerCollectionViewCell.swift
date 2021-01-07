@@ -14,4 +14,9 @@ class AnswerCollectionViewCell: UICollectionViewCell {
         super.awakeFromNib()
         layer.cornerRadius = 5
     }
+    
+    func setBackgroundColor(_ color: UIColor) {
+        isUserInteractionEnabled = color != .answerCellGreen
+        backgroundColor = color
+    }
 }

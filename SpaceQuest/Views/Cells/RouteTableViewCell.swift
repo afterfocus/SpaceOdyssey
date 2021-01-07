@@ -7,12 +7,20 @@
 
 import UIKit
 
+// MARK: RouteTableViewCellDelegate
+
 protocol RouteTableViewCellDelegate: class {
     /// Выбрана вариация маршрута с индексом `index`
     func routeTableViewCell(_ cell: RouteTableViewCell, didSelectRouteVariationAt index: Int)
 }
 
+
+// MARK: - RouteTableViewCell
+
 class RouteTableViewCell: UITableViewCell {
+    
+    // MARK: IBOutlets
+    
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
@@ -20,10 +28,13 @@ class RouteTableViewCell: UITableViewCell {
     @IBOutlet weak var foregroundView: UIView!
     
     @IBOutlet var difficultyViews: [DifficultyView]!
-    
     @IBOutlet weak var difficultyViewHeight: NSLayoutConstraint!
     
+    // MARK: - Internal Properties
+    
     weak var delegate: RouteTableViewCellDelegate?
+    
+    // MARK: - Cell Life Cycle
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -40,10 +51,14 @@ class RouteTableViewCell: UITableViewCell {
         }
     }
     
+    // MARK: - IBActions
+    
     @IBAction func startButtonTapped(_ sender: UIButton) {
         delegate?.routeTableViewCell(self, didSelectRouteVariationAt: sender.tag)
     }
 
+    // MARK: - Internal Functions
+    
     func configure(with route: Route) {
         backgroundImageView.image = UIImage(named: route.imageFileName)
         titleLabel.text = route.title

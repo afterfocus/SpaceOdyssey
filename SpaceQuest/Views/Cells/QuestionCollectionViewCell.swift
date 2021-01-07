@@ -7,7 +7,11 @@
 
 import UIKit
 
+// MARK: QuestionCollectionViewCell
+
 class QuestionCollectionViewCell: UICollectionViewCell {
+    
+    // MARK: IBOutlets
     
     @IBOutlet weak var frontView: UIView!
     @IBOutlet weak var backView: UIView!
@@ -22,29 +26,37 @@ class QuestionCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var patronymicLabel: UILabel!
     @IBOutlet weak var aboutAuthorLabel: UILabel!
     
+    @IBOutlet weak var lockView: UIVisualEffectView!
+    
+    // MARK: - Internal Properties
+    
+    var isLocked: Bool!
+    
+    // MARK: - Cell Life Cycle
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        contentView.layer.cornerRadius = 20
-        contentView.layer.masksToBounds = true
-        
         layer.dropShadow(opacity: 0.4, radius: 7)
-        layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: contentView.layer.cornerRadius).cgPath
+        layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: 20).cgPath
         
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = contentView.frame
         gradientLayer.locations = [0.05, 0.95]
         gradientLayer.colors = [CGColor.cellGradientStart, CGColor.cellGradientEnd]
-        contentView.layer.insertSublayer(gradientLayer, at: 0)
+        frontView.layer.insertSublayer(gradientLayer, at: 0)
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
         frontView.isHidden = false
         backView.isHidden = true
+        layer.shadowColor = UIColor.black.cgColor
     }
     
-    func configure(with question: Question, index: Int) {
+    // MARK: - Internal Functions
+    
+    func configure(with question: Question, index: Int, isLocked: Bool) {
         numberLabel.text = "\(index)"
         titleLabel.text = question.title
         addressLabel.text = question.address
@@ -53,10 +65,12 @@ class QuestionCollectionViewCell: UICollectionViewCell {
         nameLabel.text = question.author.name
         patronymicLabel.text = question.author.patronymic
         aboutAuthorLabel.text = question.author.aboutAuthor
+        self.isLocked = isLocked
         
         for (index, star) in starImageViews.enumerated() {
             star.tintColor = question.score > index ? .systemYellow : .unhighlightedStar
         }
+        lockView.isHidden = !isLocked
     }
     
     func flip() {

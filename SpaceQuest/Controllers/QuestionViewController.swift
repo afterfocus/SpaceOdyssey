@@ -7,69 +7,77 @@
 
 import WebKit
 
+// MARK: QuestionViewController
+
 class QuestionViewController: UIViewController {
     
+    // MARK: IBOutlets
+    
+    @IBOutlet weak var rootScrollView: UIScrollView!
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var authorLabel: UILabel!
     @IBOutlet weak var authorLabelBackground: UIView!
     @IBOutlet weak var webVideoView: WebVideoView!
     @IBOutlet weak var questionLabelBackgroundView: UIView!
     @IBOutlet weak var questionLabel: UILabel!
-    @IBOutlet var starImageViews: [UIImageView]!
-    @IBOutlet weak var hintButton: UIButton!
-    @IBOutlet weak var answerCollectionView: UICollectionView!
+    @IBOutlet weak var questionControlsView: QuestionControlsView!
+    @IBOutlet weak var answerFieldView: AnswerFieldView!
     @IBOutlet weak var answerButtonsBackgroundView: UIView!
-    @IBOutlet weak var answerButtonsCollectionView: UICollectionView!
+    @IBOutlet weak var answerButtonsView: AnswerButtonsView!
     
-    @IBOutlet weak var answerCollectionViewHeight: NSLayoutConstraint!
-    @IBOutlet weak var answerButtonsCollectionViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var answerFieldViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var answerFieldViewContainterHeight: NSLayoutConstraint!
+    @IBOutlet weak var answerButtonsViewHeight: NSLayoutConstraint!
+    
+    // MARK: - Segue Properties
     
     var route: Route!
-    var question: Question!
+    var variation: RouteVariation!
+    var questionIndex: Int!
     
-    private let buttonCellSize = CGSize(width: 37, height: 37)
-    private var answerCellSize: CGSize!
-    private var answerCellSpacing: CGFloat!
-    private var promtCellSize: CGSize!
+    // MARK: - Private Properties
     
-    private var userAnswer = [[Character]]()
+    private var currentQuestion: Question!
+    private var score = 3
+    
+    // MARK: - View Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = question.title
         backgroundImageView.image = UIImage(named: route.imageFileName)
         
-        authorLabel.text = question.authorInitials
         authorLabelBackground.layer.cornerRadius = 11
         authorLabelBackground.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
         
-        questionLabel.text = question.questionText
         questionLabelBackgroundView.layer.dropShadow(opacity: 0.3, radius: 7)
-        
-        starImageViews.forEach { $0.layer.dropShadow(opacity: 0.25, radius: 2) }
-        hintButton.layer.dropShadow(opacity: 0.25, radius: 2)
         
         answerButtonsBackgroundView.layer.cornerRadius = 20
         answerButtonsBackgroundView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         
-        answerCollectionView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(removeLastLetterFromAnswer)))
+        answerFieldView.answerFieldViewDelegate = self
+        answerButtonsView.answerButtonsViewDelegate = self
         
-        if let url = question.questionVideoUrl {
+        // Configure Question Data
+        currentQuestion = route[variation[questionIndex]]
+        title = currentQuestion.title
+        authorLabel.text = currentQuestion.authorInitials
+        questionLabel.text = currentQuestion.questionText
+        
+        answerFieldView.configureFor(rightAnswer: currentQuestion.answer, isComplete: currentQuestion.isComplete)
+        answerButtonsView.answerCharacters = currentQuestion.answerCharacters
+        score = currentQuestion.isComplete ? currentQuestion.score : 3
+        
+        questionControlsView.configure(mode: currentQuestion.isComplete ? .answerVideo : .basic,
+                                       isAnswerVideoButtonEnabled: currentQuestion.answerVideoUrl != nil,
+                                       remainingHints: answerFieldView.remainingHints,
+                                       score: score,
+                                       delegate: self)
+        
+        if let url = currentQuestion.questionVideoUrl {
             webVideoView.loadVideo(url: url)
         } else {
             webVideoView.showNoVideoLabel()
         }
-        
-        for (rowIndex, row) in question.answer.enumerated() {
-            userAnswer.append([])
-            for char in row {
-                userAnswer[rowIndex].append(char.isLetter || char.isNumber ? " " : char)
-            }
-        }
-        let cellSpace = min((UIScreen.main.bounds.width - 20) / CGFloat(question.answer.max()!.count), 38)
-        answerCellSize = CGSize(width: cellSpace * 0.88, height: cellSpace * 0.88)
-        answerCellSpacing = cellSpace * 0.12
-        promtCellSize = CGSize(width: cellSpace * 0.4, height: cellSpace * 0.88)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -88,101 +96,175 @@ class QuestionViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        answerCollectionViewHeight.constant = answerCollectionView.contentSize.height
-        answerButtonsCollectionViewHeight.constant = answerButtonsCollectionView.contentSize.height
-    }
-}
-
-extension QuestionViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if collectionView === answerButtonsCollectionView {
-            guard let targetIndexPath = findFirstEmptyIndex() else { return }
-            userAnswer[targetIndexPath.section][targetIndexPath.row] = question.answerButtons[indexPath.row]
-            answerCollectionView.reloadData()
-        }
-    }
-    
-    @objc private func removeLastLetterFromAnswer() {
+        answerFieldViewHeight.constant = answerFieldView.contentSize.height
+        answerButtonsViewHeight.constant = answerButtonsView.contentSize.height
         
+        let rootScrollViewHeight = rootScrollView.contentSize.height
+        let layoutFrameHeight = view.safeAreaLayoutGuide.layoutFrame.size.height + 40
+        let minAnswerFieldHeight = layoutFrameHeight - rootScrollViewHeight + answerFieldViewContainterHeight.constant
+        answerFieldViewContainterHeight.constant = max(answerFieldViewHeight.constant, minAnswerFieldHeight)
     }
     
-    private func findFirstEmptyIndex() -> IndexPath? {
-        for section in 0..<userAnswer.count {
-            for item in 0..<userAnswer[section].count {
-                if userAnswer[section][item] == " " {
-                    return IndexPath(item: item, section: section)
-                }
-            }
+    // MARK: - Private Functions
+    
+    private func useHint() {
+        guard answerFieldView.remainingHints > 0 else { return }
+        
+        answerFieldView.useHint().forEach {
+            answerButtonsView.removeCharacter($0)
         }
-        return nil
+        questionControlsView.setRemainingHints(answerFieldView.remainingHints)
     }
     
-    private func findFirstNonEmptyIndex() -> IndexPath? {
-        for section in 0..<userAnswer.count {
-            for item in 0..<userAnswer[section].count {
-                if userAnswer[section][item] != " " {
-                    return IndexPath(item: item, section: section)
-                }
-            }
-        }
-        return nil
+    private func reduceScore() {
+        guard score > 0 else { return }
+        score -= 1
+        questionControlsView.reduceScore(newValue: score)
+    }
+    
+    private func showNextQuestion() {
+        guard let questionVC = storyboard?.instantiateViewController(withIdentifier: "QuestionViewController") as? QuestionViewController else { return }
+        questionVC.route = route
+        questionVC.variation = variation
+        questionVC.questionIndex = route.firstIncompleteIndex(for: variation)
+        navigationController?.popViewController(animated: true)
+        navigationController?.pushViewController(questionVC, animated: true)
+    }
+    
+    private func showVideoAnswer(exitMode: VideoAnswerController.ExitMode) {
+        guard let videoAnswerVC = storyboard!.instantiateViewController(withIdentifier: "VideoAnswerController") as? VideoAnswerController else { return }
+        videoAnswerVC.videoURL = currentQuestion.answerVideoUrl
+        videoAnswerVC.exitMode = exitMode
+        videoAnswerVC.delegate = self
+        present(videoAnswerVC, animated: true)
     }
 }
 
-extension QuestionViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if collectionView === answerButtonsCollectionView {
-            return buttonCellSize
-        } else {
-            let char = question.answer[indexPath.section][indexPath.row]
-            return (char.isLetter || char.isNumber) ? answerCellSize : promtCellSize
+
+// MARK: - QuestionControlsViewDelegate
+
+extension QuestionViewController: QuestionControlsViewDelegate {
+    
+    func questionControlsViewDidTapHintButton(_ questionControlsView: QuestionControlsView) {
+        let controller = UIAlertController(title: "Использовать подсказку",
+                                           message: "\nИспользовать одну из оставшихся подсказок, чтобы открыть первую и последнюю буквы?\n\nОставшихся подсказок: \(answerFieldView.remainingHints)",
+                                           preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "Отменить", style: .cancel)
+        let useAction = UIAlertAction(title: "Использовать", style: .default) { _ in
+            self.useHint()
+            self.reduceScore()
+            self.questionControlsView.animateHintButton()
         }
+        controller.addAction(cancelAction)
+        controller.addAction(useAction)
+        present(controller, animated: true)
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return answerCellSpacing
+    func questionControlsViewDidTapClearButton(_ questionControlsView: QuestionControlsView) {
+        answerFieldView.clear()
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        if collectionView === answerCollectionView {
-            let totalCellWidth = Array(question.answer[section]).reduce(into: CGFloat.zero) {
-                $0 += (($1.isLetter || $1.isNumber) ? answerCellSize.width : promtCellSize.width)
-            }
-            let totalCellSpacing = answerCellSpacing * CGFloat(question.answer[section].count - 1)
-            let inset = (collectionView.frame.width - 2 - totalCellWidth - totalCellSpacing) / 2
-            return UIEdgeInsets(top: 0, left: inset, bottom: 15, right: inset)
-        } else {
-            return .zero
+    func questionControlsViewDidTapVideoAnswerButton(_ questionControlsView: QuestionControlsView) {
+        showVideoAnswer(exitMode: .noAction)
+    }
+}
+
+
+// MARK: - AnswerButtonsViewDelegate
+
+extension QuestionViewController: AnswerButtonsViewDelegate {
+    
+    func answerButtonsView(_ answerButtonsView: AnswerButtonsView, didSelect character: Character, at indexPath: IndexPath) {
+        if answerFieldView.appendCharacter(character) {
+            answerButtonsView.removeCharacter(at: indexPath)
         }
     }
 }
 
-extension QuestionViewController: UICollectionViewDataSource {
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return collectionView === answerButtonsCollectionView ? 1 : question.answer.count
+
+// MARK: - AnswerFieldViewDelegate
+
+extension QuestionViewController: AnswerFieldViewDelegate {
+    
+    func answerFieldView(_ answerFieldView: AnswerFieldView, didRemove character: Character) {
+        answerButtonsView.returnCharacter(character)
     }
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return collectionView === answerButtonsCollectionView ? question.answerButtons.count : question.answer[section].count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let (section, row) = (indexPath.section, indexPath.row)
-        if collectionView === answerButtonsCollectionView {
-            let cell: AnswerButtonCollectionViewCell = collectionView.dequeueReusableCell(for: indexPath)
-            cell.letterLabel.text = "\(question.answerButtons[row])"
-            return cell
-        } else {
-            let char = question.answer[section][row]
-            if char.isLetter || char.isNumber {
-                let cell: AnswerCollectionViewCell = collectionView.dequeueReusableCell(for: indexPath)
-                cell.letterLabel.text = "\(userAnswer[section][row])"
-                return cell
+    func answerFieldView(_ answerFieldView: AnswerFieldView, didReceiveAnswer isCorrectAnswer: Bool) {
+        if isCorrectAnswer {
+            currentQuestion.score = score
+            currentQuestion.isComplete = true
+            
+            let viewController: UIViewController?
+            if route.isVariationComplete(variation) {
+                guard let routeCompletedVC = storyboard!.instantiateViewController(withIdentifier: "RouteCompleteController") as? RouteCompleteController else { return }
+                routeCompletedVC.route = route
+                routeCompletedVC.lastQuestion = currentQuestion
+                routeCompletedVC.delegate = self
+                viewController = routeCompletedVC
             } else {
-                let cell: AnswerStubCollectionViewCell = collectionView.dequeueReusableCell(for: indexPath)
-                cell.stubLabel.text = "\(char)"
-                return cell
+                guard let locationCompletedVC = storyboard!.instantiateViewController(withIdentifier: "LocationCompleteController") as? LocationCompleteController else { return }
+                locationCompletedVC.question = currentQuestion
+                locationCompletedVC.delegate = self
+                viewController = locationCompletedVC
+            }
+            
+            guard let controller = viewController else { return }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
+                [weak self] in self?.present(controller, animated: true)
+            }
+        } else {
+            if answerFieldView.remainingHints > 0 {
+                questionControlsView.animateHintButton()
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
+                self.useHint()
+                self.reduceScore()
             }
         }
+    }
+}
+
+
+// MARK: - LocationCompleteControllerDelegate
+
+extension QuestionViewController: LocationCompleteControllerDelegate {
+    
+    func locationCompleteControllerDidTapVideoAnswerButton(_ controller: LocationCompleteController) {
+        showVideoAnswer(exitMode: .nextQuestion)
+    }
+    
+    func locationCompleteControllerDidTapNextQuestionButton(_ controller: LocationCompleteController) {
+        showNextQuestion()
+    }
+}
+
+
+// MARK: - RouteCompleteControllerDelegate
+
+extension QuestionViewController: RouteCompleteControllerDelegate {
+    
+    func routeCompleteControllerDidTapVideoAnswerButton(_ controller: RouteCompleteController) {
+        showVideoAnswer(exitMode: .routeList)
+    }
+    
+    func routeCompleteControllerDidTapExitButton(_ controller: RouteCompleteController) {
+        navigationController?.popViewController(animated: true)
+        navigationController?.popViewController(animated: true)
+    }
+}
+
+
+// MARK: - VideoAnswerControllerDelegate
+
+extension QuestionViewController: VideoAnswerControllerDelegate {
+    
+    func videoAnswerControllerDidTapNextQuestionButton(_ controller: VideoAnswerController) {
+        showNextQuestion()
+    }
+    
+    func videoAnswerControllerDidTapExitToRouteListButton(_ controller: VideoAnswerController) {
+        navigationController?.popViewController(animated: true)
+        navigationController?.popViewController(animated: true)
     }
 }

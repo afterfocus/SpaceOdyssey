@@ -10,6 +10,15 @@ import UIKit
 class AnswerButtonCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var letterLabel: UILabel!
     
+    var character: Character {
+        get {
+            return letterLabel.text!.first!
+        }
+        set {
+            letterLabel.text = "\(newValue)"
+        }
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         layer.cornerRadius = 4

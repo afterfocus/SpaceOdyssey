@@ -7,11 +7,23 @@
 
 import UIKit
 
+// MARK: RouteListViewController
+
 class RouteListViewController: UIViewController {
+    
+    // MARK: IBOutlets
     
     @IBOutlet weak var routesTableView: UITableView!
     
+    // MARK: - Segue Properties
+    
     let routes = DataProvider.routes
+    
+    // MARK: - Private Properties
+    
+    private var selectedIndexPath: IndexPath!
+    
+    // MARK: - View Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,7 +38,16 @@ class RouteListViewController: UIViewController {
         
         routesTableView.backgroundView = UIImageView(withImageNamed: "background_main.png", alpha: 0.6)
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        routesTableView.reloadData()
+        routesTableView.selectRow(at: selectedIndexPath, animated: false, scrollPosition: .none)
+    }
 }
+
+
+// MARK: - RouteTableViewCellDelegate
 
 extension RouteListViewController: RouteTableViewCellDelegate {
     
@@ -38,6 +59,9 @@ extension RouteListViewController: RouteTableViewCellDelegate {
         navigationController?.pushViewController(questionsVC, animated: true)
     }
 }
+
+
+// MARK: - UITableViewDataSource
 
 extension RouteListViewController: UITableViewDataSource {
     
@@ -53,15 +77,20 @@ extension RouteListViewController: UITableViewDataSource {
     }
 }
 
+
+// MARK: - UITableViewDelegate
+
 extension RouteListViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        selectedIndexPath = indexPath
         tableView.performBatchUpdates(nil)
     }
     
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         if indexPath == tableView.indexPathForSelectedRow {
             tableView.deselectRow(at: indexPath, animated: true)
+            selectedIndexPath = nil
             tableView.performBatchUpdates(nil)
             return nil
         }
@@ -69,7 +98,7 @@ extension RouteListViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath == tableView.indexPathForSelectedRow {
+        if indexPath == selectedIndexPath {
             return CGFloat(220 + 61 * routes[indexPath.row].variations.count)
         } else {
             return 220

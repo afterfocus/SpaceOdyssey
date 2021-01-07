@@ -47,6 +47,10 @@ class Route {
     var score: Int {
         return questions.reduce(0) { $0 + $1.score }
     }
+    /// Максимально возможное количество очков
+    var maxScore: Int {
+        return questions.count * 3
+    }
     
     init(imageFileName: String, title: String, subtitle: String, questions: [Question], variations: [RouteVariation]) {
         self.imageFileName = imageFileName
@@ -62,10 +66,25 @@ class Route {
     
     /// Процент прохождения вариации маршрута пользователем
     func progress(for variation: RouteVariation) -> Int {
-        var completed = 0
-        for questionIndex in variation.questionIndexes where questions[questionIndex].score > 0 {
-            completed += 1
+        let completed = variation.questionIndexes.reduce(into: 0) {
+            $0 += questions[$1].isComplete ? 1 : 0
         }
         return (completed * 100) / variation.questionIndexes.count
+    }
+    
+    func firstIncompleteIndex(for variation: RouteVariation) -> Int? {
+        for (index, questionIndex) in variation.questionIndexes.enumerated() {
+            if !questions[questionIndex].isComplete {
+                return index
+            }
+        }
+        return nil
+    }
+    
+    func isVariationComplete(_ variation: RouteVariation) -> Bool {
+        for questionIndex in variation.questionIndexes where !questions[questionIndex].isComplete {
+            return false
+        }
+        return true
     }
 }

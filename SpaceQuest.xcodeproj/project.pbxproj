@@ -10,6 +10,8 @@
 		B514B014257BF08600F587B6 /* AnswerButtonCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B514B013257BF08600F587B6 /* AnswerButtonCollectionViewCell.swift */; };
 		B5153984257D279600907AD5 /* UILabelExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5153983257D279500907AD5 /* UILabelExtension.swift */; };
 		B5153987257D292400907AD5 /* WebVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5153986257D292400907AD5 /* WebVideoView.swift */; };
+		B51C2D9B2598E83D00107378 /* CustomIntensityVisualEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51C2D9A2598E83D00107378 /* CustomIntensityVisualEffectView.swift */; };
+		B51C2D9E2599053900107378 /* LocationCompleteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51C2D9D2599053900107378 /* LocationCompleteController.swift */; };
 		B51F50FA256302D300A9AA53 /* RouteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51F50F9256302D300A9AA53 /* RouteTableViewCell.swift */; };
 		B51F50FD2563030100A9AA53 /* ReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51F50FC2563030100A9AA53 /* ReusableView.swift */; };
 		B51F51012563040D00A9AA53 /* DifficultyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51F51002563040D00A9AA53 /* DifficultyView.swift */; };
@@ -17,13 +19,18 @@
 		B51F5107256305B800A9AA53 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51F5106256305B800A9AA53 /* Route.swift */; };
 		B51F510A2567C09900A9AA53 /* DataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51F51092567C09800A9AA53 /* DataProvider.swift */; };
 		B549E2092573D30E00260121 /* QuestionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B549E2082573D30E00260121 /* QuestionViewController.swift */; };
+		B57B3CD32593BCC000270D8E /* AnswerFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57B3CD22593BCC000270D8E /* AnswerFieldView.swift */; };
+		B57B3CD62593BCCC00270D8E /* AnswerButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57B3CD52593BCCC00270D8E /* AnswerButtonsView.swift */; };
+		B57B3CDF259515CA00270D8E /* UserAnswer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57B3CDE259515CA00270D8E /* UserAnswer.swift */; };
+		B5A91A7525A39198000C0C99 /* RouteCompleteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A91A7425A39198000C0C99 /* RouteCompleteController.swift */; };
+		B5A91A7825A71382000C0C99 /* VideoAnswerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A91A7725A71382000C0C99 /* VideoAnswerController.swift */; };
+		B5A91A7B25A7254E000C0C99 /* QuestionControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A91A7A25A7254E000C0C99 /* QuestionControlsView.swift */; };
 		B5AD43B22568469400110AE8 /* UIImageViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5AD43B12568469400110AE8 /* UIImageViewExtension.swift */; };
 		B5ADEDB4258E0B3E007703C3 /* Author.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ADEDB3258E0B3E007703C3 /* Author.swift */; };
 		B5BDDC3A256828A60043737B /* QuestionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BDDC39256828A60043737B /* QuestionCollectionViewCell.swift */; };
 		B5BDDC3E256829DB0043737B /* QuestionListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BDDC3D256829DB0043737B /* QuestionListViewController.swift */; };
 		B5BDDC4125682A0F0043737B /* TopGradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BDDC4025682A0F0043737B /* TopGradientView.swift */; };
 		B5BF7AA5257BCF7D009AA0A3 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7AA4257BCF7D009AA0A3 /* UIColorExtension.swift */; };
-		B5BF7AA8257BD291009AA0A3 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7AA7257BD291009AA0A3 /* UIViewExtension.swift */; };
 		B5BF7AAB257BD2A5009AA0A3 /* CALayerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7AAA257BD2A5009AA0A3 /* CALayerExtension.swift */; };
 		B5EFD48F2562B95A00B0C5E7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EFD48E2562B95A00B0C5E7 /* AppDelegate.swift */; };
 		B5EFD4932562B95A00B0C5E7 /* RouteListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EFD4922562B95A00B0C5E7 /* RouteListViewController.swift */; };
@@ -40,6 +47,8 @@
 		B514B013257BF08600F587B6 /* AnswerButtonCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerButtonCollectionViewCell.swift; sourceTree = "<group>"; };
 		B5153983257D279500907AD5 /* UILabelExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILabelExtension.swift; sourceTree = "<group>"; };
 		B5153986257D292400907AD5 /* WebVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebVideoView.swift; sourceTree = "<group>"; };
+		B51C2D9A2598E83D00107378 /* CustomIntensityVisualEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomIntensityVisualEffectView.swift; sourceTree = "<group>"; };
+		B51C2D9D2599053900107378 /* LocationCompleteController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationCompleteController.swift; sourceTree = "<group>"; };
 		B51F50F9256302D300A9AA53 /* RouteTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteTableViewCell.swift; sourceTree = "<group>"; };
 		B51F50FC2563030100A9AA53 /* ReusableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReusableView.swift; sourceTree = "<group>"; };
 		B51F51002563040D00A9AA53 /* DifficultyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifficultyView.swift; sourceTree = "<group>"; };
@@ -47,13 +56,18 @@
 		B51F5106256305B800A9AA53 /* Route.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
 		B51F51092567C09800A9AA53 /* DataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataProvider.swift; sourceTree = "<group>"; };
 		B549E2082573D30E00260121 /* QuestionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionViewController.swift; sourceTree = "<group>"; };
+		B57B3CD22593BCC000270D8E /* AnswerFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerFieldView.swift; sourceTree = "<group>"; };
+		B57B3CD52593BCCC00270D8E /* AnswerButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerButtonsView.swift; sourceTree = "<group>"; };
+		B57B3CDE259515CA00270D8E /* UserAnswer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAnswer.swift; sourceTree = "<group>"; };
+		B5A91A7425A39198000C0C99 /* RouteCompleteController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteCompleteController.swift; sourceTree = "<group>"; };
+		B5A91A7725A71382000C0C99 /* VideoAnswerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoAnswerController.swift; sourceTree = "<group>"; };
+		B5A91A7A25A7254E000C0C99 /* QuestionControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionControlsView.swift; sourceTree = "<group>"; };
 		B5AD43B12568469400110AE8 /* UIImageViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageViewExtension.swift; sourceTree = "<group>"; };
 		B5ADEDB3258E0B3E007703C3 /* Author.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Author.swift; sourceTree = "<group>"; };
 		B5BDDC39256828A60043737B /* QuestionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionCollectionViewCell.swift; sourceTree = "<group>"; };
 		B5BDDC3D256829DB0043737B /* QuestionListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionListViewController.swift; sourceTree = "<group>"; };
 		B5BDDC4025682A0F0043737B /* TopGradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopGradientView.swift; sourceTree = "<group>"; };
 		B5BF7AA4257BCF7D009AA0A3 /* UIColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
-		B5BF7AA7257BD291009AA0A3 /* UIViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
 		B5BF7AAA257BD2A5009AA0A3 /* CALayerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CALayerExtension.swift; sourceTree = "<group>"; };
 		B5EFD48B2562B95A00B0C5E7 /* SpaceQuest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpaceQuest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5EFD48E2562B95A00B0C5E7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -84,9 +98,8 @@
 			children = (
 				B5AD43B12568469400110AE8 /* UIImageViewExtension.swift */,
 				B5BF7AA4257BCF7D009AA0A3 /* UIColorExtension.swift */,
-				B5BF7AA7257BD291009AA0A3 /* UIViewExtension.swift */,
-				B5BF7AAA257BD2A5009AA0A3 /* CALayerExtension.swift */,
 				B5153983257D279500907AD5 /* UILabelExtension.swift */,
+				B5BF7AAA257BD2A5009AA0A3 /* CALayerExtension.swift */,
 				B5F95357258887E600E4344E /* StringExtension.swift */,
 			);
 			path = Extensions;
@@ -111,6 +124,10 @@
 			children = (
 				B5BDDC4025682A0F0043737B /* TopGradientView.swift */,
 				B5153986257D292400907AD5 /* WebVideoView.swift */,
+				B5A91A7A25A7254E000C0C99 /* QuestionControlsView.swift */,
+				B57B3CD22593BCC000270D8E /* AnswerFieldView.swift */,
+				B57B3CD52593BCCC00270D8E /* AnswerButtonsView.swift */,
+				B51C2D9A2598E83D00107378 /* CustomIntensityVisualEffectView.swift */,
 			);
 			path = SupplementaryViews;
 			sourceTree = "<group>";
@@ -152,6 +169,7 @@
 				B5ADEDB3258E0B3E007703C3 /* Author.swift */,
 				B51F5103256305A700A9AA53 /* Question.swift */,
 				B51F5106256305B800A9AA53 /* Route.swift */,
+				B57B3CDE259515CA00270D8E /* UserAnswer.swift */,
 				B51F51092567C09800A9AA53 /* DataProvider.swift */,
 			);
 			path = Models;
@@ -174,6 +192,9 @@
 				B5EFD4922562B95A00B0C5E7 /* RouteListViewController.swift */,
 				B5BDDC3D256829DB0043737B /* QuestionListViewController.swift */,
 				B549E2082573D30E00260121 /* QuestionViewController.swift */,
+				B51C2D9D2599053900107378 /* LocationCompleteController.swift */,
+				B5A91A7425A39198000C0C99 /* RouteCompleteController.swift */,
+				B5A91A7725A71382000C0C99 /* VideoAnswerController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -250,14 +271,20 @@
 			files = (
 				B514B014257BF08600F587B6 /* AnswerButtonCollectionViewCell.swift in Sources */,
 				B5BDDC4125682A0F0043737B /* TopGradientView.swift in Sources */,
+				B57B3CD62593BCCC00270D8E /* AnswerButtonsView.swift in Sources */,
+				B57B3CDF259515CA00270D8E /* UserAnswer.swift in Sources */,
+				B57B3CD32593BCC000270D8E /* AnswerFieldView.swift in Sources */,
+				B5A91A7825A71382000C0C99 /* VideoAnswerController.swift in Sources */,
 				B5BDDC3E256829DB0043737B /* QuestionListViewController.swift in Sources */,
+				B51C2D9B2598E83D00107378 /* CustomIntensityVisualEffectView.swift in Sources */,
 				B5153984257D279600907AD5 /* UILabelExtension.swift in Sources */,
 				B5BF7AA5257BCF7D009AA0A3 /* UIColorExtension.swift in Sources */,
 				B5153987257D292400907AD5 /* WebVideoView.swift in Sources */,
 				B549E2092573D30E00260121 /* QuestionViewController.swift in Sources */,
+				B5A91A7525A39198000C0C99 /* RouteCompleteController.swift in Sources */,
+				B51C2D9E2599053900107378 /* LocationCompleteController.swift in Sources */,
 				B5BDDC3A256828A60043737B /* QuestionCollectionViewCell.swift in Sources */,
 				B5EFD4932562B95A00B0C5E7 /* RouteListViewController.swift in Sources */,
-				B5BF7AA8257BD291009AA0A3 /* UIViewExtension.swift in Sources */,
 				B5F953552588853200E4344E /* AnswerStubCollectionViewCell.swift in Sources */,
 				B51F50FD2563030100A9AA53 /* ReusableView.swift in Sources */,
 				B51F50FA256302D300A9AA53 /* RouteTableViewCell.swift in Sources */,
@@ -270,6 +297,7 @@
 				B51F510A2567C09900A9AA53 /* DataProvider.swift in Sources */,
 				B51F5104256305A700A9AA53 /* Question.swift in Sources */,
 				B5EFD48F2562B95A00B0C5E7 /* AppDelegate.swift in Sources */,
+				B5A91A7B25A7254E000C0C99 /* QuestionControlsView.swift in Sources */,
 				B5F95358258887E700E4344E /* StringExtension.swift in Sources */,
 				B5BF7AAB257BD2A5009AA0A3 /* CALayerExtension.swift in Sources */,
 			);

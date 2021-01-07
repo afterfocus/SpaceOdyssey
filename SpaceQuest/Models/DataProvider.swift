@@ -123,23 +123,25 @@ class DataProvider {
                         title: "Перед стартом",
                         address: "МВЦ «Самара Космическая»",
                         author: Authors.korzun,
-                        questionText: "Посмотрите внимательно на ракету. Так она выглядит за 2,5 часа до старта. Назовите настоящий цвет ракеты «Союза» и причину того, что ракета становится белой.",
+                        questionText: "Посмотрите внимательно на ракету. Так она выглядит за 2,5 часа до старта. Назовите настоящий цвет ракеты «Союза» до того, как она становится белой.",
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/33hnI0SLtnw?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/9nKjkbawOEI?playsinline=1"),
                         answer: ["СЕРЫЙ"],
-                        answerButtons: "СРЧРНЕБИЫЕНИЛСЙ",
-                        score: 0),
+                        answerCharacters: "СРЧРЕБИЫЕНИЛСЙ",
+                        isComplete: true,
+                        score: 3),
                     
                     Question(
                         title: "Великолепная шестёрка",
                         address: "Памятник Д.И.Козлову",
                         author: Authors.baranov,
-                        questionText: "В 1946 году перед ведущими конструкторами СССР ставилась единая цель – создание баллистических, а затем и космических ракет. Для управления этой системой был создан координационный орган, который хоть и имел совещательно-консультативные функции, однако его члены обладали необходимыми полномочиями для формирования направления развития советской ракетно-космической программы и смежных исследований. Вспомните название этого совещательного органа.",
+                        questionText: "В 1946 году перед ведущими конструкторами СССР ставилась единая цель – создание баллистических, а затем и космических ракет. Для управления этой системой был создан координационный орган, который хоть и имел совещательно-консультативные функции, однако его члены обладали необходимыми полномочиями для формирования направления развития советской ракетно-космической программы и смежных исследований. Назовите название этого совещательного органа.",
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/TIvJebiqV9o?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/R50m7lnY5AM?playsinline=1"),
                         answer: ["СОВЕТ", "ГЛАВНЫХ"],
-                        answerButtons: "СТСВГЛХЫВЕОАЮНОЗ",
-                        score: 0),
+                        answerCharacters: "СТСВГЛХЫВЕОАЮНОЗ",
+                        isComplete: true,
+                        score: 2),
                     
                     Question(
                         title: "Дом-рекордсмен",
@@ -149,8 +151,9 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/iVOB-crqAmQ?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/UU4D150Q6pQ?playsinline=1"),
                         answer: ["ЛЕНИНГРАД"],
-                        answerButtons: "ЛРСАНДЕРТНГМАИАСА",
-                        score: 0),
+                        answerCharacters: "ЛРСАНДЕРТНГМАИАСА",
+                        isComplete: true,
+                        score: 2),
                     
                     Question(
                         title: "Семейные узы",
@@ -160,19 +163,21 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/aCGk9x3gKEQ?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/XgjiacSNFk8?playsinline=1"),
                         answer: ["ВОЛКОВ", "РОМАНЕНКО"],
-                        answerButtons: "ВЛАОКОКВГАЕНОГРНРАОМИН",
-                        score: 0),
+                        answerCharacters: "ВЛАОКОКВГАЕНОРНРАОМИН",
+                        isComplete: true,
+                        score: 1),
                     
                     Question(
                         title: "К звёздам",
                         address: "Скульптура «Первый спутник»",
                         author: Authors.shkaplerov,
-                        questionText: "Сегодня самарский РКЦ «Прогресс» - единственное в мире предприятие, осуществляющее пуски ракет-носителей с четырех площадок. Перечислите названия этих космодромов.",
+                        questionText: "Сегодня самарский РКЦ «Прогресс» - единственное в мире предприятие, осуществляющее пуски ракет-носителей с четырех площадок. Перечислите названия этих космодромов в алфавитном порядке.",
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/K7OAFKBM3ho?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/eWtvOw_tK4k?playsinline=1"),
-                        answer: ["БАЙКОНУР", "ПЛЕСЕЦК", "ВОСТОЧНЫЙ", "КУРУ"],
-                        answerButtons: "БНЕУВАЫПНУЙСРКЕЛРЙСОКОТЦОЧКУ",
-                        score: 2),
+                        answer: ["БАЙКОНУР", "ВОСТОЧНЫЙ", "КУРУ", "ПЛЕСЕЦК"],
+                        answerCharacters: "БНЕУВАЫПНУЙСРКЕЛРЙСОКОТЦОЧКУ",
+                        isComplete: true,
+                        score: 1),
                     
                     Question(
                         title: "Покорившая небо",
@@ -182,19 +187,21 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/xRIKovb9Eh4?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/UxBcOgDIg58?playsinline=1"),
                         answer: ["СОЛОВЬЁВА"],
-                        answerButtons: "СВЬАЛКГЁОГРРВОАИОАН",
+                        answerCharacters: "СВЬАЛКГЁОГРРВОАИОАН",
+                        isComplete: true,
                         score: 3),
                     
                     Question(
                         title: "Родной край",
                         address: "Монумент «Гордость, честь и слава Самарской области»",
                         author: Authors.kornienko,
-                        questionText: "Четыре космонавта родились в Самарской области. Назовите их фамилии.",
+                        questionText: "Четыре космонавта родились в Самарской области. Назовите их фамилии в алфавитном порядке.",
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/yxZzwP_OYCc?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/JWYIcLjgWWw?playsinline=1"),
-                        answer: ["КОРНИЕНКО", "ГУБАРЕВ", "АТЬКОВ", "АВДЕЕВ"],
-                        answerButtons: "КАЕКНУАЕРИТЕНОБОВРВАДГЕВКОЬВ",
-                        score: 2),
+                        answer: ["АВДЕЕВ", "АТЬКОВ", "ГУБАРЕВ", "КОРНИЕНКО"],
+                        answerCharacters: "КАЕКНУАЕРИТЕНОБОВРВАДГЕВКОЬВ",
+                        isComplete: true,
+                        score: 1),
                     
                     Question(
                         title: "Счёт на секунды",
@@ -204,8 +211,9 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/vulFYcCDSr0?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/2O7px0BRJWQ?playsinline=1"),
                         answer: ["СОЛДАТЕНКОВ"],
-                        answerButtons: "СЁНТОВАЕЛДОРККОЛ",
-                        score: 3),
+                        answerCharacters: "СЁНТОВАЕЛДКОРК",
+                        isComplete: true,
+                        score: 2),
                     
                     Question(
                         title: "На удачу",
@@ -215,8 +223,9 @@ class DataProvider {
                         questionVideoUrl: nil,
                         answerVideoUrl: nil,
                         answer: ["ШЛЯПА"],
-                        answerButtons: "ШСРАЕЗКПКЕПЯКОКЫБЛАА",
-                        score: 1),
+                        answerCharacters: "ШСРАЕЗКПКЕПЯКОКЫБЛАРА",
+                        isComplete: true,
+                        score: 3),
                    
                     Question(
                         title: "Заключённый",
@@ -226,8 +235,9 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/CHzZXM1yMms?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/LPd9HiORRQw?playsinline=1"),
                         answer: ["ФАУ-2"],
-                        answerButtons: "ФНРДУАСК234",
-                        score: 2),
+                        answerCharacters: "ФОНРИДУАСК1234",
+                        isComplete: false,
+                        score: 0),
                    
                     Question(
                         title: "Вечный двигатель",
@@ -237,8 +247,9 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/XNvl2r3nJHY?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/assyWByROes?playsinline=1"),
                         answer: ["6"],
-                        answerButtons: "0123456",
-                        score: 2),
+                        answerCharacters: "0123456",
+                        isComplete: false,
+                        score: 0),
                     
                     Question(
                         title: "Музыкальная пауза",
@@ -248,19 +259,21 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/Meilc24vjuM?playsinline=1"),
                         answerVideoUrl: nil,
                         answer: ["РОДИНА", "СЛЫШИТ"],
-                        answerButtons: "РАВЫОТЛЗНЁСИДИШОТ",
-                        score: 3),
+                        answerCharacters: "РАВЫОТЛЗНЁСИДИШОТ",
+                        isComplete: true,
+                        score: 2),
                    
                     Question(
                         title: "Железный конь",
                         address: "Бункер Сталина",
                         author: Authors.babkin,
-                        questionText: "История РКЦ «Прогресс» началась в Москве в 1894 году, когда обрусевший немец Ю. Меллер основал небольшую мастерскую по ремонту популярного в то время вида транспорта. О каком транспорте идет речь?",
+                        questionText: "История РКЦ «Прогресс» началась в Москве в 1894 году, когда обрусевший немец Ю. Меллер основал небольшую мастерскую по ремонту популярного в то время вида транспорта. О каком транспортом средстве идет речь?",
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/pqXqCznx6FU?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/nJ5PIYGle4w?playsinline=1"),
                         answer: ["ВЕЛОСИПЕД"],
-                        answerButtons: "ВАЕСЕЛДОМКСОАПИТ",
-                        score: 1),
+                        answerCharacters: "ВАЕСЕЛДОМКАПИТ",
+                        isComplete: true,
+                        score: 3),
                    
                     Question(
                         title: "Разведка",
@@ -270,8 +283,9 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/aOMuZ2cWb8M?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/s3JETFgFLY0?playsinline=1"),
                         answer: ["04.10.1959", "ЛУНА-3"],
-                        answerButtons: "ЛНМРАУС310450919",
-                        score: 0),
+                        answerCharacters: "ЛНМРАУС310450919",
+                        isComplete: true,
+                        score: 1),
                     
                     Question(
                         title: "Космическая физика",
@@ -281,8 +295,9 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/g2kjgqjdGwg?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/as-ln4yFwUo?playsinline=1"),
                         answer: ["ДЖАНИБЕКОВ"],
-                        answerButtons: "ДБЖЕЕКНОВАИЕ",
-                        score: 2),
+                        answerCharacters: "ДБЖЕЕКНОБЗВАИЕ",
+                        isComplete: true,
+                        score: 3),
                   
                     Question(
                         title: "Про любовь",
@@ -292,7 +307,8 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/eEPryrDe9Jw?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/N-uvsQSjs7c?playsinline=1"),
                         answer: ["КАТЕРИНА"],
-                        answerButtons: "КТЕНАРЕНИАЛЯ",
+                        answerCharacters: "КАТЕНАРЕНИАЛЯН",
+                        isComplete: true,
                         score: 3),
                   
                     Question(
@@ -303,8 +319,9 @@ class DataProvider {
                         questionVideoUrl: nil,
                         answerVideoUrl: nil,
                         answer: ["ФЕЛИСЕТТ"],
-                        answerButtons: "ФЕКТМИЕРУЛСТА",
-                        score: 3),
+                        answerCharacters: "ФЕКТМАИЕРУЛСТА",
+                        isComplete: true,
+                        score: 1),
                    
                     Question(
                         title: "Космический художник",
@@ -314,8 +331,9 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/Y0e44G3izrE?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/8fbB8usbTbo?playsinline=1"),
                         answer: ["ЛЕОНОВ"],
-                        answerButtons: "ЛОРНЕГАГВОИАН",
-                        score: 1),
+                        answerCharacters: "ЛОРНЕГАГВОИАНВ",
+                        isComplete: true,
+                        score: 3),
                    
                     Question(
                         title: "Свет далёких планет",
@@ -325,8 +343,9 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/tXaxZzYRiHw?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/-EqX3bQOp9M?playsinline=1"),
                         answer: ["ВЕНЕРА", "МАРС"],
-                        answerButtons: "ВРПСЮЕИАЕАЕМРНТР",
-                        score: 2),
+                        answerCharacters: "ВАРПСЮЕУИАНПЕЛАЕМРНТР",
+                        isComplete: true,
+                        score: 3),
                    
                     Question(
                         title: "Секреты космонавтики",
@@ -336,7 +355,8 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/szt07mZFoqg?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/tu3ecFZI5LY?playsinline=1"),
                         answer: ["ГАГАРИН"],
-                        answerButtons: "ГИДОВТНИАТВЕАГЕАРВ",
+                        answerCharacters: "ГИДОВТНИАТВЕАГЕАР",
+                        isComplete: true,
                         score: 3)
                   ],
                   variations: [
@@ -360,18 +380,20 @@ class DataProvider {
                         questionVideoUrl: nil,
                         answerVideoUrl: nil,
                         answer: ["НОЕВ", "КОВЧЕГ"],
-                        answerButtons: "НЕОККОЧГВДОВЕЛА",
-                        score: 2),
+                        answerCharacters: "НЕОККОЧГВДОВЕЛ",
+                        isComplete: false,
+                        score: 0),
                     
                     Question(
                         title: "Учитель",
                         address: "Скульптурная композиция «Колыбель человечества»",
                         author: Authors.babkin,
-                        questionText: "Этот человек происходил из польского дворянского рода, но был «обычным» сельским учителем. Автор научно-фантастических произведений, сторонник и пропагандист идей освоения космического пространства. Его именем назван кратер на Луне и малая планета «1590», открытая 1 июля 1933 года. В 2015 году его имя присвоено городу, построенному близ космодрома «Восточный». В Самаре, Москве, Санкт-Петербурге, а также во многих других населённых пунктах есть улицы его имени.",
+                        questionText: "Этот человек происходил из польского дворянского рода, но был «обычным» сельским учителем. Автор научно-фантастических произведений, сторонник и пропагандист идей освоения космического пространства. Его именем назван кратер на Луне и малая планета «1590», открытая 1 июля 1933 года. В 2015 году его имя присвоено городу, построенному близ космодрома «Восточный». В Самаре, Москве, Санкт-Петербурге, а также во многих других населённых пунктах есть улицы его имени. Назовите фамилию этого человека.",
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/eOs_G65fE_8?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/Mrchfp3YFtM?playsinline=1"),
                         answer: ["ЦИОЛКОВСКИЙ"],
-                        answerButtons: "ЦКЗИОИЛЙОВККРУОСН",
+                        answerCharacters: "ЦКИОИЛЙОВККОСН",
+                        isComplete: true,
                         score: 1),
                    
                     Question(
@@ -382,7 +404,8 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/clmAWfZ8SWI?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/5aUkc15McW4?playsinline=1"),
                         answer: ["КОСМИЧЕСКАЯ", "ФИЛОСОФИЯ"],
-                        answerButtons: "КИАИЛОЯЕОСФСЧСИКФМОЯ",
+                        answerCharacters: "КИАИЛОЯЕОСФСЧССИКФМОЯ",
+                        isComplete: true,
                         score: 1),
                    
                     Question(
@@ -393,7 +416,8 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/cG78ZItzT6o?playsinline=1"),
                         answerVideoUrl: nil,
                         answer: ["14 МИНУТ", "ДО СТАРТА"],
-                        answerButtons: "12432МОДАРНУТТТСИА",
+                        answerCharacters: "12432МОДАРНУТТТСИА",
+                        isComplete: true,
                         score: 1),
                    
                     Question(
@@ -404,8 +428,9 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/NyTrU0KgXCo?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/ISkp7OZlg9o?playsinline=1"),
                         answer: ["ДЖАНИБЕКОВ", "САВИНОВ", "САЛЮТ-7"],
-                        answerButtons: "СДАИНВАКОИОСЮАБНВЕЛЖВТ7",
-                        score: 2),
+                        answerCharacters: "СДАИНВАКОИОСЮАБНВЕЛЖВТ7",
+                        isComplete: true,
+                        score: 1),
                    
                     Question(
                         title: "Искусство обмана",
@@ -415,8 +440,9 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/EDC5uqBB4y8?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/gZkx07CMYRY?playsinline=1"),
                         answer: ["КОСМОС"],
-                        answerButtons: "КЕОМСВЛОАССЕННЯ",
-                        score: 3),
+                        answerCharacters: "КЕОМСВЛОАССЕНЯ",
+                        isComplete: false,
+                        score: 0),
                   
                     Question(
                         title: "Ключ на старт",
@@ -426,8 +452,9 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/s8W9_QDu_4w?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/V1rmyaAigQ4?playsinline=1"),
                         answer: ["9"],
-                        answerButtons: "123456789",
-                        score: 3),
+                        answerCharacters: "123456789",
+                        isComplete: false,
+                        score: 0),
                    
                     Question(
                         title: "Знаете, каким он парнем был",
@@ -436,9 +463,10 @@ class DataProvider {
                         questionText: "Одной из самых известных его песен стала – «Знаете, каким он парнем был». Песня-посвящение Ю.А. Гагарину. Назовите фамилии композитора и автора стихов данного произведения.",
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/zznNR8-Yco0?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/9gzWVaZ0feE?playsinline=1"),
-                        answer: ["ПАХМУТОВА", "ДОБРОНРАВОВ"],
-                        answerButtons: "ДОНВООТВАБМВОХУАРРПА",
-                        score: 3),
+                        answer: ["ДОБРОНРАВОВ", "ПАХМУТОВА"],
+                        answerCharacters: "ДОНВООТВАБМВОХУАРРПАН",
+                        isComplete: true,
+                        score: 1),
                    
                     Question(
                         title: "Сила духа",
@@ -448,8 +476,9 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/kooxsq4aE3w?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/p7b6OzE9FuM?playsinline=1"),
                         answer: ["НЕВЕСОМОСТЬ"],
-                        answerButtons: "НСМТМООДЬОХЕЬТОВЕЛСА",
-                        score: 3),
+                        answerCharacters: "НСМТМООДЬОХЕЬТОВЕЛСАН",
+                        isComplete: true,
+                        score: 2),
                    
                     Question(
                         title: "Поля без границ",
@@ -459,8 +488,9 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/F5qeCjrx6yA?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/Lv4PR8yrJfM?playsinline=1"),
                         answer: ["2"],
-                        answerButtons: "0123456",
-                        score: 2),
+                        answerCharacters: "0123456",
+                        isComplete: true,
+                        score: 3),
                   
                     Question(
                         title: "Хвостатые герои",
@@ -469,9 +499,10 @@ class DataProvider {
                         questionText: "Какие до полета в космос были имена у собак Белки и Стрелки?",
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/mbOapNVz1WE?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/WhKzzm9DJx4?playsinline=1"),
-                        answer: ["КАПЛЯ", "ВИЛЬНА"],
-                        answerButtons: "ВБОЬАИЛЯКЛИАПНБК",
-                        score: 1),
+                        answer: ["ВИЛЬНА", "КАПЛЯ"],
+                        answerCharacters: "ВБОЬАИЛЯКЛИАПНБК",
+                        isComplete: true,
+                        score: 2),
                   
                     Question(
                         title: "Про любовь",
@@ -481,19 +512,21 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/eEPryrDe9Jw?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/N-uvsQSjs7c?playsinline=1"),
                         answer: ["КАТЕРИНА"],
-                        answerButtons: "КЕАТТЯААРНЬТИН",
-                        score: 0),
+                        answerCharacters: "КЕАТТЯААРНЬТИН",
+                        isComplete: true,
+                        score: 3),
                   
                     Question(
                         title: "Поэма о космонавте",
                         address: "Фонтан «Парус»",
                         author: Authors.soifer,
-                        questionText: "В 1967 году в городе Куйбышев прошли 5 концертов Владимира Высоцкого. Высоцкий был дружен с Гагариным и другими первыми космонавтами. Он посвящал им свои песни и стихи. А они брали и берут с собой записи Владимира Семеновича на борт космического корабля. Самое сильное его произведение из этой серии – «Поэма о космонавте». В ней есть такие строки:\n\tВот мой дублер, который мог быть Первым,\n\tКоторый смог впервые стать вторым.\n\tПока что на него не тратят шрифта —\n\tЗапас заглавных букв на одного.\n\tМы с ним вдвоем прошли весь путь до лифта,\n\tНо дальше я поднялся без него.\nНазовите фамилию этого известного всем Героя",
+                        questionText: "В 1967 году в городе Куйбышев прошли 5 концертов Владимира Высоцкого. Высоцкий был дружен с Гагариным и другими первыми космонавтами. Он посвящал им свои песни и стихи. А они брали и берут с собой записи Владимира Семеновича на борт космического корабля. Самое сильное его произведение из этой серии – «Поэма о космонавте». В ней есть такие строки:\n\tВот мой дублер, который мог быть Первым,\n\tКоторый смог впервые стать вторым.\n\tПока что на него не тратят шрифта —\n\tЗапас заглавных букв на одного.\n\tМы с ним вдвоем прошли весь путь до лифта,\n\tНо дальше я поднялся без него.\nНазовите фамилию этого известного всем Героя.",
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/fw6dEOdLvHI?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/C4p1b2dsmNQ?playsinline=1"),
                         answer: ["ТИТОВ"],
-                        answerButtons: "ГГАТТЁИОРКОВРАНЛВ",
-                        score: 0),
+                        answerCharacters: "ГГАТТЁИОРКОВРА",
+                        isComplete: true,
+                        score: 3),
                   
                     Question(
                         title: "Космический художник",
@@ -503,8 +536,9 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/Y0e44G3izrE?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/8fbB8usbTbo?playsinline=1"),
                         answer: ["ЛЕОНОВ"],
-                        answerButtons: "РЛАНИГОГЕАНОЬРВ",
-                        score: 1),
+                        answerCharacters: "РЛАНИГОГЕАНОЬВ",
+                        isComplete: true,
+                        score: 3),
                    
                     Question(
                         title: "Океан вселенной",
@@ -514,7 +548,8 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/ODWOj9HfrLU?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/5R4NGIii8YI?playsinline=1"),
                         answer: ["ТРАВА", "У ДОМА"],
-                        answerButtons: "УМАСРНАЕАДОТВВИА",
+                        answerCharacters: "УМАСРАЕАДОТВВА",
+                        isComplete: true,
                         score: 2)
                   ],
                   variations: [
@@ -532,8 +567,9 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/X1LlOO46lzU?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/HZ_1CR-VCYo?playsinline=1"),
                         answer: ["ВОЛК"],
-                        answerButtons: "КЕЛВРАТЕМОЬОЁРВ",
-                        score: 2),
+                        answerCharacters: "КЕЛВРАТЕМОЬОРВ",
+                        isComplete: false,
+                        score: 0),
                     
                     Question(
                         title: "Поэма о космонавте",
@@ -543,7 +579,8 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/jWBza3HR_20?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/ZOnsglvUHDQ?playsinline=1"),
                         answer: ["КОЗЛОВ"],
-                        answerButtons: "КМОЕВЕТОЬЛЗРАН",
+                        answerCharacters: "КМОЕВЕТОЬЛЗРАН",
+                        isComplete: true,
                         score: 3),
                    
                     Question(
@@ -554,8 +591,9 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/4fiE4VgggOo?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/BUvmG0p_Oj0?playsinline=1"),
                         answer: ["ВОСТОЧНЫЙ"],
-                        answerButtons: "ВСЧАУТКРЙНБОЫОУ",
-                        score: 0),
+                        answerCharacters: "ВСЧАУТКРЙНБОЫО",
+                        isComplete: true,
+                        score: 3),
                    
                     Question(
                         title: "На земле и в космосе",
@@ -565,8 +603,9 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/rV8dIlAgCYU?playsinline=1"),
                         answerVideoUrl: nil,
                         answer: ["УЛЫБКА", "ГАГАРИНА"],
-                        answerButtons: "УАЫНАГЛИЕЮБКАГРАИ",
-                        score: 2),
+                        answerCharacters: "УАЫНАГЛИЕЮБКАГРАИ",
+                        isComplete: true,
+                        score: 1),
                    
                     Question(
                         title: "Костюм на выход",
@@ -576,7 +615,8 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/CHoUkDjrd7w?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/TVyLNhelTdo?playsinline=1"),
                         answer: ["ПИНГВИН"],
-                        answerButtons: "ПГИАИТТЛНСВЕНК",
+                        answerCharacters: "ПГИАИТТЛНСВЕНК",
+                        isComplete: true,
                         score: 3),
                    
                     Question(
@@ -587,7 +627,8 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/n6JTh09TNqY?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/b5WhVuJlar0?playsinline=1"),
                         answer: ["МАЙОР"],
-                        answerButtons: "МНИЙЙЕАТТАЕПКРОЛН",
+                        answerCharacters: "МНИЙЙЕАТАКРОЛН",
+                        isComplete: true,
                         score: 3),
                    
                     Question(
@@ -598,8 +639,9 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/mvV5Y0pInIk?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/7z3wSGbdQsA?playsinline=1"),
                         answer: ["ЧЕРНОВСКОЕ", "ШОССЕ"],
-                        answerButtons: "ЕЕНСОШОВОЧРМСКОЕССК",
-                        score: 3),
+                        answerCharacters: "ЕЕНСОШОВОЧРМСКОЕССК",
+                        isComplete: true,
+                        score: 1),
                    
                     Question(
                         title: "На пыльных дорожках",
@@ -608,9 +650,10 @@ class DataProvider {
                         questionText: "Средняя температура Марса –55 градусов, его атмосфера на 95% состоит из углекислого газа. Диаметр Марса почти в 2 раза меньше диаметра Земли. А сколько процентов составляет сила тяжести на поверхности Красной планеты относительно земной?",
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/Sn7bxOzAC5A?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/ibnAGcoK2gI?playsinline=1"),
-                        answer: ["37%"],
-                        answerButtons: "1234567",
-                        score: 2),
+                        answer: ["37"],
+                        answerCharacters: "1234567",
+                        isComplete: true,
+                        score: 3),
                    
                     Question(
                         title: "Первопроходец",
@@ -620,8 +663,9 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/8TQvAiMfyC0?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/9K3m7RproCQ?playsinline=1"),
                         answer: ["ЗА ОСВОЕНИЕ", "ЦЕЛИННЫХ", "ЗЕМЕЛЬ"],
-                        answerButtons: "ЗВНННИМАЛЕЕЕЫХОЕЦОИЗСЛЕЬ",
-                        score: 3),
+                        answerCharacters: "ЗВНННИМАЛЕЕЕЫХОЕЦОИЗСЛЕЬ",
+                        isComplete: true,
+                        score: 1),
                    
                     Question(
                         title: "Минуты, изменившие мир",
@@ -631,7 +675,8 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/uLZ5GC9Uey8?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/Jtiu9n3VUkQ?playsinline=1"),
                         answer: ["108"],
-                        answerButtons: "1523806",
+                        answerCharacters: "1523806",
+                        isComplete: true,
                         score: 3),
                    
                     Question(
@@ -642,7 +687,8 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/AU98WbhIzEw?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/P6Kpsv3rH78?playsinline=1"),
                         answer: ["АЛЬФА", "ЦЕНТАВРА"],
-                        answerButtons: "ФЛТАСВПАРЦЕЬНАИРКАВОМ",
+                        answerCharacters: "ФЛТАВСАРЦЕЬНАА",
+                        isComplete: true,
                         score: 1),
                     
                     Question(
@@ -653,8 +699,9 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/BQnXb6XYikw?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/Nj2y-oT8DNI?playsinline=1"),
                         answer: ["ВОСХОД"],
-                        answerButtons: "ОЗДАКАВХАЕССОРВТСТ",
-                        score: 2),
+                        answerCharacters: "ОЗДАКАВХАЕСОРВ",
+                        isComplete: true,
+                        score: 3),
                     
                     Question(
                         title: "Летающий танк",
@@ -664,7 +711,8 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/H98rGx4yrQ0?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/re4MJulRoc0?playsinline=1"),
                         answer: ["ГОРБАТЫЙ"],
-                        answerButtons: "ОЫТГБКЛРАЕГЙИ",
+                        answerCharacters: "ОЫТГБКЛРАЕГЙИН",
+                        isComplete: true,
                         score: 2)
                   ],
                   variations: [
@@ -683,8 +731,9 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/yWdd2Hx1JAs?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/FwZgfQFVwEU?playsinline=1"),
                         answer: ["ПТИЦЫ"],
-                        answerButtons: "ПБКЦОТШКИИСЫА",
-                        score: 2),
+                        answerCharacters: "ПБКЦОТШКИИСЫАР",
+                        isComplete: true,
+                        score: 0),
                   
                     Question(
                         title: "Как за каменной стеной",
@@ -694,8 +743,9 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/pQfw7ZVmtn4?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/TvvNnkJAp20?playsinline=1"),
                         answer: ["3"],
-                        answerButtons: "1234567",
-                        score: 3),
+                        answerCharacters: "1234567",
+                        isComplete: false,
+                        score: 0),
                   
                     Question(
                         title: "Космическая эстафета",
@@ -705,8 +755,9 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/L_8nHkB7q1k?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/OKTzzU8HGFA?playsinline=1"),
                         answer: ["ФАКЕЛ"],
-                        answerButtons: "АРДВФЕКЛЗЕТЕАКЗА",
-                        score: 1),
+                        answerCharacters: "АРДВФЕКЛТЕАКЗА",
+                        isComplete: true,
+                        score: 3),
                    
                     Question(
                         title: "Вопреки",
@@ -716,19 +767,21 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/kXStxFIS6RU?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/dc-_hKzb4J0?playsinline=1"),
                         answer: ["НК-33"],
-                        answerButtons: "ЛНРК373",
-                        score: 2),
+                        answerCharacters: "ЛНРК373",
+                        isComplete: false,
+                        score: 0),
                    
                     Question(
                         title: "За гранью возможного",
                         address: "Подшипники «СПЗ-ГРУПП»",
                         author: Authors.korolev,
-                        questionText: "Вспомните названия пилотируемых кораблей, созданных под руководством С.П. Королева.",
+                        questionText: "Перечислите в алфавитном порядке названия пилотируемых кораблей, созданных под руководством С.П. Королева.",
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/YsshUKGTC_Y?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/Y3p4HJAQa8A?playsinline=1"),
                         answer: ["ВОСТОК", "ВОСХОД", "СОЮЗ"],
-                        answerButtons: "СЗОВОСКХЮСОТОВОД",
-                        score: 3),
+                        answerCharacters: "СЗОВОСКНКХЮСОТОВОД",
+                        isComplete: true,
+                        score: 2),
                   
                     Question(
                         title: "Пешком вокруг земли",
@@ -738,18 +791,20 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/fL_N8bNBeaQ?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/hohri1xNzEA?playsinline=1"),
                         answer: ["40075"],
-                        answerButtons: "0023457",
-                        score: 3),
+                        answerCharacters: "0023457",
+                        isComplete: true,
+                        score: 2),
                   
                     Question(
                         title: "Упавшая звезда",
                         address: "Куйбышевкабель",
                         author: Authors.ren,
-                        questionText: "Что делают в Центре подготовки космонавтов при подготовке к космическим полетам для того, чтобы члены экипажа сохранили жизнь и здоровье?",
+                        questionText: "Что проходят в Центре подготовки космонавтов при подготовке к космическим полетам для того, чтобы члены экипажа сохранили жизнь и здоровье?",
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/VDAvGeSl76c?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/JBA_Z4e67LM?playsinline=1"),
                         answer: ["ТРЕНИРОВКИ", "ПО ВЫЖИВАНИЮ"],
-                        answerButtons: "ТРИЫИЕОКПОРИИВЖВВАННЮ",
+                        answerCharacters: "ТРИЫИЕОКПОРИИВЖВВАННЮ",
+                        isComplete: true,
                         score: 1),
                   
                     Question(
@@ -760,8 +815,9 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/5ZMVn6dqFA8?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/yYWdTxiNrco?playsinline=1"),
                         answer: ["ПОДУШКА"],
-                        answerButtons: "ПАОГИККУНДША",
-                        score: 2),
+                        answerCharacters: "ПАОГИКЛИКУНДША",
+                        isComplete: true,
+                        score: 3),
                   
                     Question(
                         title: "Война и космос",
@@ -771,8 +827,9 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/PeU5f2T-UKE?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/3HmbOv1m6YI?playsinline=1"),
                         answer: ["БЕРЕГОВОЙ"],
-                        answerButtons: "БВЕКОРЗГЕУОЕНЙЦ",
-                        score: 3),
+                        answerCharacters: "БВЕКОРЗГЕУОЕНЙ",
+                        isComplete: true,
+                        score: 2),
                   
                     Question(
                         title: "Восточный",
@@ -782,7 +839,8 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/DZAbvh2EZSs?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/DiXX00YnvVA?playsinline=1"),
                         answer: ["АМУРСКАЯ", "ЦИОЛКОВСКИЙ"],
-                        answerButtons: "ЦВКРООУКААСЛЙСИИКМЯ",
+                        answerCharacters: "ЦВКРООУКААСЛЙСИИКМЯ",
+                        isComplete: true,
                         score: 1),
                    
                     Question(
@@ -793,7 +851,8 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/nmCpguXTaA8?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/8692mPIK3Iw?playsinline=1"),
                         answer: ["ЗЕМЛЯ", "ЛУНА"],
-                        answerButtons: "ЛЕЛРУМНЯМААЗС",
+                        answerCharacters: "ЛЕЛРУМНЯМНААЗС",
+                        isComplete: true,
                         score: 3),
                    
                     Question(
@@ -804,8 +863,9 @@ class DataProvider {
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/Y_JK9ZhypaI?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/ZVZmUfUp-sA?playsinline=1"),
                         answer: ["4"],
-                        answerButtons: "1234567",
-                        score: 2)
+                        answerCharacters: "1234567",
+                        isComplete: true,
+                        score: 3)
                   ],
                   variations: [
                     RouteVariation(length: 4, duration: 60, questionIndexes: Array(0...11))
