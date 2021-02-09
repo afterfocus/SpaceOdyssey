@@ -17,6 +17,10 @@ class Author {
     let patronymic: String
     /// Об авторе
     let aboutAuthor: String
+    /// Фамилия и инициалы
+    var initials: String {
+        return "\(surname) \(name.first!)." + (patronymic.count > 0 ? " \(patronymic.first!)." : "")
+    }
     
     init(surname: String, name: String, patronymic: String, aboutAuthor: String) {
         self.surname = surname

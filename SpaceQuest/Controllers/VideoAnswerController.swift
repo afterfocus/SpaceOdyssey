@@ -7,26 +7,31 @@
 
 import UIKit
 
+// MARK: VideoAnswerControllerDelegate
+
 protocol VideoAnswerControllerDelegate: class {
     func videoAnswerControllerDidTapNextQuestionButton(_ controller: VideoAnswerController)
-    func videoAnswerControllerDidTapExitToRouteListButton(_ controller: VideoAnswerController)
-    func videoAnswerControllerDidTapExitButton(_ controller: VideoAnswerController)
+    func videoAnswerControllerDidTapEndRouteButton(_ controller: VideoAnswerController)
+    func videoAnswerControllerDidTapCloseButton(_ controller: VideoAnswerController)
 }
 
 extension VideoAnswerControllerDelegate {
-    func videoAnswerControllerDidTapExitButton(_ controller: VideoAnswerController) { }
+    func videoAnswerControllerDidTapCloseButton(_ controller: VideoAnswerController) { }
 }
+
+// MARK: - VideoAnswerControllerDelegate
 
 class VideoAnswerController: UIViewController {
     
     enum ExitMode {
-        case routeList, nextQuestion, noAction
+        case introVideo, endRoute, nextQuestion, noAction
     }
     
     // MARK: IBOutlets
     
+    @IBOutlet var titleLabel: UILabel!
     @IBOutlet var webVideoView: WebVideoView!
-    @IBOutlet var exitButton: UIButton!
+    @IBOutlet var closeButton: UIButton!
     
     // MARK: - Segue Properties
     
@@ -38,24 +43,30 @@ class VideoAnswerController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        titleLabel.text = (exitMode == .introVideo) ? "Вступление" : "Видео-ответ"
         webVideoView.layer.dropShadow(color: .cellShadow, opacity: 0.35, radius: 40)
         
         switch exitMode {
-            case .routeList: exitButton.setTitle("На главный экран", for: .normal)
-            case .nextQuestion: exitButton.setTitle("Следующий вопрос", for: .normal)
-            default: exitButton.setTitle("Закрыть", for: .normal)
+            case .endRoute: closeButton.setTitle("Завершить маршрут", for: .normal)
+            case .nextQuestion: closeButton.setTitle("Следующий вопрос", for: .normal)
+            default: closeButton.setTitle("Закрыть", for: .normal)
         }
         webVideoView.loadVideo(url: videoURL)
     }
     
     // MARK: - IBActions
     
-    @IBAction func exitButtonPressed(_ sender: UIButton) {
-        switch exitMode {
-            case .routeList: delegate?.videoAnswerControllerDidTapExitToRouteListButton(self)
-            case .nextQuestion: delegate?.videoAnswerControllerDidTapNextQuestionButton(self)
-            default: delegate?.videoAnswerControllerDidTapExitButton(self)
+    @IBAction func closeButtonPressed(_ sender: UIButton) {
+        dismiss(animated: true) { [self] in
+            switch exitMode {
+                case .endRoute:
+                    delegate?.videoAnswerControllerDidTapEndRouteButton(self)
+                case .nextQuestion:
+                    delegate?.videoAnswerControllerDidTapNextQuestionButton(self)
+                default:
+                    delegate?.videoAnswerControllerDidTapCloseButton(self)
+            }
         }
-        dismiss(animated: true)
     }
 }

@@ -10,7 +10,6 @@ import UIKit
 // MARK: RouteCompleteControllerDelegate
 
 protocol RouteCompleteControllerDelegate: class {
-    func routeCompleteControllerDidTapVideoAnswerButton(_ controller: RouteCompleteController)
     func routeCompleteControllerDidTapExitButton(_ controller: RouteCompleteController)
 }
 
@@ -25,7 +24,6 @@ class RouteCompleteController: UIViewController {
     @IBOutlet var starImageView: UIImageView!
     @IBOutlet var scoredStarsLabel: UILabel!
     @IBOutlet var totalStarsLabel: UILabel!
-    @IBOutlet var videoAnswerButton: UIButton!
     
     // MARK: - Segue Properties
     
@@ -46,8 +44,6 @@ class RouteCompleteController: UIViewController {
         scoredStarsLabel.layer.dropShadow(opacity: 0.25, radius: 7)
         totalStarsLabel.layer.dropShadow(opacity: 0.25, radius: 7)
         
-        videoAnswerButton.isEnabled = lastQuestion.answerVideoUrl != nil
-        videoAnswerButton.alpha = lastQuestion.answerVideoUrl != nil ? 1 : 0.6
         totalStarsLabel.text = "\(route.maxScore)"
     }
     
@@ -73,12 +69,6 @@ class RouteCompleteController: UIViewController {
     }
     
     // MARK: - IBActions
-    
-    @IBAction func videoAnswerButtonPressed(_ sender: UIButton) {
-        dismiss(animated: true) {
-            self.delegate?.routeCompleteControllerDidTapVideoAnswerButton(self)
-        }
-    }
     
     @IBAction func exitButtonPressed(_ sender: UIButton) {
         delegate?.routeCompleteControllerDidTapExitButton(self)

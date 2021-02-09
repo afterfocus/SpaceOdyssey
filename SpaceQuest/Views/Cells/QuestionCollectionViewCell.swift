@@ -18,8 +18,9 @@ class QuestionCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var numberLabel: UILabel!
     @IBOutlet var starImageViews: [UIImageView]!
+    @IBOutlet weak var checkmarkImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var addressLabel: UILabel!
+    @IBOutlet weak var locationNameLabel: UILabel!
     
     @IBOutlet weak var surnameLabel: UILabel!
     @IBOutlet weak var nameLabel: UILabel!
@@ -27,10 +28,6 @@ class QuestionCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var aboutAuthorLabel: UILabel!
     
     @IBOutlet weak var lockView: UIVisualEffectView!
-    
-    // MARK: - Internal Properties
-    
-    var isLocked: Bool!
     
     // MARK: - Cell Life Cycle
     
@@ -43,7 +40,7 @@ class QuestionCollectionViewCell: UICollectionViewCell {
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = contentView.frame
         gradientLayer.locations = [0.05, 0.95]
-        gradientLayer.colors = [CGColor.cellGradientStart, CGColor.cellGradientEnd]
+        gradientLayer.colors = [CGColor.lightBlue, CGColor.darkBlue]
         frontView.layer.insertSublayer(gradientLayer, at: 0)
     }
     
@@ -59,13 +56,13 @@ class QuestionCollectionViewCell: UICollectionViewCell {
     func configure(with question: Question, index: Int, isLocked: Bool) {
         numberLabel.text = "\(index)"
         titleLabel.text = question.title
-        addressLabel.text = question.address
+        locationNameLabel.text = question.location.name
         
         surnameLabel.text = question.author.surname
         nameLabel.text = question.author.name
         patronymicLabel.text = question.author.patronymic
         aboutAuthorLabel.text = question.author.aboutAuthor
-        self.isLocked = isLocked
+        checkmarkImageView.isHidden = !question.isComplete
         
         for (index, star) in starImageViews.enumerated() {
             star.tintColor = question.score > index ? .systemYellow : .unhighlightedStar

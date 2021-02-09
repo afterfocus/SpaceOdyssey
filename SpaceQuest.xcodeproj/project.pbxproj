@@ -3,10 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2986A9CA1D3746A5C61D859F /* Pods_SpaceQuest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 606595FA560EA01E18AD5594 /* Pods_SpaceQuest.framework */; };
 		B514B014257BF08600F587B6 /* AnswerButtonCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B514B013257BF08600F587B6 /* AnswerButtonCollectionViewCell.swift */; };
 		B5153984257D279600907AD5 /* UILabelExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5153983257D279500907AD5 /* UILabelExtension.swift */; };
 		B5153987257D292400907AD5 /* WebVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5153986257D292400907AD5 /* WebVideoView.swift */; };
@@ -18,6 +19,11 @@
 		B51F5104256305A700A9AA53 /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51F5103256305A700A9AA53 /* Question.swift */; };
 		B51F5107256305B800A9AA53 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51F5106256305B800A9AA53 /* Route.swift */; };
 		B51F510A2567C09900A9AA53 /* DataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51F51092567C09800A9AA53 /* DataProvider.swift */; };
+		B5373E6425BCA0A400F91820 /* MapPlacemark.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5373E6325BCA0A400F91820 /* MapPlacemark.swift */; };
+		B5373E6D25D1BC8300F91820 /* MapCallout.xib in Resources */ = {isa = PBXBuildFile; fileRef = B5373E6C25D1BC8200F91820 /* MapCallout.xib */; };
+		B5373E7025D1C4CB00F91820 /* MapCallout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5373E6F25D1C4CB00F91820 /* MapCallout.swift */; };
+		B5373E7325D1C64100F91820 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5373E7225D1C64100F91820 /* UIViewExtension.swift */; };
+		B5373E7625D1C73300F91820 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5373E7525D1C73300F91820 /* Location.swift */; };
 		B549E2092573D30E00260121 /* QuestionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B549E2082573D30E00260121 /* QuestionViewController.swift */; };
 		B57B3CD32593BCC000270D8E /* AnswerFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57B3CD22593BCC000270D8E /* AnswerFieldView.swift */; };
 		B57B3CD62593BCCC00270D8E /* AnswerButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57B3CD52593BCCC00270D8E /* AnswerButtonsView.swift */; };
@@ -25,6 +31,8 @@
 		B5A91A7525A39198000C0C99 /* RouteCompleteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A91A7425A39198000C0C99 /* RouteCompleteController.swift */; };
 		B5A91A7825A71382000C0C99 /* VideoAnswerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A91A7725A71382000C0C99 /* VideoAnswerController.swift */; };
 		B5A91A7B25A7254E000C0C99 /* QuestionControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A91A7A25A7254E000C0C99 /* QuestionControlsView.swift */; };
+		B5A91A8425AC45D8000C0C99 /* LocationFailedController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A91A8325AC45D7000C0C99 /* LocationFailedController.swift */; };
+		B5A91A8825AC4A88000C0C99 /* LocationFinishedController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A91A8725AC4A88000C0C99 /* LocationFinishedController.swift */; };
 		B5AD43B22568469400110AE8 /* UIImageViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5AD43B12568469400110AE8 /* UIImageViewExtension.swift */; };
 		B5ADEDB4258E0B3E007703C3 /* Author.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ADEDB3258E0B3E007703C3 /* Author.swift */; };
 		B5BDDC3A256828A60043737B /* QuestionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BDDC39256828A60043737B /* QuestionCollectionViewCell.swift */; };
@@ -32,6 +40,7 @@
 		B5BDDC4125682A0F0043737B /* TopGradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BDDC4025682A0F0043737B /* TopGradientView.swift */; };
 		B5BF7AA5257BCF7D009AA0A3 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7AA4257BCF7D009AA0A3 /* UIColorExtension.swift */; };
 		B5BF7AAB257BD2A5009AA0A3 /* CALayerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7AAA257BD2A5009AA0A3 /* CALayerExtension.swift */; };
+		B5E96EC625ACB7D300DA030F /* MapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E96EC525ACB7D300DA030F /* MapController.swift */; };
 		B5EFD48F2562B95A00B0C5E7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EFD48E2562B95A00B0C5E7 /* AppDelegate.swift */; };
 		B5EFD4932562B95A00B0C5E7 /* RouteListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EFD4922562B95A00B0C5E7 /* RouteListViewController.swift */; };
 		B5EFD4962562B95A00B0C5E7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B5EFD4942562B95A00B0C5E7 /* Main.storyboard */; };
@@ -44,6 +53,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1287940696F57534413CA409 /* Pods-SpaceQuest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpaceQuest.debug.xcconfig"; path = "Target Support Files/Pods-SpaceQuest/Pods-SpaceQuest.debug.xcconfig"; sourceTree = "<group>"; };
+		4FADCF94CCA1726A9DD5D3DF /* Pods-SpaceQuest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpaceQuest.release.xcconfig"; path = "Target Support Files/Pods-SpaceQuest/Pods-SpaceQuest.release.xcconfig"; sourceTree = "<group>"; };
+		606595FA560EA01E18AD5594 /* Pods_SpaceQuest.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SpaceQuest.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B514B013257BF08600F587B6 /* AnswerButtonCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerButtonCollectionViewCell.swift; sourceTree = "<group>"; };
 		B5153983257D279500907AD5 /* UILabelExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILabelExtension.swift; sourceTree = "<group>"; };
 		B5153986257D292400907AD5 /* WebVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebVideoView.swift; sourceTree = "<group>"; };
@@ -55,6 +67,11 @@
 		B51F5103256305A700A9AA53 /* Question.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
 		B51F5106256305B800A9AA53 /* Route.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
 		B51F51092567C09800A9AA53 /* DataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataProvider.swift; sourceTree = "<group>"; };
+		B5373E6325BCA0A400F91820 /* MapPlacemark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapPlacemark.swift; sourceTree = "<group>"; };
+		B5373E6C25D1BC8200F91820 /* MapCallout.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MapCallout.xib; sourceTree = "<group>"; };
+		B5373E6F25D1C4CB00F91820 /* MapCallout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCallout.swift; sourceTree = "<group>"; };
+		B5373E7225D1C64100F91820 /* UIViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
+		B5373E7525D1C73300F91820 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		B549E2082573D30E00260121 /* QuestionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionViewController.swift; sourceTree = "<group>"; };
 		B57B3CD22593BCC000270D8E /* AnswerFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerFieldView.swift; sourceTree = "<group>"; };
 		B57B3CD52593BCCC00270D8E /* AnswerButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerButtonsView.swift; sourceTree = "<group>"; };
@@ -62,6 +79,8 @@
 		B5A91A7425A39198000C0C99 /* RouteCompleteController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteCompleteController.swift; sourceTree = "<group>"; };
 		B5A91A7725A71382000C0C99 /* VideoAnswerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoAnswerController.swift; sourceTree = "<group>"; };
 		B5A91A7A25A7254E000C0C99 /* QuestionControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionControlsView.swift; sourceTree = "<group>"; };
+		B5A91A8325AC45D7000C0C99 /* LocationFailedController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationFailedController.swift; sourceTree = "<group>"; };
+		B5A91A8725AC4A88000C0C99 /* LocationFinishedController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationFinishedController.swift; sourceTree = "<group>"; };
 		B5AD43B12568469400110AE8 /* UIImageViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageViewExtension.swift; sourceTree = "<group>"; };
 		B5ADEDB3258E0B3E007703C3 /* Author.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Author.swift; sourceTree = "<group>"; };
 		B5BDDC39256828A60043737B /* QuestionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -69,6 +88,7 @@
 		B5BDDC4025682A0F0043737B /* TopGradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopGradientView.swift; sourceTree = "<group>"; };
 		B5BF7AA4257BCF7D009AA0A3 /* UIColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
 		B5BF7AAA257BD2A5009AA0A3 /* CALayerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CALayerExtension.swift; sourceTree = "<group>"; };
+		B5E96EC525ACB7D300DA030F /* MapController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapController.swift; sourceTree = "<group>"; };
 		B5EFD48B2562B95A00B0C5E7 /* SpaceQuest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpaceQuest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5EFD48E2562B95A00B0C5E7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B5EFD4922562B95A00B0C5E7 /* RouteListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteListViewController.swift; sourceTree = "<group>"; };
@@ -87,12 +107,51 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2986A9CA1D3746A5C61D859F /* Pods_SpaceQuest.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6C81B1D5711B8FAEBEFA39A6 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				1287940696F57534413CA409 /* Pods-SpaceQuest.debug.xcconfig */,
+				4FADCF94CCA1726A9DD5D3DF /* Pods-SpaceQuest.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		90FC8CE7D344FF833692B7C0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				606595FA560EA01E18AD5594 /* Pods_SpaceQuest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B5373E5F25BCA04A00F91820 /* QuestionController */ = {
+			isa = PBXGroup;
+			children = (
+				B5153986257D292400907AD5 /* WebVideoView.swift */,
+				B5A91A7A25A7254E000C0C99 /* QuestionControlsView.swift */,
+				B57B3CD22593BCC000270D8E /* AnswerFieldView.swift */,
+				B57B3CD52593BCCC00270D8E /* AnswerButtonsView.swift */,
+			);
+			path = QuestionController;
+			sourceTree = "<group>";
+		};
+		B5373E6225BCA06B00F91820 /* MapController */ = {
+			isa = PBXGroup;
+			children = (
+				B5373E6325BCA0A400F91820 /* MapPlacemark.swift */,
+				B5373E6C25D1BC8200F91820 /* MapCallout.xib */,
+				B5373E6F25D1C4CB00F91820 /* MapCallout.swift */,
+			);
+			path = MapController;
+			sourceTree = "<group>";
+		};
 		B5AD43B02568467D00110AE8 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -101,6 +160,7 @@
 				B5153983257D279500907AD5 /* UILabelExtension.swift */,
 				B5BF7AAA257BD2A5009AA0A3 /* CALayerExtension.swift */,
 				B5F95357258887E600E4344E /* StringExtension.swift */,
+				B5373E7225D1C64100F91820 /* UIViewExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -123,10 +183,6 @@
 			isa = PBXGroup;
 			children = (
 				B5BDDC4025682A0F0043737B /* TopGradientView.swift */,
-				B5153986257D292400907AD5 /* WebVideoView.swift */,
-				B5A91A7A25A7254E000C0C99 /* QuestionControlsView.swift */,
-				B57B3CD22593BCC000270D8E /* AnswerFieldView.swift */,
-				B57B3CD52593BCCC00270D8E /* AnswerButtonsView.swift */,
 				B51C2D9A2598E83D00107378 /* CustomIntensityVisualEffectView.swift */,
 			);
 			path = SupplementaryViews;
@@ -137,6 +193,8 @@
 			children = (
 				B5EFD48D2562B95A00B0C5E7 /* SpaceQuest */,
 				B5EFD48C2562B95A00B0C5E7 /* Products */,
+				6C81B1D5711B8FAEBEFA39A6 /* Pods */,
+				90FC8CE7D344FF833692B7C0 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -168,6 +226,7 @@
 			children = (
 				B5ADEDB3258E0B3E007703C3 /* Author.swift */,
 				B51F5103256305A700A9AA53 /* Question.swift */,
+				B5373E7525D1C73300F91820 /* Location.swift */,
 				B51F5106256305B800A9AA53 /* Route.swift */,
 				B57B3CDE259515CA00270D8E /* UserAnswer.swift */,
 				B51F51092567C09800A9AA53 /* DataProvider.swift */,
@@ -182,6 +241,8 @@
 				B5EFD4942562B95A00B0C5E7 /* Main.storyboard */,
 				B5BDDC4525682CE90043737B /* SupplementaryViews */,
 				B5BDDC4425682CCD0043737B /* Cells */,
+				B5373E6225BCA06B00F91820 /* MapController */,
+				B5373E5F25BCA04A00F91820 /* QuestionController */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -191,10 +252,13 @@
 			children = (
 				B5EFD4922562B95A00B0C5E7 /* RouteListViewController.swift */,
 				B5BDDC3D256829DB0043737B /* QuestionListViewController.swift */,
+				B5E96EC525ACB7D300DA030F /* MapController.swift */,
 				B549E2082573D30E00260121 /* QuestionViewController.swift */,
+				B5A91A8725AC4A88000C0C99 /* LocationFinishedController.swift */,
 				B51C2D9D2599053900107378 /* LocationCompleteController.swift */,
-				B5A91A7425A39198000C0C99 /* RouteCompleteController.swift */,
+				B5A91A8325AC45D7000C0C99 /* LocationFailedController.swift */,
 				B5A91A7725A71382000C0C99 /* VideoAnswerController.swift */,
+				B5A91A7425A39198000C0C99 /* RouteCompleteController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -206,9 +270,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B5EFD4A22562B97900B0C5E7 /* Build configuration list for PBXNativeTarget "SpaceQuest" */;
 			buildPhases = (
+				E8774B49B6DA1B26A2AD0470 /* [CP] Check Pods Manifest.lock */,
 				B5EFD4872562B95A00B0C5E7 /* Sources */,
 				B5EFD4882562B95A00B0C5E7 /* Frameworks */,
 				B5EFD4892562B95A00B0C5E7 /* Resources */,
+				492602B5AAC3B68CC15ECC4A /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -257,12 +323,55 @@
 			buildActionMask = 2147483647;
 			files = (
 				B5EFD49E2562B97900B0C5E7 /* LaunchScreen.storyboard in Resources */,
+				B5373E6D25D1BC8300F91820 /* MapCallout.xib in Resources */,
 				B5EFD49B2562B97900B0C5E7 /* Assets.xcassets in Resources */,
 				B5EFD4962562B95A00B0C5E7 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		492602B5AAC3B68CC15ECC4A /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SpaceQuest/Pods-SpaceQuest-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SpaceQuest/Pods-SpaceQuest-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpaceQuest/Pods-SpaceQuest-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E8774B49B6DA1B26A2AD0470 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SpaceQuest-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		B5EFD4872562B95A00B0C5E7 /* Sources */ = {
@@ -274,6 +383,7 @@
 				B57B3CD62593BCCC00270D8E /* AnswerButtonsView.swift in Sources */,
 				B57B3CDF259515CA00270D8E /* UserAnswer.swift in Sources */,
 				B57B3CD32593BCC000270D8E /* AnswerFieldView.swift in Sources */,
+				B5A91A8425AC45D8000C0C99 /* LocationFailedController.swift in Sources */,
 				B5A91A7825A71382000C0C99 /* VideoAnswerController.swift in Sources */,
 				B5BDDC3E256829DB0043737B /* QuestionListViewController.swift in Sources */,
 				B51C2D9B2598E83D00107378 /* CustomIntensityVisualEffectView.swift in Sources */,
@@ -281,6 +391,9 @@
 				B5BF7AA5257BCF7D009AA0A3 /* UIColorExtension.swift in Sources */,
 				B5153987257D292400907AD5 /* WebVideoView.swift in Sources */,
 				B549E2092573D30E00260121 /* QuestionViewController.swift in Sources */,
+				B5A91A8825AC4A88000C0C99 /* LocationFinishedController.swift in Sources */,
+				B5373E7625D1C73300F91820 /* Location.swift in Sources */,
+				B5E96EC625ACB7D300DA030F /* MapController.swift in Sources */,
 				B5A91A7525A39198000C0C99 /* RouteCompleteController.swift in Sources */,
 				B51C2D9E2599053900107378 /* LocationCompleteController.swift in Sources */,
 				B5BDDC3A256828A60043737B /* QuestionCollectionViewCell.swift in Sources */,
@@ -291,6 +404,7 @@
 				B51F51012563040D00A9AA53 /* DifficultyView.swift in Sources */,
 				B5EFD4992562B95A00B0C5E7 /* SpaceQuest.xcdatamodeld in Sources */,
 				B5AD43B22568469400110AE8 /* UIImageViewExtension.swift in Sources */,
+				B5373E7025D1C4CB00F91820 /* MapCallout.swift in Sources */,
 				B51F5107256305B800A9AA53 /* Route.swift in Sources */,
 				B5F95352258884B100E4344E /* AnswerCollectionViewCell.swift in Sources */,
 				B5ADEDB4258E0B3E007703C3 /* Author.swift in Sources */,
@@ -300,6 +414,8 @@
 				B5A91A7B25A7254E000C0C99 /* QuestionControlsView.swift in Sources */,
 				B5F95358258887E700E4344E /* StringExtension.swift in Sources */,
 				B5BF7AAB257BD2A5009AA0A3 /* CALayerExtension.swift in Sources */,
+				B5373E6425BCA0A400F91820 /* MapPlacemark.swift in Sources */,
+				B5373E7325D1C64100F91820 /* UIViewExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -443,13 +559,14 @@
 		};
 		B5EFD4A32562B97900B0C5E7 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1287940696F57534413CA409 /* Pods-SpaceQuest.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8TA67UG9J4;
 				INFOPLIST_FILE = SpaceQuest/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -463,13 +580,14 @@
 		};
 		B5EFD4A42562B97900B0C5E7 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4FADCF94CCA1726A9DD5D3DF /* Pods-SpaceQuest.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8TA67UG9J4;
 				INFOPLIST_FILE = SpaceQuest/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

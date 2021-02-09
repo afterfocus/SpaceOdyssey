@@ -60,10 +60,12 @@ class QuestionViewController: UIViewController {
         // Configure Question Data
         currentQuestion = route[variation[questionIndex]]
         title = currentQuestion.title
-        authorLabel.text = currentQuestion.authorInitials
+        authorLabel.text = currentQuestion.author.initials
         questionLabel.text = currentQuestion.questionText
         
-        answerFieldView.configureFor(rightAnswer: currentQuestion.answer, isComplete: currentQuestion.isComplete)
+        answerFieldView.configureFor(rightAnswer: currentQuestion.answer,
+                                     isComplete: currentQuestion.isComplete,
+                                     maxWidth: UIScreen.main.bounds.width - 20)
         answerButtonsView.answerCharacters = currentQuestion.answerCharacters
         score = currentQuestion.isComplete ? currentQuestion.score : 3
         
@@ -116,11 +118,13 @@ class QuestionViewController: UIViewController {
         questionControlsView.setRemainingHints(answerFieldView.remainingHints)
     }
     
-    private func reduceScore() {
-        guard score > 0 else { return }
-        score -= 1
-        questionControlsView.reduceScore(newValue: score)
+    private func delay(delayTime: Double = 0.75, closure: @escaping () -> ()) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + delayTime) {
+            closure()
+        }
     }
+    
+    // MARK: Navigation
     
     private func showNextQuestion() {
         guard let questionVC = storyboard?.instantiateViewController(withIdentifier: "QuestionViewController") as? QuestionViewController else { return }
@@ -138,6 +142,23 @@ class QuestionViewController: UIViewController {
         videoAnswerVC.delegate = self
         present(videoAnswerVC, animated: true)
     }
+    
+    private func showLocationFinishedController(isLocationFailed: Bool = false, isRouteCompleted: Bool) {
+        let identifier = isLocationFailed ? "LocationFailedController" : "LocationCompleteController"
+        guard let controller = storyboard!.instantiateViewController(withIdentifier: identifier) as? LocationFinishedController else { return }
+        controller.question = currentQuestion
+        controller.isRouteCompleted = isRouteCompleted
+        controller.delegate = self
+        present(controller, animated: true)
+    }
+    
+    private func showRouteCompletedController() {
+        guard let controller = storyboard!.instantiateViewController(withIdentifier: "RouteCompleteController") as? RouteCompleteController else { return }
+        controller.route = route
+        controller.lastQuestion = currentQuestion
+        controller.delegate = self
+        present(controller, animated: true)
+    }
 }
 
 
@@ -152,7 +173,8 @@ extension QuestionViewController: QuestionControlsViewDelegate {
         let cancelAction = UIAlertAction(title: "Отменить", style: .cancel)
         let useAction = UIAlertAction(title: "Использовать", style: .default) { _ in
             self.useHint()
-            self.reduceScore()
+            self.score -= 1
+            self.questionControlsView.reduceScore(newValue: self.score)
             self.questionControlsView.animateHintButton()
         }
         controller.addAction(cancelAction)
@@ -194,32 +216,23 @@ extension QuestionViewController: AnswerFieldViewDelegate {
         if isCorrectAnswer {
             currentQuestion.score = score
             currentQuestion.isComplete = true
-            
-            let viewController: UIViewController?
-            if route.isVariationComplete(variation) {
-                guard let routeCompletedVC = storyboard!.instantiateViewController(withIdentifier: "RouteCompleteController") as? RouteCompleteController else { return }
-                routeCompletedVC.route = route
-                routeCompletedVC.lastQuestion = currentQuestion
-                routeCompletedVC.delegate = self
-                viewController = routeCompletedVC
-            } else {
-                guard let locationCompletedVC = storyboard!.instantiateViewController(withIdentifier: "LocationCompleteController") as? LocationCompleteController else { return }
-                locationCompletedVC.question = currentQuestion
-                locationCompletedVC.delegate = self
-                viewController = locationCompletedVC
-            }
-            
-            guard let controller = viewController else { return }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
-                [weak self] in self?.present(controller, animated: true)
+            delay {
+                self.showLocationFinishedController(isRouteCompleted: self.route.isVariationComplete(self.variation))
             }
         } else {
-            if answerFieldView.remainingHints > 0 {
+            score -= 1
+            delay { self.questionControlsView.reduceScore(newValue: self.score) }
+            
+            if score == 0 {
+                currentQuestion.isComplete = true
+                delay {
+                    self.showLocationFinishedController(isLocationFailed: true,
+                                                        isRouteCompleted: self.route.isVariationComplete(self.variation))
+                }
+            } else {
+                guard answerFieldView.remainingHints > 0 else { return }
                 questionControlsView.animateHintButton()
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
-                self.useHint()
-                self.reduceScore()
+                delay { self.useHint() }
             }
         }
     }
@@ -228,14 +241,18 @@ extension QuestionViewController: AnswerFieldViewDelegate {
 
 // MARK: - LocationCompleteControllerDelegate
 
-extension QuestionViewController: LocationCompleteControllerDelegate {
+extension QuestionViewController: LocationFinishedControllerDelegate {
     
-    func locationCompleteControllerDidTapVideoAnswerButton(_ controller: LocationCompleteController) {
-        showVideoAnswer(exitMode: .nextQuestion)
+    func locationFinishedControllerDidTapVideoAnswerButton(_ controller: LocationFinishedController) {
+        showVideoAnswer(exitMode: route.isVariationComplete(variation) ? .endRoute : .nextQuestion)
     }
     
-    func locationCompleteControllerDidTapNextQuestionButton(_ controller: LocationCompleteController) {
+    func locationFinishedControllerDidTapNextQuestionButton(_ controller: LocationFinishedController) {
         showNextQuestion()
+    }
+    
+    func locationFinishedControllerDidTapEndRouteButton(_ controller: LocationFinishedController) {
+        showRouteCompletedController()
     }
 }
 
@@ -243,10 +260,6 @@ extension QuestionViewController: LocationCompleteControllerDelegate {
 // MARK: - RouteCompleteControllerDelegate
 
 extension QuestionViewController: RouteCompleteControllerDelegate {
-    
-    func routeCompleteControllerDidTapVideoAnswerButton(_ controller: RouteCompleteController) {
-        showVideoAnswer(exitMode: .routeList)
-    }
     
     func routeCompleteControllerDidTapExitButton(_ controller: RouteCompleteController) {
         navigationController?.popViewController(animated: true)
@@ -263,8 +276,7 @@ extension QuestionViewController: VideoAnswerControllerDelegate {
         showNextQuestion()
     }
     
-    func videoAnswerControllerDidTapExitToRouteListButton(_ controller: VideoAnswerController) {
-        navigationController?.popViewController(animated: true)
-        navigationController?.popViewController(animated: true)
+    func videoAnswerControllerDidTapEndRouteButton(_ controller: VideoAnswerController) {
+        showRouteCompletedController()
     }
 }

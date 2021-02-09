@@ -7,28 +7,14 @@
 
 import UIKit
 
-// MARK: LocationCompleteControllerDelegate
-
-protocol LocationCompleteControllerDelegate: class {
-    func locationCompleteControllerDidTapVideoAnswerButton(_ controller: LocationCompleteController)
-    func locationCompleteControllerDidTapNextQuestionButton(_ controller: LocationCompleteController)
-}
-
 
 // MARK: - LocationCompleteController
 
-class LocationCompleteController: UIViewController {
+class LocationCompleteController: LocationFinishedController {
     
     // MARK: IBOutlets
     
-    @IBOutlet var containerView: UIView!
     @IBOutlet var starImageViews: [UIImageView]!
-    @IBOutlet var videoAnswerButton: UIButton!
-    
-    // MARK: - Segue Properties
-    
-    var question: Question!
-    weak var delegate: LocationCompleteControllerDelegate?
     
     // MARK: - Private Properties
     
@@ -42,9 +28,6 @@ class LocationCompleteController: UIViewController {
         starImageViews.forEach {
             $0.layer.dropShadow(opacity: 0.25, offset: CGSize(width: 0, height: 5), radius: 7)
         }
-        containerView.layer.dropShadow(color: UIColor.systemYellow.cgColor, opacity: 0.3, radius: 25)
-        videoAnswerButton.isEnabled = question.answerVideoUrl != nil
-        videoAnswerButton.alpha = question.answerVideoUrl != nil ? 1 : 0.6
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -71,18 +54,5 @@ class LocationCompleteController: UIViewController {
             }
             startTime += 0.4
         }
-    }
-    
-    // MARK: - IBActions
-    
-    @IBAction func videoAnswerButtonPressed(_ sender: UIButton) {
-        dismiss(animated: true) {
-            self.delegate?.locationCompleteControllerDidTapVideoAnswerButton(self)
-        }
-    }
-    
-    @IBAction func nextQuestionButtonPressed(_ sender: UIButton) {
-        delegate?.locationCompleteControllerDidTapNextQuestionButton(self)
-        dismiss(animated: true)
     }
 }

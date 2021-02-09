@@ -15,11 +15,13 @@ extension UIColor {
     static let answerCellRed = UIColor.systemRed.withAlphaComponent(0.92)
     static let answerCellGreen = UIColor.systemGreen.withAlphaComponent(0.92)
     
+    static let lightBlue = UIColor(red: 115/255, green: 172/255, blue: 236/255, alpha: 1)
+    static let darkBlue = UIColor(red: 5/255, green: 30/255, blue: 81/255, alpha: 1)
 }
 
 extension CGColor {
-    static let cellGradientStart = UIColor(red: 115/255, green: 172/255, blue: 236/255, alpha: 1).cgColor
-    static let cellGradientEnd = UIColor(red: 5/255, green: 30/255, blue: 81/255, alpha: 1).cgColor
+    static let lightBlue = UIColor.lightBlue.cgColor
+    static let darkBlue = UIColor.darkBlue.cgColor
     static let cellShadow = UIColor(red: 105/255, green: 192/255, blue: 240/255, alpha: 1).cgColor
 }
 

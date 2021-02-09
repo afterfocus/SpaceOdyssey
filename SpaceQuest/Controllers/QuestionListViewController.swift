@@ -41,10 +41,25 @@ class QuestionListViewController: UIViewController {
         questionsCollectionView.reloadData()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if UserDefaults.standard.bool(forKey: "isFirstTimeLaunched") {
+            guard let videoAnswerVC = storyboard!.instantiateViewController(withIdentifier: "VideoAnswerController") as? VideoAnswerController else { return }
+            videoAnswerVC.videoURL = URL(string: "https://www.youtube.com/embed/yvkINNzNnlU?playsinline=1")
+            videoAnswerVC.exitMode = .introVideo
+            present(videoAnswerVC, animated: true)
+            UserDefaults.standard.setValue(false, forKey: "isFirstTimeLaunched")
+        }
+    }
+    
     // MARK: - IBActions
     
     @IBAction func startButtonPressed(_ sender: UIButton) {
         showQuestionController(questionIndex: firstIncompleteIndex!)
+    }
+    
+    @IBAction func mapButtonPressed(_ sender: UIBarButtonItem) {
+        showMapController()
     }
     
     // MARK: - Private Functions
@@ -56,6 +71,13 @@ class QuestionListViewController: UIViewController {
         questionVC.questionIndex = questionIndex
         navigationController?.pushViewController(questionVC, animated: true)
     }
+    
+    private func showMapController() {
+        guard let questionVC = storyboard?.instantiateViewController(withIdentifier: "MapController") as? MapController else { return }
+        questionVC.route = route
+        questionVC.routeVariation = routeVariation
+        navigationController?.pushViewController(questionVC, animated: true)
+    }
 }
 
 
@@ -65,7 +87,7 @@ extension QuestionListViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let cell = collectionView.cellForItem(at: indexPath) as? QuestionCollectionViewCell,
-              !cell.isLocked else { return }
+              cell.lockView.isHidden else { return }
         
         if cell.backView.isHidden {
             cell.flip()

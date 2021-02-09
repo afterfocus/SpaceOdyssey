@@ -11,8 +11,8 @@ import Foundation
 class Question {
     /// Название вопроса
     let title: String
-    /// Адрес достопремичательности
-    let address: String
+    /// Локация
+    let location: Location
     /// Автор вопроса
     let author: Author
     /// Текст вопроса
@@ -29,10 +29,6 @@ class Question {
     var isComplete: Bool
     /// Количнство очков, заработанных пользователем за ответ
     var score: Int
-    /// Фамилия и инициалы автора
-    var authorInitials: String {
-        return "\(author.surname) \(author.name.first!)." + (author.patronymic.count > 0 ? " \(author.patronymic.first!)." : "")
-    }
     
     var answerLength: Int {
         var count = 0
@@ -44,9 +40,9 @@ class Question {
         return count
     }
     
-    init(title: String, address: String, author: Author, questionText: String, questionVideoUrl: URL?, answerVideoUrl: URL?, answer: [String], answerCharacters: String, isComplete: Bool, score: Int) {
+    init(title: String, location: Location, author: Author, questionText: String, questionVideoUrl: URL?, answerVideoUrl: URL?, answer: [String], answerCharacters: String, isComplete: Bool, score: Int) {
         self.title = title
-        self.address = address
+        self.location = location
         self.author = author
         self.questionText = questionText
         self.questionVideoUrl = questionVideoUrl
