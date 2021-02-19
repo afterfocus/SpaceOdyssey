@@ -72,6 +72,7 @@ class Route {
         return (completed * 100) / variation.questionIndexes.count
     }
     
+    /// Первый не пройденный вопрос для заданной вариации маршрута
     func firstIncompleteIndex(for variation: RouteVariation) -> Int? {
         for (index, questionIndex) in variation.questionIndexes.enumerated() {
             if !questions[questionIndex].isComplete {
@@ -81,10 +82,17 @@ class Route {
         return nil
     }
     
+    /// Пройдена ли указанная вариация маршрута
     func isVariationComplete(_ variation: RouteVariation) -> Bool {
         for questionIndex in variation.questionIndexes where !questions[questionIndex].isComplete {
             return false
         }
         return true
+    }
+    
+    func dataToSave() -> [QuestionData] {
+        return questions.map {
+            QuestionData(isComplete: $0.isComplete, score: $0.score)
+        }
     }
 }

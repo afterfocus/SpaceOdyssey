@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MapCallout: UIView {
+class MapCalloutView: UIView {
     
     @IBOutlet weak var addressLabel: UILabel!
     @IBOutlet weak var photoImageView: UIImageView!

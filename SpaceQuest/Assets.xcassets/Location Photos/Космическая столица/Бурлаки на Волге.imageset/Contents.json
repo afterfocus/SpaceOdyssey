@@ -1,15 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "Бурлаки на Волге.jpg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "Бурлаки на Волге@2x.jpg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "Бурлаки на Волге@3x.jpg",
       "idiom" : "universal",
       "scale" : "3x"
     }

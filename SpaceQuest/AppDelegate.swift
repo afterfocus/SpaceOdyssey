@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import YandexMapsMobile
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -14,15 +13,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        YMKMapKit.setApiKey("7ab269af-7c79-4c99-bb21-9afad48c1db9")
         
-        UserDefaults.standard.register(defaults: [ "isFirstTimeLaunched": true,
-                                                   "isMapNightModeEnabled": true ])
+        DataModel.setYandexMapsAPIKey()
+        
+        if DataModel.isLoggedIn {
+            DataModel.logIn()
+        }
+        
+        window = UIWindow(frame: UIScreen.main.bounds)
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let controlledIdentifier = DataModel.isLoggedIn ? "TabBarController" : "LoginController"
+        let initialViewController = storyboard.instantiateViewController(withIdentifier: controlledIdentifier)
+        window?.rootViewController = initialViewController
+        window?.makeKeyAndVisible()
+        
         return true
     }
     
     func applicationDidEnterBackground(_ application: UIApplication) {
-        
+        DataModel.current.saveToFile()
     }
 }
 

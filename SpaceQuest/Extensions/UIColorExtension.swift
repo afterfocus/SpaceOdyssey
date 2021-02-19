@@ -17,11 +17,28 @@ extension UIColor {
     
     static let lightBlue = UIColor(red: 115/255, green: 172/255, blue: 236/255, alpha: 1)
     static let darkBlue = UIColor(red: 5/255, green: 30/255, blue: 81/255, alpha: 1)
+    static let lightAccent = UIColor(named: "LightAccent")!
+    static let darkAccent = UIColor(named: "DarkAccent")!
 }
 
 extension CGColor {
-    static let lightBlue = UIColor.lightBlue.cgColor
-    static let darkBlue = UIColor.darkBlue.cgColor
+    
+    static var lightBlue: CGColor {
+        UIColor.lightBlue.cgColor
+    }
+    
+    static var darkBlue: CGColor {
+        UIColor.darkBlue.cgColor
+    }
+    
+    static var lightAccent: CGColor {
+        UIColor.lightAccent.cgColor
+    }
+    
+    static var darkAccent: CGColor {
+        UIColor.darkAccent.cgColor
+    }
+    
     static let cellShadow = UIColor(red: 105/255, green: 192/255, blue: 240/255, alpha: 1).cgColor
 }
 

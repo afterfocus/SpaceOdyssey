@@ -1,15 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "1 корпус Самарского университета.jpg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "1 корпус Самарского университета@2x.jpg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "1 корпус Самарского университета@3x.jpg",
       "idiom" : "universal",
       "scale" : "3x"
     }
