@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import YandexMapsMobile
 
 // MARK: - LocationInfoContainerController
 
@@ -17,7 +18,8 @@ class LocationInfoContainerController: UIViewController {
     
     // MARK: - Segue Properties
     
-    var location: Location!
+    var questionIndex: Int!
+    var question: Question!
     
     // MARK: - View Life Cycle
     
@@ -25,7 +27,8 @@ class LocationInfoContainerController: UIViewController {
         if segue.identifier == "InfoEmbedSegue" {
             let infoController = segue.destination as? LocationInfoController
             infoController?.height = height
-            infoController?.location = location
+            infoController?.questionIndex = questionIndex
+            infoController?.question = question
         }
     }
 }
@@ -40,13 +43,21 @@ class LocationInfoController: UIViewController {
     @IBOutlet weak var addressLabel: UILabel!
     @IBOutlet weak var photoImageView: UIImageView!
     @IBOutlet weak var locationNameLabel: UILabel!
+    @IBOutlet weak var mapView: YMKMapView!
     
     @IBOutlet weak var photoImageViewHeight: NSLayoutConstraint!
     
     // MARK: - Segue Properties
     
-    var location: Location!
+    var questionIndex: Int!
+    var question: Question!
     weak var height: NSLayoutConstraint!
+    
+    // MARK: - Private Properties
+    
+    private var map: YMKMap {
+        return mapView.mapWindow.map
+    }
     
     // MARK: - View Life Cycle
     
@@ -56,16 +67,22 @@ class LocationInfoController: UIViewController {
         view.layer.borderColor = .lightAccent
         view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         
+        let location = question.location
         addressLabel.text = location.address
         locationNameLabel.text = location.name
         photoImageView.image = UIImage(named: location.photoFilename)!
+        
+        let point = YMKPoint(latitude: location.latitude, longitude: location.longtitude)
+        let placemarkView = MapPlacemarkView(index: questionIndex, isComplete: question.isComplete, isLocked: false)
+        map.isNightModeEnabled = DataModel.current.isMapNightModeEnabled
+        map.mapObjects.addPlacemark(with: point, view: YRTViewProvider(uiView: placemarkView))
+        map.move(with: YMKCameraPosition(target: point, zoom: 14, azimuth: 0, tilt: 0))
     }
     
     override func viewDidLayoutSubviews() {
         let ratio = photoImageView.image!.size.height / photoImageView.image!.size.width
         photoImageViewHeight.constant = photoImageView.bounds.width * ratio
-        print(photoImageView.bounds.width)
-        height.constant = 170 + photoImageViewHeight.constant + addressLabel.bounds.height + locationNameLabel.bounds.height
+        height.constant = 170 + photoImageViewHeight.constant + addressLabel.bounds.height + mapView.bounds.height + locationNameLabel.bounds.height
     }
     
     // MARK: - IBActions

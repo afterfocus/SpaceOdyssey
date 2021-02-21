@@ -23,13 +23,13 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Location Always and When in Use Usage Description</string>
+	<string>Доступ к геолокации необходим для навигации по маршрутам квеста.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Location Always Usage Description</string>
+	<string>Доступ к геолокации необходим для навигации по маршрутам квеста.</string>
 	<key>NSLocationUsageDescription</key>
-	<string>Location Usage Description</string>
+	<string>Доступ к геолокации необходим для навигации по маршрутам квеста.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Location When in Use Usage Description</string>
+	<string>Доступ к геолокации необходим для навигации по маршрутам квеста.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

@@ -42,15 +42,15 @@ class LoginController: UIViewController {
     }
     
     @IBAction func loginButtonPressed(_ sender: UIButton) {
-        guard checkUserName(),
-              checkEmail(),
+        guard validateNameAndEmail(),
               let name = nameTextField.text,
               let email = emailTextField.text
         else { return }
 
         if isInEditingMode {
-            editingDelegate?.loginControllerDidEndEditing(self, userName: name, email: email)
-            dismiss(animated: true)
+            dismiss(animated: true) {
+                self.editingDelegate?.loginControllerDidEndEditing(self, userName: name, email: email)
+            }
         } else {
             DataModel.logIn(userName: name, email: email)
             guard let tabBarController = storyboard?.instantiateViewController(withIdentifier: "TabBarController") else { return }
@@ -74,18 +74,21 @@ class LoginController: UIViewController {
         textField.text = textField.text!.trimmingCharacters(in: [" "]).trimmingCharacters(in: [" "])
     }
     
-    private func checkUserName() -> Bool {
+    private func validateNameAndEmail() -> Bool {
         trimCharacters(in: nameTextField)
-        guard nameTextField.text!.count < 2 else { return true }
-        showAlert(title: "Name Validation Error", message: "User name is invalid.\nPlease provide correct user name.")
-        return false
-    }
-    
-    private func checkEmail() -> Bool {
         trimCharacters(in: emailTextField)
-        guard emailTextField.text!.count < 2 else { return true }
-        showAlert(title: "Email Validation Error", message: "Email is invalid.\nPlease provide correct email.")
-        return false
+        
+        if nameTextField.text!.count < 2 {
+            showAlert(title: "Ошибка входа", message: "Пожалуйста, укажите корректное имя пользователя.")
+            return false
+        }
+        
+        let predicate = NSPredicate(format:"SELF MATCHES %@", "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}")
+        if !predicate.evaluate(with: emailTextField.text!) {
+            showAlert(title: "Ошибка входа", message: "Указан некорректный адрес электронной почты.\nПожалуйста, укажите существующий адрес электронной почты для доставки наград.")
+            return false
+        }
+        return true
     }
     
     private func showAlert(title: String, message: String) {

@@ -43,7 +43,7 @@ class DataModel {
         self.email = email
         
         /// Проверить существует ли файл.
-        if (try? dataFilePath.checkResourceIsReachable()) ?? false {
+        if (try? dataFilePath().checkResourceIsReachable()) ?? false {
             loadFromFile()
             print("--- FILE \(filename) FOUND AND LOADED ---")
         } else {
@@ -53,11 +53,23 @@ class DataModel {
     }
     
     /// Сменить имя пользователя и/или e-mail
-    func editUser(newName: String, newEmail: String) {
-        userName = newName
-        email = newEmail
-        DataModel.loggedInUser = (newName, newEmail)
-        print("--- DATA FILE RENAMED TO \(filename) ---")
+    func editUser(newName: String, newEmail: String) -> Bool {
+        let newFilePath = dataFilePath(for: "\(newName) - \(newEmail).plist")
+        do {
+            if (try? newFilePath.checkResourceIsReachable()) ?? false {
+                print("--- FILE ALREADY EXIST ---")
+                return false
+            }
+            try FileManager.default.moveItem(at: dataFilePath(), to: newFilePath)
+            userName = newName
+            email = newEmail
+            DataModel.loggedInUser = (newName, newEmail)
+            print("--- DATA FILE RENAMED TO \(filename) ---")
+            return true
+        } catch {
+            print("DATA SAVING ERROR: \(error.localizedDescription)")
+            return false
+        }
     }
     
     /// Имя файла с данными для текущего вользователя
@@ -66,11 +78,11 @@ class DataModel {
     }
     
     /// Полный путь к файлу
-    private var dataFilePath: URL {
+    private func dataFilePath(for filename: String? = nil) -> URL {
         let paths = FileManager.default.urls(
             for: .documentDirectory,
             in: .userDomainMask)
-        return paths[0].appendingPathComponent(filename)
+        return paths[0].appendingPathComponent(filename ?? self.filename)
     }
     
     /// Сохранить настройки и прогресс пользователя в файл
@@ -78,7 +90,7 @@ class DataModel {
         let encoder = PropertyListEncoder()
         do {
             let data = try encoder.encode(prepateDataToSave())
-            try data.write(to: dataFilePath, options: Data.WritingOptions.atomic)
+            try data.write(to: dataFilePath(), options: Data.WritingOptions.atomic)
         } catch {
             print("DATA SAVING ERROR: \(error.localizedDescription)")
         }
@@ -87,7 +99,7 @@ class DataModel {
     
     /// Загрузить настройки и прогресс пользователя из файла
     func loadFromFile() {
-        if let data = try? Data(contentsOf: dataFilePath) {
+        if let data = try? Data(contentsOf: dataFilePath()) {
             let decoder = PropertyListDecoder()
             do {
                 let savedData = try decoder.decode(DataToSave.self, from: data)

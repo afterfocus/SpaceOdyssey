@@ -3621,9 +3621,9 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gdo-HL-X5t">
-                                <rect key="frame" x="0.0" y="172" width="320" height="400"/>
+                                <rect key="frame" x="0.0" y="2" width="320" height="570"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="400" id="AZk-9J-Hxj"/>
+                                    <constraint firstAttribute="height" constant="570" id="AZk-9J-Hxj"/>
                                 </constraints>
                                 <connections>
                                     <segue destination="YyX-Xa-yzL" kind="embed" identifier="InfoEmbedSegue" id="3qG-VR-TKJ"/>
@@ -3672,7 +3672,7 @@
             <objects>
                 <viewController id="YyX-Xa-yzL" customClass="LocationInfoController" customModule="SpaceQuest" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="QJY-nR-uTE">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="400"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="570"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Проспект Ленина 21" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uue-uA-SOL">
@@ -3705,7 +3705,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DGT-Zb-qwW">
-                                <rect key="frame" x="60" y="321" width="200" height="45"/>
+                                <rect key="frame" x="60" y="483" width="200" height="45"/>
                                 <color key="backgroundColor" name="LightAccent"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="45" id="Nh1-D8-SXZ"/>
@@ -3725,16 +3725,29 @@
                                     <action selector="closeButtonPressed:" destination="YyX-Xa-yzL" eventType="touchUpInside" id="hDy-ff-ukt"/>
                                 </connections>
                             </button>
+                            <view clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MFO-UN-zbR" customClass="YMKMapView">
+                                <rect key="frame" x="24" y="313" width="272" height="150"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="150" id="vLu-YE-HTh"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="20"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="SAc-8I-36A"/>
                         <color key="backgroundColor" name="DarkAccent"/>
                         <constraints>
                             <constraint firstItem="w7K-EW-0Jm" firstAttribute="leading" secondItem="SAc-8I-36A" secondAttribute="leading" constant="24" id="0dg-HD-X6A"/>
+                            <constraint firstItem="SAc-8I-36A" firstAttribute="trailing" secondItem="MFO-UN-zbR" secondAttribute="trailing" constant="24" id="1Xt-0E-F9a"/>
                             <constraint firstItem="Uue-uA-SOL" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="SAc-8I-36A" secondAttribute="leading" constant="20" id="4pv-gQ-gW4"/>
+                            <constraint firstItem="MFO-UN-zbR" firstAttribute="top" secondItem="5wu-h3-XCe" secondAttribute="bottom" constant="17" id="L9d-Xg-I24"/>
                             <constraint firstItem="5wu-h3-XCe" firstAttribute="centerX" secondItem="QJY-nR-uTE" secondAttribute="centerX" id="Lzf-TU-Z67"/>
                             <constraint firstItem="Uue-uA-SOL" firstAttribute="top" secondItem="SAc-8I-36A" secondAttribute="top" constant="20" id="V5h-JS-cBO"/>
                             <constraint firstItem="5wu-h3-XCe" firstAttribute="top" secondItem="w7K-EW-0Jm" secondAttribute="bottom" constant="17" id="cIT-t3-2XF"/>
-                            <constraint firstItem="DGT-Zb-qwW" firstAttribute="top" secondItem="5wu-h3-XCe" secondAttribute="bottom" constant="25" id="cjk-Wv-g7v"/>
                             <constraint firstItem="DGT-Zb-qwW" firstAttribute="centerX" secondItem="QJY-nR-uTE" secondAttribute="centerX" id="cpv-ad-9II"/>
                             <constraint firstItem="SAc-8I-36A" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Uue-uA-SOL" secondAttribute="trailing" constant="20" id="eG2-AF-p2n"/>
                             <constraint firstItem="5wu-h3-XCe" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="SAc-8I-36A" secondAttribute="leading" constant="20" id="fmN-tj-KxS"/>
@@ -3742,11 +3755,14 @@
                             <constraint firstItem="SAc-8I-36A" firstAttribute="trailing" secondItem="w7K-EW-0Jm" secondAttribute="trailing" constant="24" id="jqE-dJ-Ff1"/>
                             <constraint firstItem="SAc-8I-36A" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="5wu-h3-XCe" secondAttribute="trailing" constant="20" id="kKb-sO-olR"/>
                             <constraint firstItem="Uue-uA-SOL" firstAttribute="centerX" secondItem="QJY-nR-uTE" secondAttribute="centerX" id="lRE-I1-NNB"/>
+                            <constraint firstItem="DGT-Zb-qwW" firstAttribute="top" secondItem="MFO-UN-zbR" secondAttribute="bottom" constant="20" id="lZm-Wg-Mhe"/>
+                            <constraint firstItem="MFO-UN-zbR" firstAttribute="leading" secondItem="SAc-8I-36A" secondAttribute="leading" constant="24" id="ock-M9-dEM"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="addressLabel" destination="Uue-uA-SOL" id="SNH-Dg-ZJl"/>
                         <outlet property="locationNameLabel" destination="5wu-h3-XCe" id="MmU-Y2-O6S"/>
+                        <outlet property="mapView" destination="MFO-UN-zbR" id="zR1-jO-F2b"/>
                         <outlet property="photoImageView" destination="w7K-EW-0Jm" id="8KC-xS-srh"/>
                         <outlet property="photoImageViewHeight" destination="Z0O-vy-8Hh" id="Jqk-kr-1sv"/>
                     </connections>

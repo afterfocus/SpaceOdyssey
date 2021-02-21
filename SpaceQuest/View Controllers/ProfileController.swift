@@ -101,11 +101,11 @@ class ProfileController: UIViewController {
     
     @IBAction func exitButtonPressed(_ sender: UIButton) {
         let alert = UIAlertController(title: "Вы действительно хотите выйти?",
-                                      message: "\nВесь прогресс пользователя будет сохранен и восстановлен при следующем входе",
+                                      message: "\nВесь прогресс пользователя будет сохранен и восстановлен при следующем входе.",
                                       preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
         let exitAction = UIAlertAction(title: "Выход", style: .default) { _ in
-            DataModel.current.exit()
+            DataModel.logOut()
             guard let loginController = self.storyboard?.instantiateViewController(withIdentifier: "LoginController") else { return }
             loginController.modalPresentationStyle = .fullScreen
             loginController.modalTransitionStyle = .flipHorizontal
@@ -123,9 +123,23 @@ class ProfileController: UIViewController {
 extension ProfileController: LoginControllerEditingDelegate {
     
     func loginControllerDidEndEditing(_ controller: LoginController, userName: String, email: String) {
-        dataModel.editUserData(newName: userName, newEmail: email)
-        userNameLabel.text = userName
-        emailLabel.text = email
+        if dataModel.editUser(newName: userName, newEmail: email) {
+            userNameLabel.text = userName
+            emailLabel.text = email
+            let alert = UIAlertController(title: "Данные изменены",
+                                          message: "Для повторного входа необходимо использовать новое имя пользователя и электронную почту.",
+                                          preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "ОК", style: .cancel)
+            alert.addAction(okAction)
+            present(alert, animated: true)
+        } else {
+            let alert = UIAlertController(title: "Ошибка изменения данных",
+                                          message: "Пользователь с таким именем и электронной почтой уже зарегистрирован на устройстве.\nПожалуйста, осуществите вход в профиль данного пользователя или укажите другую комбинацию имени и электронной почты.",
+                                          preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "ОК", style: .cancel)
+            alert.addAction(okAction)
+            present(alert, animated: true)
+        }
     }
 }
 

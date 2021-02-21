@@ -195,8 +195,8 @@ class MapController: UIViewController {
             let question = route[questionIndex]
             let point = YMKPoint(latitude: question.location.latitude, longitude: question.location.longtitude)
             let placemarkView = MapPlacemarkView(index: placemarkIndex,
-                                         isComplete: route[questionIndex].isComplete,
-                                         firstIncompleteIndex: firstIncompleteIndex)
+                                                 isComplete: route[questionIndex].isComplete,
+                                                 isLocked: questionIndex > (firstIncompleteIndex ?? 100))
             let ymkPlacemark = map.mapObjects.addPlacemark(with: point, view: YRTViewProvider(uiView: placemarkView))
             ymkPlacemark.userData = question
             ymkPlacemark.zIndex = 0

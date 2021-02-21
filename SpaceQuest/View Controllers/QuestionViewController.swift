@@ -111,7 +111,8 @@ class QuestionViewController: UIViewController {
     
     @IBAction func locationInfoButtonPressed(_ sender: UIButton) {
         guard let controller = storyboard!.instantiateViewController(withIdentifier: "LocationInfoContainerController") as? LocationInfoContainerController else { return }
-        controller.location = currentQuestion.location
+        controller.questionIndex = questionIndex
+        controller.question = currentQuestion
         present(controller, animated: true)
     }
     

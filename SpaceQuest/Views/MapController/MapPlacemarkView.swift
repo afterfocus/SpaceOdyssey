@@ -11,10 +11,8 @@ class MapPlacemarkView: UIView {
     
     private var numberLabel = UILabel()
     
-    convenience init(index: Int, isComplete: Bool, firstIncompleteIndex: Int?) {
+    convenience init(index: Int, isComplete: Bool, isLocked: Bool) {
         self.init(frame: CGRect(x: 0, y: 0, width: 35, height: 35))
-        
-        let isLocked = index > firstIncompleteIndex ?? 100
         isOpaque = false
         clearsContextBeforeDrawing = false
         alpha = isLocked ? 0.5 : 1
