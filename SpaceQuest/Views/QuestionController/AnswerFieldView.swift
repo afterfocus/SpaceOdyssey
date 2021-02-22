@@ -60,8 +60,8 @@ class AnswerFieldView: UICollectionView {
     
         rightAnswer.forEach {
             switch $0.count {
-            case 5...8: availableHints.append(1)
-            case 9...: availableHints.append(2)
+            case 6...9: availableHints.append(1)
+            case 10...: availableHints.append(2)
             default: availableHints.append(0)
             }
             isFixed.append([Bool](repeating: isComplete, count: $0.count))

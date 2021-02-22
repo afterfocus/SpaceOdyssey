@@ -249,6 +249,7 @@ extension QuestionViewController: AnswerFieldViewDelegate {
                 guard answerFieldView.remainingHints > 0 else { return }
                 questionControlsView.animateHintButton()
                 delay { self.useHint() }
+                delay(delayTime: 1.5) { self.answerFieldView.clear() }
             }
         }
     }
