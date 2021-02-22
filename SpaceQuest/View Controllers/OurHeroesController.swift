@@ -41,7 +41,7 @@ extension OurHeroesController: UITableViewDataSource {
         let hero = heroes[row]
         
         if heroPhotos[row] == nil {
-            heroPhotos[row] = UIImage(named: hero.surname)
+            heroPhotos[row] = UIImage(named: hero.photoFilename)
         }
         cell.fioLabel.text = hero.fio
         cell.aboutAuthorLabel.text = hero.aboutAuthorFull

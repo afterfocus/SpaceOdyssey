@@ -374,7 +374,7 @@
                             </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Mth-w4-UW8"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" name="DarkAccent"/>
                         <constraints>
                             <constraint firstItem="bqH-uw-NVq" firstAttribute="bottom" secondItem="Mth-w4-UW8" secondAttribute="top" constant="30" id="2z4-oD-FgQ"/>
                             <constraint firstItem="bqH-uw-NVq" firstAttribute="leading" secondItem="Mth-w4-UW8" secondAttribute="leading" id="7eN-nr-Cdm"/>

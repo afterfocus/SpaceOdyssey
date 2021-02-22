@@ -49,6 +49,11 @@ class WebVideoView: UIView {
         loadingIndicator.isHidden = true
         noVideoLabel.isHidden = false
     }
+    
+    /// Остановить воспроизведение видео
+    func stopVideoPlaying() {
+        webView.reload()
+    }
 }
 
 

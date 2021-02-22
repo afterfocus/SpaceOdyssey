@@ -6,6 +6,7 @@
 //
 
 import WebKit
+import AudioToolbox
 
 // MARK: QuestionViewController
 
@@ -39,6 +40,7 @@ class QuestionViewController: UIViewController {
     
     private var currentQuestion: Question!
     private var score = 3
+    private let impactGenerator = UIImpactFeedbackGenerator(style: .light)
     
     // MARK: - View Life Cycle
     
@@ -64,6 +66,7 @@ class QuestionViewController: UIViewController {
         questionLabel.text = currentQuestion.questionText
         
         answerFieldView.configureFor(rightAnswer: currentQuestion.answer,
+                                     alternativeAnswer: currentQuestion.alternativeAnswer,
                                      isComplete: currentQuestion.isComplete,
                                      maxWidth: UIScreen.main.bounds.width - 20)
         answerButtonsView.answerCharacters = currentQuestion.answerCharacters
@@ -207,6 +210,8 @@ extension QuestionViewController: AnswerButtonsViewDelegate {
     
     func answerButtonsView(_ answerButtonsView: AnswerButtonsView, didSelect character: Character, at indexPath: IndexPath) {
         if answerFieldView.appendCharacter(character) {
+            impactGenerator.impactOccurred()
+            AudioServicesPlaySystemSound(0x450)
             answerButtonsView.removeCharacter(at: indexPath)
         }
     }
@@ -227,6 +232,7 @@ extension QuestionViewController: AnswerFieldViewDelegate {
             currentQuestion.isComplete = true
             delay {
                 self.showLocationFinishedController(isRouteCompleted: self.route.isVariationComplete(self.variation))
+                self.webVideoView.stopVideoPlaying()
             }
         } else {
             score -= 1
@@ -237,6 +243,7 @@ extension QuestionViewController: AnswerFieldViewDelegate {
                 delay {
                     self.showLocationFinishedController(isLocationFailed: true,
                                                         isRouteCompleted: self.route.isVariationComplete(self.variation))
+                    self.webVideoView.stopVideoPlaying()
                 }
             } else {
                 guard answerFieldView.remainingHints > 0 else { return }

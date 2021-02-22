@@ -22,7 +22,10 @@ class LocationFailedController: LocationFinishedController {
     override func viewDidLoad() {
         super.viewDidLoad()
         titleLabel.layer.dropShadow(opacity: 0.3, radius: 8)
-        rightAnswerField.configureFor(rightAnswer: question.answer, isComplete: true, maxWidth: 280)
+        rightAnswerField.configureFor(rightAnswer: question.answer,
+                                      alternativeAnswer: nil,
+                                      isComplete: true,
+                                      maxWidth: 280)
     }
     
     override func viewDidLayoutSubviews() {

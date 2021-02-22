@@ -34,6 +34,7 @@ class AnswerFieldView: UICollectionView {
     private let feedbackGenerator = UINotificationFeedbackGenerator()
     
     private var rightAnswer = [String]()
+    private var alternativeAnswer = [String]()
     private var userAnswer: UserAnswer!
     private var availableHints: [Int]!
     private var usedHints = 0
@@ -48,8 +49,9 @@ class AnswerFieldView: UICollectionView {
         delegate = self
     }
     
-    func configureFor(rightAnswer: [String], isComplete: Bool, maxWidth: CGFloat) {
+    func configureFor(rightAnswer: [String], alternativeAnswer: [String]?, isComplete: Bool, maxWidth: CGFloat) {
         self.rightAnswer = rightAnswer
+        self.alternativeAnswer = alternativeAnswer ?? []
         userAnswer = UserAnswer(rightAnswer: rightAnswer, isComplete: isComplete)
         availableHints = []
         isFixed = []
@@ -58,8 +60,8 @@ class AnswerFieldView: UICollectionView {
     
         rightAnswer.forEach {
             switch $0.count {
-            case 5...7: availableHints.append(1)
-            case 8...: availableHints.append(2)
+            case 5...8: availableHints.append(1)
+            case 9...: availableHints.append(2)
             default: availableHints.append(0)
             }
             isFixed.append([Bool](repeating: isComplete, count: $0.count))
@@ -71,7 +73,8 @@ class AnswerFieldView: UICollectionView {
     func appendCharacter(_ character: Character) -> Bool {
         let isAppended = userAnswer.appendCharacter(character)
         if isAppended && userAnswer.isInputCompleted() {
-            inputCompeleted(isCorrect: userAnswer.isEqual(to: rightAnswer))
+            let isRightAnswer = userAnswer.isEqual(to: rightAnswer, or: alternativeAnswer)
+            inputCompeleted(isCorrect: isRightAnswer)
         }
         reloadData()
         return isAppended
@@ -92,12 +95,6 @@ class AnswerFieldView: UICollectionView {
         }
         usedHints += 1
         
-        /*
-        if userAnswer.isInputCompleted(),
-           userAnswer.isEqual(to: rightAnswer) {
-            inputCompeleted(isCorrect: true)
-            reloadData()
-        }*/
         return openedCharacters
     }
     

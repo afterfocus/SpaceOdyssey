@@ -65,10 +65,15 @@ class UserAnswer {
         return true
     }
     
-    func isEqual(to rightAnswer: [String]) -> Bool {
+    func isEqual(to rightAnswer: [String], or alternativeAnswer: [String]) -> Bool {
+        var isEqualToRightAnswer = true
+        var isEqualToAlternativeAnswer = !alternativeAnswer.isEmpty
         for (rowIndex, row) in rightAnswer.enumerated() where row != self[rowIndex] {
-            return false
+            isEqualToRightAnswer = false
         }
-        return true
+        for (rowIndex, row) in alternativeAnswer.enumerated() where row != self[rowIndex] {
+            isEqualToAlternativeAnswer = false
+        }
+        return isEqualToRightAnswer || isEqualToAlternativeAnswer
     }
 }

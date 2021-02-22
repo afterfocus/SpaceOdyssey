@@ -14,6 +14,7 @@ extension UILabel {
         label.textAlignment = NSTextAlignment.center
         label.font = .boldSystemFont(ofSize: 17)
         label.text = text
+        label.textColor = .white
         return label
     }
 }
