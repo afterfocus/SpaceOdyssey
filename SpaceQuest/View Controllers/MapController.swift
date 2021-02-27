@@ -17,6 +17,9 @@ class MapController: UIViewController {
     
     @IBOutlet weak var topGradientView: TopGradientView!
     @IBOutlet weak var mapView: YMKMapView!
+    @IBOutlet weak var questionLabel: UILabel!
+    @IBOutlet weak var distanceLabel: UILabel!
+    @IBOutlet weak var distanceUnitLabel: UILabel!
     @IBOutlet weak var zoomInButton: UIButton!
     @IBOutlet weak var zoomOutButton: UIButton!
     @IBOutlet weak var enableTrackingButton: UIButton!
@@ -30,7 +33,8 @@ class MapController: UIViewController {
     // MARK: - Private Properties
     
     private var locationManager = CLLocationManager()
-    private var drivingSession: YMKDrivingSession?
+    private let pedestrianRouter = YMKTransport.sharedInstance()!.createPedestrianRouter()
+    private var masstransitSession: YMKMasstransitSession?
     private var map: YMKMap {
         return mapView.mapWindow.map
     }
@@ -59,6 +63,7 @@ class MapController: UIViewController {
             orientToNorthButton.backgroundColor = backgroundColorForButton(isEnabled: !isNorthOriented)
         }
     }
+    private var routeEndPoint: YMKPoint?
     
     // MARK: - View Life Cycle
     
@@ -85,6 +90,9 @@ class MapController: UIViewController {
         enableTrackingButton.backgroundColor = backgroundColorForButton(isEnabled: false)
         orientToNorthButton.backgroundColor = backgroundColorForButton(isEnabled: false)
         
+        questionLabel.layer.dropShadow(opacity: 0.7, radius: 7)
+        distanceLabel.layer.dropShadow(opacity: 0.7, radius: 7)
+        distanceUnitLabel.layer.dropShadow(opacity: 0.7, radius: 7)
         zoomInButton.layer.dropShadow(opacity: 0.35, radius: 7)
         zoomOutButton.layer.dropShadow(opacity: 0.35, radius: 7)
         enableTrackingButton.layer.dropShadow(opacity: 0.35, radius: 7)
@@ -97,7 +105,6 @@ class MapController: UIViewController {
         let userLocationLayer = YMKMapKit.sharedInstance().createUserLocationLayer(with: mapView.mapWindow)
         userLocationLayer.setVisibleWithOn(true)
         userLocationLayer.setObjectListenerWith(self)
-        
         addQuestionPlacemarks()
     }
     
@@ -207,17 +214,24 @@ class MapController: UIViewController {
         guard let coordinates = locationManager.location?.coordinate,
               let firstIncompleteIndex = route.firstIncompleteIndex(for: routeVariation) else { return }
         let question = route[routeVariation[firstIncompleteIndex]]
+        
+        questionLabel.text = "\(firstIncompleteIndex + 1). \(question.title)"
+        
         let startPoint = YMKPoint(latitude: coordinates.latitude, longitude: coordinates.longitude)
-        let targetPoint = YMKPoint(latitude: question.location.latitude,
-                                   longitude: question.location.longtitude)
+        routeEndPoint = YMKPoint(latitude: question.location.latitude,
+                                 longitude: question.location.longtitude)
         
         let requestPoints = [YMKRequestPoint(point: startPoint, type: .waypoint, pointContext: nil),
-                             YMKRequestPoint(point: targetPoint, type: .waypoint, pointContext: nil)]
-    
+                             YMKRequestPoint(point: routeEndPoint!, type: .waypoint, pointContext: nil)]
+        
+        
+        
+        masstransitSession = pedestrianRouter.requestRoutes(with: requestPoints, timeOptions: .init())
+        /*
         let drivingRouter = YMKDirections.sharedInstance().createDrivingRouter()
         drivingSession = drivingRouter.requestRoutes(with: requestPoints,
                                                      drivingOptions: YMKDrivingDrivingOptions(),
-                                                     vehicleOptions: YMKDrivingVehicleOptions()) {
+                                                     vehicleOptions: YMKDrivingVehicleOptions()) */{
             routesResponse, error in
             if let routes = routesResponse {
                 self.map.mapObjects.clear()
@@ -343,7 +357,32 @@ extension MapController: CLLocationManagerDelegate {
         if isTrackingEnabled {
             moveToUserLocation(withAnimationType: .linear, duration: 0.2)
         }
+        guard let endPoint = routeEndPoint,
+              let coordinates = locationManager.location?.coordinate else { return }
+        let currentPoint = YMKPoint(latitude: coordinates.latitude, longitude: coordinates.longitude)
+        var distance = YMKDistance(currentPoint, endPoint)
+        
+        if distance > 1000 {
+            distance /= 1000
+            distanceLabel.text = "\(String(format: "%.1f", distance))"
+            distanceUnitLabel.text = "км"
+        } else {
+            distanceLabel.text = "\(Int(distance))"
+            distanceUnitLabel.text = "м"
+        }
     }
+}
+
+
+// MARK: - YMKLocationDelegate
+
+extension MapController: YMKLocationDelegate {
+    
+    func onLocationUpdated(with location: YMKLocation) {
+        print(#function)
+    }
+    
+    func onLocationStatusUpdated(with status: YMKLocationStatus) { }
 }
 
 

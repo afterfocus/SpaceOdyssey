@@ -23,6 +23,7 @@ class ProfileController: UIViewController {
     @IBOutlet weak var kcalLabel: UILabel!
     @IBOutlet weak var isMapInNightModeSwitch: UISwitch!
     @IBOutlet weak var isRoutingDisabledSwitch: UISwitch!
+    @IBOutlet weak var versionLabel: UILabel!
     
     // MARK: - Private Properties
     
@@ -47,6 +48,8 @@ class ProfileController: UIViewController {
         
         isMapInNightModeSwitch.isOn = dataModel.isMapNightModeEnabled
         isRoutingDisabledSwitch.isOn = dataModel.isRoutingDisabled
+        
+        versionLabel.text = "\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Undefined")"
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -83,7 +86,7 @@ class ProfileController: UIViewController {
                                 Пользователь: \(DataModel.current.userName)
                                 Устройство: \(UIDevice.modelName)
                                 Версия iOS: \(UIDevice.current.systemVersion)
-                                Версия приложения: \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Undefined")
+                                Версия приложения: \(versionLabel.text)
 
                                 Ваш вопрос:
 

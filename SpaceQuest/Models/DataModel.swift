@@ -7,6 +7,7 @@
 
 import Foundation
 import YandexMapsMobile
+import SwiftSMTP
 
 // MARK: - Question Data
 
@@ -140,6 +141,28 @@ class DataModel {
             for question in route.questions {
                 question.isComplete = false
                 question.score = 0
+            }
+        }
+    }
+    
+    func sendEmail() {
+        let smtp = SMTP(hostname: "smtp.gmail.com",
+                        email: "aerotaksimaksim@gmail.com",
+                        password: "gakmyc-wyfjur-mAsga9")
+        
+        let drLight = Mail.User(name: "Dr. Light", email: "drlight@gmail.com")
+        let megaman = Mail.User(name: "Megaman", email: email)
+        
+        let mail = Mail(
+            from: drLight,
+            to: [megaman],
+            subject: "Humans and robots living together in harmony and equality.",
+            text: "That was my ultimate wish."
+        )
+        
+        smtp.send(mail) { (error) in
+            if let error = error {
+                print(error)
             }
         }
     }
@@ -707,28 +730,11 @@ extension DataModel {
                         answer: ["ГАГАРИН"],
                         answerCharacters: "ГИДОВТНИАТВЕАГЕАР",
                         isComplete: false,
-                        score: 0),
-                    
-                    // Альтернативная конфигурация вопроса
-                    Question(
-                        title: "Секреты космонавтики",
-                        location: Location(name: "Мемориальная доска «Кембриджской пятерке»",
-                                           address: "Фрунзе 179",
-                                           latitude: 53.197983,
-                                           longtitude: 50.098590,
-                                           photoFilename: "Мемориальная доска Кембриджскои пятерке"),
-                        author: authors["Артемьев"]!,
-                        questionText: "Королев был настолько засекречен, что когда он 12 апреля 1961 года приехал в, так называемый, «домик на Волге» и хотел войти, сотрудник КГБ попытался этому воспрепятствовать. Так как в лицо его знали только начальники. Назовите фамилию человека, к которому на встречу шел Королев.",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/szt07mZFoqg?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/tu3ecFZI5LY?playsinline=1"),
-                        answer: ["ГАГАРИН"],
-                        answerCharacters: "ГИДОВТНИАТВЕАГЕАР",
-                        isComplete: false,
                         score: 0)
                   ],
                   variations: [
-                    RouteVariation(length: 6.3, duration: 90, questionIndexes: [4,5,6,7,8,9,10,11,12,20,14,15,16,17,18]),
-                    RouteVariation(length: 7.5, duration: 120, questionIndexes: [0,1,2,3,4,5,6,7,8,9,10,11,12,20,14]),
+                    RouteVariation(length: 6.3, duration: 90, questionIndexes: [4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]),
+                    RouteVariation(length: 7.5, duration: 120, questionIndexes: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]),
                     RouteVariation(length: 10.7, duration: 180, questionIndexes: Array(0...19))
             ]),
         
@@ -1198,44 +1204,10 @@ extension DataModel {
                         answer: ["ГОРБАТЫЙ"],
                         answerCharacters: "ОЫТГБКЛРАЕГЙИН",
                         isComplete: false,
-                        score: 0),
-                    
-                    // Альтернативная конфигурация вопроса
-                    Question(
-                        title: "Космос-арена",
-                        location: Location(name: "Мост через пруд",
-                                           address: "Парк культуры и отдыха имени Юрия Гагарина",
-                                           latitude: 53.228771,
-                                           longtitude: 50.198803,
-                                           photoFilename: "Мост через пруд"),
-                        author: authors["Прокопьев"]!,
-                        questionText: "Какое природное явление космонавты видят 16 раз в сутки?",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/BQnXb6XYikw?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/Nj2y-oT8DNI?playsinline=1"),
-                        answer: ["ВОСХОД"],
-                        answerCharacters: "ОЗДАКАВХАЕСОРВ",
-                        isComplete: false,
-                        score: 0),
-                    
-                    // Альтернативная конфигурация вопроса
-                    Question(
-                        title: "Летающий танк",
-                        location: Location(name: "Колесо обозрения",
-                                           address: "Парк культуры и отдыха имени Юрия Гагарина",
-                                           latitude: 53.230543,
-                                           longtitude: 50.198083,
-                                           photoFilename: "Колесо обозрения"),
-                        author: authors["Тихонов"]!,
-                        questionText: "Ил-2 изначально разрабатывался как двухместный самолет. Но в ходе испытаний были выявлены некоторые серьезные недостатки. Ильюшин решил пойти на хитрость, сделав Ил-2 одноместным. Вместо кабины штурмана был установлен еще один бензобак. Бронекорпус был уменьшен. Это позволило сделать штурмовик легче. Ил-2 называли БШ-2 «Бронированным штурмовиком». Для улучшения обзора кабину пилота приподняли, после чего Ил-2 приобрёл другое прозвище. Какое новое прозвище получил Ил-2?",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/H98rGx4yrQ0?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/re4MJulRoc0?playsinline=1"),
-                        answer: ["ГОРБАТЫЙ"],
-                        answerCharacters: "ОЫТГБКЛРАЕГЙИН",
-                        isComplete: false,
-                        score: 0),
+                        score: 0)
                   ],
                   variations: [
-                    RouteVariation(length: 6.2, duration: 90, questionIndexes: [0,1,2,3,4,5,6,7,8,13,14]),
+                    RouteVariation(length: 6.2, duration: 90, questionIndexes: [0,1,2,3,4,5,6,7,8,9,10]),
                     RouteVariation(length: 9.7, duration: 160, questionIndexes: Array(0...12))
             ]),
         
@@ -1271,7 +1243,7 @@ extension DataModel {
                                            longtitude: 50.264262,
                                            photoFilename: "АО Арконик СМЗ"),
                         author: authors["Шкаплеров"]!,
-                        questionText: "Какова толщина стенок Международной космической Станции (в миллиметрах)?",
+                        questionText: "Какова толщина стенок герметичной оболочки Международной космической Станции (в миллиметрах)?",
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/pQfw7ZVmtn4?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/TvvNnkJAp20?playsinline=1"),
                         answer: ["3"],

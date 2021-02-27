@@ -76,7 +76,7 @@ class LocationInfoController: UIViewController {
         let placemarkView = MapPlacemarkView(index: questionIndex, isComplete: question.isComplete, isLocked: false)
         map.isNightModeEnabled = DataModel.current.isMapNightModeEnabled
         map.mapObjects.addPlacemark(with: point, view: YRTViewProvider(uiView: placemarkView))
-        map.move(with: YMKCameraPosition(target: point, zoom: 14, azimuth: 0, tilt: 0))
+        map.move(with: YMKCameraPosition(target: point, zoom: 14.5, azimuth: 0, tilt: 0))
     }
     
     override func viewDidLayoutSubviews() {
