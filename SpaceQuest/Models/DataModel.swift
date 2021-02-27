@@ -52,6 +52,7 @@ class DataModel {
     }
     
     /// Сменить имя пользователя и/или e-mail
+    /// Возвращает false, если файл с таким именем уже существует
     func editUser(newName: String, newEmail: String) -> Bool {
         let newFilePath = dataFilePath(for: "\(newName) - \(newEmail).plist")
         do {
@@ -68,24 +69,10 @@ class DataModel {
         }
     }
     
-    /// Имя файла с данными для текущего вользователя
-    private var filename: String {
-        return "\(userName) - \(email).plist"
-    }
-    
-    /// Полный путь к файлу
-    private func dataFilePath(for filename: String? = nil) -> URL {
-        let paths = FileManager.default.urls(
-            for: .documentDirectory,
-            in: .userDomainMask)
-        return paths[0].appendingPathComponent(filename ?? self.filename)
-    }
-    
     /// Сохранить настройки и прогресс пользователя в файл
     func saveToFile() {
-        let encoder = PropertyListEncoder()
         do {
-            let data = try encoder.encode(prepateDataToSave())
+            let data = try PropertyListEncoder().encode(dataToSave)
             try data.write(to: dataFilePath(), options: Data.WritingOptions.atomic)
         } catch {
             print("DATA SAVING ERROR: \(error.localizedDescription)")
@@ -95,9 +82,8 @@ class DataModel {
     /// Загрузить настройки и прогресс пользователя из файла
     func loadFromFile() {
         if let data = try? Data(contentsOf: dataFilePath()) {
-            let decoder = PropertyListDecoder()
             do {
-                let savedData = try decoder.decode(DataToSave.self, from: data)
+                let savedData = try PropertyListDecoder().decode(DataToSave.self, from: data)
                 unpackSavedData(savedData)
             } catch {
                 print("DATA LOADING ERROR: \(error.localizedDescription)")
@@ -105,13 +91,26 @@ class DataModel {
         }
     }
     
+    // MARK: - Private Functions
+    
+    /// Имя файла с данными для текущего вользователя
+    private var filename: String {
+        return "\(userName) - \(email).plist"
+    }
+    
     /// Подготовить данные для сохранения
-    private func prepateDataToSave() -> DataToSave {
+    private var dataToSave: DataToSave {
         let routesData = DataModel.routes.map { $0.dataToSave() }
         return DataToSave(isRouteFirstTimeLaunched: isRouteFirstTimeLaunched,
                           isMapNightModeEnabled: isMapNightModeEnabled,
                           isRoutingDisabled: isRoutingDisabled,
                           routesData: routesData)
+    }
+    
+    /// Полный путь к файлу
+    private func dataFilePath(for filename: String? = nil) -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        return paths[0].appendingPathComponent(filename ?? self.filename)
     }
     
     /// Распаковать сохраненные данные
@@ -203,12 +202,10 @@ extension DataModel {
         current = DataModel(userName: userName, email: email)
         DataModel.isLoggedIn = true
         DataModel.loggedInUser = (userName, email)
-        print("--- LOGGED IN \(userName) / \(email) ---")
     }
     
     static func logIn() {
         current = DataModel(userName: loggedInUser.name, email: loggedInUser.email)
-        print("--- LOGGED IN \(loggedInUser.name) / \(loggedInUser.email) ---")
     }
     
     /// Срахнить данные и выйти
@@ -216,8 +213,8 @@ extension DataModel {
         current.saveToFile()
         DataModel.isLoggedIn = false
         DataModel.loggedInUser = ("Undefined", "Undefined")
-        print("--- LOGGED OUT ---")
     }
+    
     
     // MARK: - Authors
     
