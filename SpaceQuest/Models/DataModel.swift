@@ -146,8 +146,8 @@ class DataModel {
     /*
     func sendEmail() {
         let smtp = SMTP(hostname: "smtp.gmail.com",
-                        email: "aerotaksimaksim@gmail.com",
-                        password: "gakmyc-wyfjur-mAsga9")
+                        email: "",
+                        password: "")
         
         let drLight = Mail.User(name: "Dr. Light", email: "drlight@gmail.com")
         let megaman = Mail.User(name: "Megaman", email: email)
