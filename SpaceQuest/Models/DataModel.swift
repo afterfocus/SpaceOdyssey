@@ -7,6 +7,7 @@
 
 import Foundation
 import YandexMapsMobile
+//import SwiftSMTP
 
 // MARK: - Question Data
 
@@ -45,10 +46,8 @@ class DataModel {
         /// Проверить существует ли файл.
         if (try? dataFilePath().checkResourceIsReachable()) ?? false {
             loadFromFile()
-            print("--- FILE \(filename) FOUND AND LOADED ---")
         } else {
             clearUserProgress()
-            print("--- FILE \(filename) NOT FOUND ---\n--- SHOULD CREATE FILE \(filename) ---")
         }
     }
     
@@ -57,17 +56,14 @@ class DataModel {
         let newFilePath = dataFilePath(for: "\(newName) - \(newEmail).plist")
         do {
             if (try? newFilePath.checkResourceIsReachable()) ?? false {
-                print("--- FILE ALREADY EXIST ---")
                 return false
             }
             try FileManager.default.moveItem(at: dataFilePath(), to: newFilePath)
             userName = newName
             email = newEmail
             DataModel.loggedInUser = (newName, newEmail)
-            print("--- DATA FILE RENAMED TO \(filename) ---")
             return true
         } catch {
-            print("DATA SAVING ERROR: \(error.localizedDescription)")
             return false
         }
     }
@@ -94,7 +90,6 @@ class DataModel {
         } catch {
             print("DATA SAVING ERROR: \(error.localizedDescription)")
         }
-        print("--- DID SAVE TO FILE \(filename) ---")
     }
     
     /// Загрузить настройки и прогресс пользователя из файла
@@ -143,29 +138,32 @@ class DataModel {
             }
         }
     }
+    
     /*
     func sendEmail() {
         let smtp = SMTP(hostname: "smtp.gmail.com",
-                        email: "aerotaksimaksim@gmail.com",
-                        password: "gakmyc-wyfjur-mAsga9")
+                        email: "",
+                        password: "")
         
-        let drLight = Mail.User(name: "Dr. Light", email: "drlight@gmail.com")
-        let megaman = Mail.User(name: "Megaman", email: email)
+        let sender = Mail.User(name: "Одиссея Марса", email: "spacequest@gmail.com")
+        let reciever = Mail.User(name: userName, email: email)
         
         let mail = Mail(
-            from: drLight,
-            to: [megaman],
-            subject: "Humans and robots living together in harmony and equality.",
-            text: "That was my ultimate wish."
+            from: sender,
+            to: [reciever],
+            subject: "Одиссея Марса - Награды за прохождение маршрута",
+            text: ""
         )
         
         smtp.send(mail) { (error) in
             if let error = error {
                 print(error)
+            } else {
+                print("Письмо отправлено")
             }
         }
     }
-    */
+ */
 }
     
 
@@ -677,8 +675,8 @@ extension DataModel {
                                            photoFilename: "Фонтан Парус"),
                         author: authors["Котельников"]!,
                         questionText: "В космос успешно запускали не только собак, но и наиболее близких человеку по физиологии обезьян. А вот судьба кошек-космонавтов, к сожалению, не сложилась. На данный момент достоверно подтверждён полет в космос единственного представителя вида. Назовите имя этой астрокошки.",
-                        questionVideoUrl: nil,
-                        answerVideoUrl: nil,
+                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/uXlN_zx5Gkw?playsinline=1"),
+                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/1ar5imu87vI?playsinline=1"),
                         answer: ["ФЕЛИСЕТТ"],
                         answerCharacters: "ФЕКТМАИЕРУЛСТА",
                         isComplete: false,
@@ -946,7 +944,7 @@ extension DataModel {
                                            longtitude: 50.082413,
                                            photoFilename: "Фонтан Парус"),
                         author: authors["Сойфер"]!,
-                        questionText: "В стихотворении В. Высоцкого «Поэма о космонавте» такие строки:\n\tВот мой дублер, который мог быть Первым,\n\tКоторый смог впервые стать вторым.\n\tПока что на него не тратят шрифта —\n\tЗапас заглавных букв на одного.\n\tМы с ним вдвоем прошли весь путь до лифта,\n\tНо дальше я поднялся без него.\nНазовите фамилию этого известного всем Героя.",
+                        questionText: "В стихотворении В. Высоцкого «Поэма о космонавте» есть такие строки:\n\tВот мой дублер, который мог быть Первым,\n\tКоторый смог впервые стать вторым.\n\tПока что на него не тратят шрифта —\n\tЗапас заглавных букв на одного.\n\tМы с ним вдвоем прошли весь путь до лифта,\n\tНо дальше я поднялся без него.\nНазовите фамилию этого известного всем Героя.",
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/fw6dEOdLvHI?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/C4p1b2dsmNQ?playsinline=1"),
                         answer: ["ТИТОВ"],
@@ -1069,10 +1067,10 @@ extension DataModel {
                                            latitude: 53.222732,
                                            longtitude: 50.173088,
                                            photoFilename: "Памятник Ломоносову"),
-                        author: authors["Черкасов"]!,
+                        author: authors["Котельников"]!,
                         questionText: "Невесомость приводит к общему ухудшению состояния здоровья. Сегодня космические экспедиции длятся около полугода. Во время них космонавты каждый день занимаются спортом минимум два часа, а перед возвращением на Землю используют нагрузочный костюм. С помощью специальных прорезиненных жгутов он позволяет придать телу нагрузку, похожую на земную. Как называется нагрузочный костюм, благодаря которому космонавты возвращаются на Землю немного ослабевшими, но все же здоровыми?",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/CHoUkDjrd7w?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/TVyLNhelTdo?playsinline=1"),
+                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/SbRvHT1ZvZs?playsinline=1"),
+                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/XB2TG19tmpM?playsinline=1"),
                         answer: ["ПИНГВИН"],
                         answerCharacters: "ПГИАИТТЛНСВЕНК",
                         isComplete: false,

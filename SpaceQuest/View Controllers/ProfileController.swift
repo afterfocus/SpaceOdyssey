@@ -74,6 +74,18 @@ class ProfileController: UIViewController {
         present(loginController, animated: true)
     }
     
+    @IBAction func youtubeButtonPressed(_ sender: UIButton) {
+        UIApplication.shared.open(URL(string: "https://youtube.com/c/AleksandraDanilenko")!, options: [:], completionHandler: nil)
+    }
+    
+    @IBAction func instagramButtonPressed(_ sender: UIButton) {
+        UIApplication.shared.open(URL(string: "https://instagram.com/zhadina.space/")!, options: [:], completionHandler: nil)
+    }
+    
+    @IBAction func tiktokButtonPressed(_ sender: UIButton) {
+        UIApplication.shared.open(URL(string: "https://www.tiktok.com/@zhadina.space")!, options: [:], completionHandler: nil)
+    }
+    
     @IBAction func emailUsButtonPressed(_ sender: UIButton) {
         if MFMailComposeViewController.canSendMail() {
             let mail = MFMailComposeViewController()

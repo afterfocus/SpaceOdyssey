@@ -305,6 +305,8 @@
 			dependencies = (
 			);
 			name = SpaceQuest;
+			packageProductDependencies = (
+			);
 			productName = SpaceQuest;
 			productReference = B5EFD48B2562B95A00B0C5E7 /* SpaceQuest.app */;
 			productType = "com.apple.product-type.application";
@@ -332,6 +334,8 @@
 				Base,
 			);
 			mainGroup = B5EFD4822562B95900B0C5E7;
+			packageReferences = (
+			);
 			productRefGroup = B5EFD48C2562B95A00B0C5E7 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -603,7 +607,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.2.4;
+				MARKETING_VERSION = 0.2.5;
 				PRODUCT_BUNDLE_IDENTIFIER = MaximGolov.SpaceQuest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -625,7 +629,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.2.4;
+				MARKETING_VERSION = 0.2.5;
 				PRODUCT_BUNDLE_IDENTIFIER = MaximGolov.SpaceQuest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

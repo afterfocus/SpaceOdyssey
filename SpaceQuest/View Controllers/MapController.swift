@@ -35,6 +35,7 @@ class MapController: UIViewController {
     private var locationManager = CLLocationManager()
     private let pedestrianRouter = YMKTransport.sharedInstance()!.createPedestrianRouter()
     private var masstransitSession: YMKMasstransitSession?
+    private var firstIncompleteIndex: Int?
     private var map: YMKMap {
         return mapView.mapWindow.map
     }
@@ -106,6 +107,14 @@ class MapController: UIViewController {
         userLocationLayer.setVisibleWithOn(true)
         userLocationLayer.setObjectListenerWith(self)
         addQuestionPlacemarks()
+        
+        firstIncompleteIndex = route.firstIncompleteIndex(for: routeVariation)
+        
+        if let index = firstIncompleteIndex {
+            questionLabel.text = "\(index + 1). \(route[routeVariation[index]].title)"
+        } else {
+            questionLabel.text = "Маршрут завершен"
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -196,14 +205,12 @@ class MapController: UIViewController {
     }
     
     private func addQuestionPlacemarks() {
-        let firstIncompleteIndex = route.firstIncompleteIndex(for: routeVariation)
-        
         for (placemarkIndex, questionIndex) in routeVariation.questionIndexes.enumerated() {
             let question = route[questionIndex]
             let point = YMKPoint(latitude: question.location.latitude, longitude: question.location.longtitude)
             let placemarkView = MapPlacemarkView(index: placemarkIndex,
                                                  isComplete: route[questionIndex].isComplete,
-                                                 isLocked: questionIndex > (firstIncompleteIndex ?? 100))
+                                                 isLocked: placemarkIndex > (firstIncompleteIndex ?? 100))
             let ymkPlacemark = map.mapObjects.addPlacemark(with: point, view: YRTViewProvider(uiView: placemarkView))
             ymkPlacemark.userData = question
             ymkPlacemark.zIndex = 0
@@ -212,10 +219,8 @@ class MapController: UIViewController {
     
     private func buildRoute() {
         guard let coordinates = locationManager.location?.coordinate,
-              let firstIncompleteIndex = route.firstIncompleteIndex(for: routeVariation) else { return }
+              let firstIncompleteIndex = firstIncompleteIndex else { return }
         let question = route[routeVariation[firstIncompleteIndex]]
-        
-        questionLabel.text = "\(firstIncompleteIndex + 1). \(question.title)"
         
         let startPoint = YMKPoint(latitude: coordinates.latitude, longitude: coordinates.longitude)
         routeEndPoint = YMKPoint(latitude: question.location.latitude,
@@ -223,8 +228,6 @@ class MapController: UIViewController {
         
         let requestPoints = [YMKRequestPoint(point: startPoint, type: .waypoint, pointContext: nil),
                              YMKRequestPoint(point: routeEndPoint!, type: .waypoint, pointContext: nil)]
-        
-        
         
         masstransitSession = pedestrianRouter.requestRoutes(with: requestPoints, timeOptions: .init()) {
             routesResponse, error in
