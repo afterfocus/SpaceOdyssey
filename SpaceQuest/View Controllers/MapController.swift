@@ -226,12 +226,7 @@ class MapController: UIViewController {
         
         
         
-        masstransitSession = pedestrianRouter.requestRoutes(with: requestPoints, timeOptions: .init())
-        /*
-        let drivingRouter = YMKDirections.sharedInstance().createDrivingRouter()
-        drivingSession = drivingRouter.requestRoutes(with: requestPoints,
-                                                     drivingOptions: YMKDrivingDrivingOptions(),
-                                                     vehicleOptions: YMKDrivingVehicleOptions()) */{
+        masstransitSession = pedestrianRouter.requestRoutes(with: requestPoints, timeOptions: .init()) {
             routesResponse, error in
             if let routes = routesResponse {
                 self.map.mapObjects.clear()

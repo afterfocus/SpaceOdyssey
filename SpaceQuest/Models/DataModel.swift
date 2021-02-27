@@ -7,7 +7,6 @@
 
 import Foundation
 import YandexMapsMobile
-import SwiftSMTP
 
 // MARK: - Question Data
 
@@ -144,7 +143,7 @@ class DataModel {
             }
         }
     }
-    
+    /*
     func sendEmail() {
         let smtp = SMTP(hostname: "smtp.gmail.com",
                         email: "aerotaksimaksim@gmail.com",
@@ -166,6 +165,7 @@ class DataModel {
             }
         }
     }
+    */
 }
     
 

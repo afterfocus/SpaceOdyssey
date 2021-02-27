@@ -86,7 +86,7 @@ class ProfileController: UIViewController {
                                 Пользователь: \(DataModel.current.userName)
                                 Устройство: \(UIDevice.modelName)
                                 Версия iOS: \(UIDevice.current.systemVersion)
-                                Версия приложения: \(versionLabel.text)
+                                Версия приложения: \(versionLabel.text ?? "Undefined")
 
                                 Ваш вопрос:
 

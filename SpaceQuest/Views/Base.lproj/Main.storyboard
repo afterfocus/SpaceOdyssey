@@ -30,7 +30,7 @@
                                 <rect key="frame" x="0.0" y="170.5" width="320" height="368.5"/>
                                 <subviews>
                                     <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nzo-bO-uee">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="668.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="653.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Максим" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xFZ-Qe-7O2">
                                                 <rect key="frame" x="115" y="92" width="90" height="29"/>
@@ -339,7 +339,7 @@
                                             <constraint firstItem="rFV-ld-Rsx" firstAttribute="centerX" secondItem="Nzo-bO-uee" secondAttribute="centerX" id="YTi-iv-Lfw"/>
                                             <constraint firstItem="ZYk-nn-VbU" firstAttribute="top" secondItem="PZI-7e-SHf" secondAttribute="bottom" constant="25" id="ZJE-Uy-bCD"/>
                                             <constraint firstItem="SIw-dg-pb1" firstAttribute="centerX" secondItem="Nzo-bO-uee" secondAttribute="centerX" id="bD4-yF-sPi"/>
-                                            <constraint firstAttribute="bottom" secondItem="e3m-or-dJq" secondAttribute="bottom" constant="35" id="bpj-dM-XCv"/>
+                                            <constraint firstAttribute="bottom" secondItem="e3m-or-dJq" secondAttribute="bottom" constant="20" id="bpj-dM-XCv"/>
                                             <constraint firstItem="isw-bL-Bv7" firstAttribute="centerX" secondItem="Nzo-bO-uee" secondAttribute="centerX" id="eF3-LC-oyx"/>
                                             <constraint firstItem="ig5-ZC-qLA" firstAttribute="leading" secondItem="xFZ-Qe-7O2" secondAttribute="trailing" id="eJ2-tX-qvn"/>
                                             <constraint firstItem="xFZ-Qe-7O2" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Nzo-bO-uee" secondAttribute="leading" constant="40" id="erM-54-0vi"/>
