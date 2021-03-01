@@ -74,6 +74,14 @@ class ProfileController: UIViewController {
         present(loginController, animated: true)
     }
     
+    @IBAction func bonusButtonPressed(_ sender: UIButton) {
+        guard let videoAnswerVC = storyboard!.instantiateViewController(withIdentifier: "VideoAnswerController") as? VideoAnswerController else { return }
+        videoAnswerVC.videoURL = URL(string: "https://www.youtube.com/embed/Kk0GdMjRgQE?playsinline=1")
+        videoAnswerVC.mode = .bonusVideo
+        videoAnswerVC.modalPresentationStyle = .overFullScreen
+        present(videoAnswerVC, animated: true)
+    }
+    
     @IBAction func youtubeButtonPressed(_ sender: UIButton) {
         UIApplication.shared.open(URL(string: "https://youtube.com/c/AleksandraDanilenko")!, options: [:], completionHandler: nil)
     }

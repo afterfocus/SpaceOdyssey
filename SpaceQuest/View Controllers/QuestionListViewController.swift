@@ -24,6 +24,8 @@ class QuestionListViewController: UIViewController {
     // MARK: - Private Properties
     
     private var firstIncompleteIndex: Int?
+    private var cellSpacing: CGFloat!
+    private var cellSize: CGSize!
     
     // MARK: - View Life Cycle
     
@@ -33,6 +35,10 @@ class QuestionListViewController: UIViewController {
         questionsCollectionView.backgroundView = UIImageView(withImageNamed: route.imageFileName, alpha: 0.75)
         startButton.isHidden = route.isVariationComplete(routeVariation)
         startButton.layer.dropShadow(opacity: 0.3, offset: CGSize(width: 0, height: 3), radius: 7)
+        
+        cellSpacing = UIScreen.main.bounds.width > 320 ? 20 : 10
+        let width = (UIScreen.main.bounds.width - 3 * cellSpacing) / 2
+        cellSize = CGSize(width: width, height: 138)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -46,7 +52,8 @@ class QuestionListViewController: UIViewController {
         if DataModel.current.isRouteFirstTimeLaunched {
             guard let videoAnswerVC = storyboard!.instantiateViewController(withIdentifier: "VideoAnswerController") as? VideoAnswerController else { return }
             videoAnswerVC.videoURL = URL(string: "https://www.youtube.com/embed/yvkINNzNnlU?playsinline=1")
-            videoAnswerVC.exitMode = .introVideo
+            videoAnswerVC.mode = .introVideo
+            videoAnswerVC.modalPresentationStyle = .overFullScreen
             present(videoAnswerVC, animated: true)
             
             DataModel.current.isRouteFirstTimeLaunched = false
@@ -119,5 +126,35 @@ extension QuestionListViewController: UICollectionViewDataSource {
                        index: indexPath.row + 1,
                        isLocked: indexPath.row > firstIncompleteIndex ?? 100)
         return cell
+    }
+}
+
+
+// MARK: - UICollectionViewDelegateFlowLayout
+
+extension QuestionListViewController: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return cellSpacing
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return cellSpacing * 0.75
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return cellSize
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 20, left: cellSpacing, bottom: 20, right: cellSpacing)
     }
 }

@@ -173,10 +173,6 @@ extension DataModel {
     /// Синглтон. Доступен только после авторизации пользователя.
     static var current: DataModel!
     
-    static var userDefaults: UserDefaults {
-        return UserDefaults.standard
-    }
-    
     static var isLoggedIn: Bool {
         get { userDefaults.bool(forKey: "IsLoggedIn") }
         set { userDefaults.setValue(newValue, forKey: "IsLoggedIn") }
@@ -215,24 +211,29 @@ extension DataModel {
         DataModel.loggedInUser = ("Undefined", "Undefined")
     }
     
+    private static var userDefaults: UserDefaults {
+        return UserDefaults.standard
+    }
+    
+    
     
     // MARK: - Authors
     
-    static let vipAuthors = [
-        Author(surname: "Леонов",
-               name: "Алексей",
-               patronymic: "Архипович\n1934 – 2019",
-               aboutAuthor: "",
-               aboutAuthorFull: "Дважды Герой Советского Союза,\nЛётчик-космонавт СССР №11,\nГенерал-майор авиации, к.т.н.,\nПервый человек, вышедший в открытый космос, участник первого международного космического полёта «Союз-Аполлон»",
-               photoFilename: "Леонов"),
-        
-        Author(surname: "Ткаченко",
-               name: "Сергей",
-               patronymic: "Иванович\n1950 – 2017",
-               aboutAuthor: "",
-               aboutAuthorFull: "Профессор кафедры космического машиностроения Самарского университета, д.т.н., заместитель Генерального конструктора по научной работе АО «РКЦ «Прогресс», главный конструктор серии малых космических аппаратов «АИСТ»",
-               photoFilename: "Ткаченко")
-    ]
+    static let leonov = Author(
+        surname: "Леонов",
+        name: "Алексей",
+        patronymic: "Архипович\n1934 – 2019",
+        aboutAuthor: "",
+        aboutAuthorFull: "Дважды Герой Советского Союза,\nЛётчик-космонавт СССР №11,\nГенерал-майор авиации, к.т.н.,\nПервый человек, вышедший в открытый космос, участник первого международного космического полёта «Союз-Аполлон»",
+        photoFilename: "Леонов")
+    
+    static let tkachenko = Author(
+        surname: "Ткаченко",
+        name: "Сергей",
+        patronymic: "Иванович\n1950 – 2017",
+        aboutAuthor: "",
+        aboutAuthorFull: "Профессор кафедры космического машиностроения Самарского университета, д.т.н., заместитель Генерального конструктора по научной работе АО «РКЦ «Прогресс», главный конструктор серии малых космических аппаратов «АИСТ»",
+        photoFilename: "Ткаченко")
     
     static let authors: [String: Author] = [
         "Артемьев": Author(surname: "Артемьев",
@@ -1321,7 +1322,7 @@ extension DataModel {
                         questionText: "Что проходят в Центре подготовки космонавтов при подготовке к космическим полетам для того, чтобы члены экипажа сохранили жизнь и здоровье?",
                         questionVideoUrl: URL(string: "https://www.youtube.com/embed/VDAvGeSl76c?playsinline=1"),
                         answerVideoUrl: URL(string: "https://www.youtube.com/embed/JBA_Z4e67LM?playsinline=1"),
-                        answer: ["ТРЕНИРОВКИ", "ПО ВЫЖИВАНИЮ"],
+                        answer: ["ТРЕНИРОВКИ", "ПО", "ВЫЖИВАНИЮ"],
                         answerCharacters: "ТРИЫИЕОКПОРИИВЖВВАННЮ",
                         isComplete: false,
                         score: 0),

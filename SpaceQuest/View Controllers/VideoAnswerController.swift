@@ -23,8 +23,8 @@ extension VideoAnswerControllerDelegate {
 
 class VideoAnswerController: UIViewController {
     
-    enum ExitMode {
-        case introVideo, endRoute, nextQuestion, noAction
+    enum Mode {
+        case introVideo, bonusVideo, endRoute, nextQuestion, noAction
     }
     
     // MARK: IBOutlets
@@ -33,14 +33,14 @@ class VideoAnswerController: UIViewController {
     @IBOutlet weak var webVideoView: WebVideoView!
     @IBOutlet weak var closeButton: UIButton!
     
-    @IBOutlet weak var introMainLabel: UILabel!
-    @IBOutlet weak var introSecondaryLabel: UILabel!
+    @IBOutlet weak var secondaryLabel: UILabel!
+    @IBOutlet weak var tertiaryLabel: UILabel!
     @IBOutlet weak var buttonCenterYConstraint: NSLayoutConstraint!
     
     // MARK: - Segue Properties
     
     var videoURL: URL!
-    var exitMode: ExitMode!
+    var mode: Mode!
     weak var delegate: VideoAnswerControllerDelegate?
     
     // MARK: - View Life Cycle
@@ -48,22 +48,27 @@ class VideoAnswerController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        titleLabel.text = (exitMode == .introVideo) ? "Вступление" : "Видео-ответ"
-        
-        if exitMode == .introVideo {
-            titleLabel.text = "Вступление"
-            introMainLabel.isHidden = false
-            introSecondaryLabel.isHidden = false
-            buttonCenterYConstraint.constant = 25
-            closeButton.isEnabled = false
-            closeButton.alpha = 0.6
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 6) {
-                self.closeButton.isEnabled = true
-                self.closeButton.alpha = 1
+        if mode == .introVideo || mode == .bonusVideo {
+            secondaryLabel.isHidden = false
+            tertiaryLabel.isHidden = false
+            buttonCenterYConstraint.constant = 30
+            
+            if mode == .introVideo {
+                titleLabel.text = "Вступление"
+                closeButton.isEnabled = false
+                closeButton.alpha = 0.6
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 6) {
+                    self.closeButton.isEnabled = true
+                    self.closeButton.alpha = 1
+                }
+            } else if mode == .bonusVideo {
+                titleLabel.text = "Видео с МКС\n9 апреля 2018 г."
+                secondaryLabel.text = "Артемьев Олег Германович\nГерой РФ, лётчик-космонавт РФ"
+                tertiaryLabel.text = "Автор стихов - Сергей Иванович Ткаченко\nПрофессор кафедры космического машиностроения Самарского университета,\nд.т.н., заместитель Генерального конструктора\nпо научной работе АО «РКЦ «Прогресс»,\nглавный конструктор серии малых космических аппаратов\n«АИСТ»."
             }
         }
         
-        switch exitMode {
+        switch mode {
             case .endRoute: closeButton.setTitle("Завершить маршрут", for: .normal)
             case .nextQuestion: closeButton.setTitle("Следующий вопрос", for: .normal)
             default: closeButton.setTitle("Закрыть", for: .normal)
@@ -77,7 +82,7 @@ class VideoAnswerController: UIViewController {
     
     @IBAction func closeButtonPressed(_ sender: UIButton) {
         dismiss(animated: true) { [self] in
-            switch exitMode {
+            switch mode {
                 case .endRoute:
                     delegate?.videoAnswerControllerDidTapEndRouteButton(self)
                 case .nextQuestion:

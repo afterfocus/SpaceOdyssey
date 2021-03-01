@@ -29,19 +29,18 @@ class QuestionCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var lockView: UIVisualEffectView!
     
+    // MARK: - Private Properties
+    
+    private var hasShadow = false
+    
     // MARK: - Cell Life Cycle
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        
-        layer.dropShadow(opacity: 0.4, radius: 7)
-        layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: 20).cgPath
-        
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = contentView.frame
-        gradientLayer.locations = [0.05, 0.95]
-        gradientLayer.colors = [CGColor.lightBlue, CGColor.darkBlue]
-        frontView.layer.insertSublayer(gradientLayer, at: 0)
+    override func layoutSubviews() {
+        if !hasShadow {
+            layer.dropShadow(opacity: 0.4, radius: 7)
+            layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: 20).cgPath
+            hasShadow = true
+        }
     }
     
     override func prepareForReuse() {

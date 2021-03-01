@@ -353,7 +353,7 @@ extension MapController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if isTrackingEnabled {
-            moveToUserLocation(withAnimationType: .linear, duration: 0.2)
+            moveToUserLocation(withAnimationType: .linear, duration: 0.5)
         }
         guard let endPoint = routeEndPoint,
               let coordinates = locationManager.location?.coordinate else { return }

@@ -19,6 +19,8 @@ protocol AnswerButtonsViewDelegate: class {
 
 class AnswerButtonsView: UICollectionView {
     
+    @IBOutlet weak var width: NSLayoutConstraint!
+    
     // MARK: Internal Properties
     
     var answerCharacters = [Character]() {
@@ -30,7 +32,8 @@ class AnswerButtonsView: UICollectionView {
     
     // MARK: - Private Properties
     
-    private let buttonCellSize = CGSize(width: 37, height: 37)
+    private var buttonCellSize: CGSize!
+    private var buttonCellSpacing: CGFloat!
     
     // MARK: - Internal Functions
     
@@ -38,6 +41,16 @@ class AnswerButtonsView: UICollectionView {
         super.awakeFromNib()
         dataSource = self
         delegate = self
+        
+        if UIScreen.main.bounds.width > 320 {
+            buttonCellSize = CGSize(width: 37, height: 37)
+            buttonCellSpacing = 7
+            width.constant = 301
+        } else {
+            buttonCellSize = CGSize(width: 35, height: 35)
+            buttonCellSpacing = 6
+            width.constant = 281
+        }
     }
     
     func removeCharacter(at indexPath: IndexPath) {
@@ -104,6 +117,12 @@ extension AnswerButtonsView: UICollectionViewDelegateFlowLayout {
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         return buttonCellSize
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return buttonCellSpacing
     }
 }
 

@@ -31,7 +31,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func applicationDidEnterBackground(_ application: UIApplication) {
-        DataModel.current.saveToFile()
+        if DataModel.isLoggedIn {
+            DataModel.current.saveToFile()
+        }
     }
 }
 

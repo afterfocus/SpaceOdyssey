@@ -147,10 +147,10 @@ class QuestionViewController: UIViewController {
         navigationController?.pushViewController(questionVC, animated: true)
     }
     
-    private func showVideoAnswer(exitMode: VideoAnswerController.ExitMode) {
+    private func showVideoAnswer(mode: VideoAnswerController.Mode) {
         guard let videoAnswerVC = storyboard!.instantiateViewController(withIdentifier: "VideoAnswerController") as? VideoAnswerController else { return }
         videoAnswerVC.videoURL = currentQuestion.answerVideoUrl
-        videoAnswerVC.exitMode = exitMode
+        videoAnswerVC.mode = mode
         videoAnswerVC.delegate = self
         present(videoAnswerVC, animated: true)
     }
@@ -199,7 +199,7 @@ extension QuestionViewController: QuestionControlsViewDelegate {
     }
     
     func questionControlsViewDidTapVideoAnswerButton(_ questionControlsView: QuestionControlsView) {
-        showVideoAnswer(exitMode: .noAction)
+        showVideoAnswer(mode: .noAction)
     }
 }
 
@@ -261,7 +261,7 @@ extension QuestionViewController: AnswerFieldViewDelegate {
 extension QuestionViewController: LocationFinishedControllerDelegate {
     
     func locationFinishedControllerDidTapVideoAnswerButton(_ controller: LocationFinishedController) {
-        showVideoAnswer(exitMode: route.isVariationComplete(variation) ? .endRoute : .nextQuestion)
+        showVideoAnswer(mode: route.isVariationComplete(variation) ? .endRoute : .nextQuestion)
     }
     
     func locationFinishedControllerDidTapNextQuestionButton(_ controller: LocationFinishedController) {

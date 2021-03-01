@@ -20,8 +20,9 @@ class OurHeroesController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let sortedHeroes = Array(DataModel.authors.values).sorted { $0.surname < $1.surname }
-        heroes = DataModel.vipAuthors + sortedHeroes
+        heroes = Array(DataModel.authors.values).sorted { $0.surname < $1.surname }
+        heroes.insert(DataModel.leonov, at: 0)
+        heroes.append(DataModel.tkachenko)
         heroPhotos = Array(repeating: nil, count: heroes.count)
     }
 }
