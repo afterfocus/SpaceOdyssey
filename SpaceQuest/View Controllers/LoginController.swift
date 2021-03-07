@@ -11,7 +11,7 @@ protocol LoginControllerEditingDelegate: class {
     func loginControllerDidEndEditing(_ controller: LoginController, userName: String, email: String)
 }
 
-class LoginController: UIViewController {
+final class LoginController: UIViewController {
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var nameTextField: UITextField!
@@ -79,23 +79,16 @@ class LoginController: UIViewController {
         trimCharacters(in: emailTextField)
         
         if nameTextField.text!.count < 2 {
-            showAlert(title: "Ошибка входа", message: "Пожалуйста, укажите корректное имя пользователя.")
+            present(UIAlertController.incorrentNameAlert, animated: true)
             return false
         }
         
         let predicate = NSPredicate(format:"SELF MATCHES %@", "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}")
         if !predicate.evaluate(with: emailTextField.text!) {
-            showAlert(title: "Ошибка входа", message: "Указан некорректный адрес электронной почты.\nПожалуйста, укажите существующий адрес электронной почты для доставки наград.")
+            present(UIAlertController.incorrentEmailAlert, animated: true)
             return false
         }
         return true
-    }
-    
-    private func showAlert(title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let action = UIAlertAction(title: "OK", style: .cancel)
-        alert.addAction(action)
-        present(alert, animated: true)
     }
 }
 

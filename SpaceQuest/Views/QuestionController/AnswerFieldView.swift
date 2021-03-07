@@ -17,7 +17,7 @@ protocol AnswerFieldViewDelegate: class {
 
 // MARK: - AnswerFieldCollectionView
 
-class AnswerFieldView: UICollectionView {
+final class AnswerFieldView: UICollectionView {
     
     // MARK: Internal Properties
     

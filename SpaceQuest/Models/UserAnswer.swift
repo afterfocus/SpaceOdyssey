@@ -7,7 +7,7 @@
 
 import Foundation
 
-class UserAnswer {
+final class UserAnswer {
     
     private var answer: [[Character]]
     

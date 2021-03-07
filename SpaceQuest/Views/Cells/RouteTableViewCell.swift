@@ -17,7 +17,7 @@ protocol RouteTableViewCellDelegate: class {
 
 // MARK: - RouteTableViewCell
 
-class RouteTableViewCell: UITableViewCell {
+final class RouteTableViewCell: UITableViewCell {
     
     // MARK: IBOutlets
     

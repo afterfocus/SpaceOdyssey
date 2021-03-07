@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: QuestionListViewController
 
-class QuestionListViewController: UIViewController {
+final class QuestionListViewController: UIViewController {
     
     // MARK: IBOutlets
     

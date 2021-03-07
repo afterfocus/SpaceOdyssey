@@ -7,7 +7,7 @@
 
 import UIKit
 
-class AnswerCollectionViewCell: UICollectionViewCell {
+final class AnswerCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var letterLabel: UILabel!
     
     override func awakeFromNib() {

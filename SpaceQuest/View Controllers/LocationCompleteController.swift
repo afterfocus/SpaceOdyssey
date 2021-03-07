@@ -10,7 +10,7 @@ import UIKit
 
 // MARK: - LocationCompleteController
 
-class LocationCompleteController: LocationFinishedController {
+final class LocationCompleteController: LocationFinishedController {
     
     // MARK: IBOutlets
     

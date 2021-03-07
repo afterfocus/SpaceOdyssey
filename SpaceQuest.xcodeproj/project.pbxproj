@@ -33,6 +33,7 @@
 		B53B8AFC25DC08DC00D284A9 /* UITextFieldExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53B8AFB25DC08DC00D284A9 /* UITextFieldExtension.swift */; };
 		B53B8B0125DEB14300D284A9 /* UIDeviceExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53B8B0025DEB14300D284A9 /* UIDeviceExtension.swift */; };
 		B549E2092573D30E00260121 /* QuestionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B549E2082573D30E00260121 /* QuestionViewController.swift */; };
+		B575826D25F4907A007A9C8D /* UIAlertControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B575826C25F4907A007A9C8D /* UIAlertControllerExtension.swift */; };
 		B57B3CD32593BCC000270D8E /* AnswerFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57B3CD22593BCC000270D8E /* AnswerFieldView.swift */; };
 		B57B3CD62593BCCC00270D8E /* AnswerButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57B3CD52593BCCC00270D8E /* AnswerButtonsView.swift */; };
 		B57B3CDF259515CA00270D8E /* UserAnswer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57B3CDE259515CA00270D8E /* UserAnswer.swift */; };
@@ -89,6 +90,7 @@
 		B53B8AFB25DC08DC00D284A9 /* UITextFieldExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITextFieldExtension.swift; sourceTree = "<group>"; };
 		B53B8B0025DEB14300D284A9 /* UIDeviceExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDeviceExtension.swift; sourceTree = "<group>"; };
 		B549E2082573D30E00260121 /* QuestionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionViewController.swift; sourceTree = "<group>"; };
+		B575826C25F4907A007A9C8D /* UIAlertControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIAlertControllerExtension.swift; sourceTree = "<group>"; };
 		B57B3CD22593BCC000270D8E /* AnswerFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerFieldView.swift; sourceTree = "<group>"; };
 		B57B3CD52593BCCC00270D8E /* AnswerButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerButtonsView.swift; sourceTree = "<group>"; };
 		B57B3CDE259515CA00270D8E /* UserAnswer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAnswer.swift; sourceTree = "<group>"; };
@@ -171,6 +173,7 @@
 		B5AD43B02568467D00110AE8 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				B575826C25F4907A007A9C8D /* UIAlertControllerExtension.swift */,
 				B5AD43B12568469400110AE8 /* UIImageViewExtension.swift */,
 				B5BF7AA4257BCF7D009AA0A3 /* UIColorExtension.swift */,
 				B5153983257D279500907AD5 /* UILabelExtension.swift */,
@@ -412,6 +415,7 @@
 				B57B3CDF259515CA00270D8E /* UserAnswer.swift in Sources */,
 				B57B3CD32593BCC000270D8E /* AnswerFieldView.swift in Sources */,
 				B5A91A8425AC45D8000C0C99 /* LocationFailedController.swift in Sources */,
+				B575826D25F4907A007A9C8D /* UIAlertControllerExtension.swift in Sources */,
 				B5A91A7825A71382000C0C99 /* VideoAnswerController.swift in Sources */,
 				B5BDDC3E256829DB0043737B /* QuestionListViewController.swift in Sources */,
 				B51C2D9B2598E83D00107378 /* CustomIntensityVisualEffectView.swift in Sources */,
@@ -607,7 +611,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.2.6;
+				MARKETING_VERSION = 0.3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = MaximGolov.SpaceQuest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -629,7 +633,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.2.6;
+				MARKETING_VERSION = 0.3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = MaximGolov.SpaceQuest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: - LocationFailedController
 
-class LocationFailedController: LocationFinishedController {
+final class LocationFailedController: LocationFinishedController {
     
     // MARK: IBOutlets
     

@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: QuestionCollectionViewCell
 
-class QuestionCollectionViewCell: UICollectionViewCell {
+final class QuestionCollectionViewCell: UICollectionViewCell {
     
     // MARK: IBOutlets
     

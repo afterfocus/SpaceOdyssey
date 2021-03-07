@@ -8,7 +8,7 @@
 import Foundation
 
 /// Вопрос
-class Question {
+final class Question {
     /// Название вопроса
     let title: String
     /// Локация
@@ -28,9 +28,11 @@ class Question {
     /// Ссылка на видео с правильным ответом
     let answerVideoUrl: URL?
     /// Завершен ли вопрос
-    var isComplete: Bool
-    /// Количнство очков, заработанных пользователем за ответ
-    var score: Int
+    var isComplete = false
+    /// Количество очков, заработанных пользователем за ответ
+    var score = 0
+    /// Использовано подсказок
+    var usedHints = 0
     
     var answerLength: Int {
         var count = 0
@@ -42,7 +44,7 @@ class Question {
         return count
     }
     
-    init(title: String, location: Location, author: Author, questionText: String, questionVideoUrl: URL?, answerVideoUrl: URL?, answer: [String], alternativeAnswer: [String]? = nil, answerCharacters: String, isComplete: Bool, score: Int) {
+    init(title: String, location: Location, author: Author, questionText: String, questionVideoUrl: URL?, answerVideoUrl: URL?, answer: [String], alternativeAnswer: [String]? = nil, answerCharacters: String) {
         self.title = title
         self.location = location
         self.author = author
@@ -51,8 +53,6 @@ class Question {
         self.answerVideoUrl = answerVideoUrl
         self.answer = answer
         self.answerCharacters = Array(answerCharacters)
-        self.isComplete = isComplete
-        self.score = score
         self.alternativeAnswer = alternativeAnswer
     }
 }

@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: RouteListViewController
 
-class RouteListViewController: UIViewController {
+final class RouteListViewController: UIViewController {
     
     // MARK: IBOutlets
     
@@ -43,6 +43,23 @@ class RouteListViewController: UIViewController {
         super.viewWillAppear(animated)
         routesTableView.reloadData()
         routesTableView.selectRow(at: selectedIndexPath, animated: false, scrollPosition: .none)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        guard DataModel.current.shouldSendRegistrationPrizes else { return }
+        
+        DataModel.current.sendRegistrationPrize() { statusCode in
+            guard let code = statusCode else {
+                self.present(UIAlertController.registrationPrizesNotSendWithUndefinedError, animated: true)
+                return
+            }
+            if code == 200 {
+                DataModel.current.shouldSendRegistrationPrizes = false
+            } else {
+                self.present(UIAlertController.registrationPrizesNotSend(errorCode: code), animated: true)
+            }
+        }
     }
 }
 

@@ -13,6 +13,7 @@ protocol LocationFinishedControllerDelegate: class {
     func locationFinishedControllerDidTapVideoAnswerButton(_ controller: LocationFinishedController)
     func locationFinishedControllerDidTapNextQuestionButton(_ controller: LocationFinishedController)
     func locationFinishedControllerDidTapEndRouteButton(_ controller: LocationFinishedController)
+    func locationFinishedControllerDidTapXmarkButton(_ controller: LocationFinishedController)
 }
 
 // MARK: - LocationFinishedController
@@ -24,6 +25,7 @@ class LocationFinishedController: UIViewController {
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var videoAnswerButton: UIButton!
     @IBOutlet weak var closeButton: UIButton!
+    @IBOutlet weak var xmarkButton: UIButton!
     
     // MARK: - Segue Properties
     
@@ -39,6 +41,9 @@ class LocationFinishedController: UIViewController {
         videoAnswerButton.isEnabled = question.answerVideoUrl != nil
         videoAnswerButton.alpha = question.answerVideoUrl != nil ? 1 : 0.6
         closeButton.setTitle(isRouteCompleted ? "Завершить маршрут" : "Следующий вопрос", for: .normal)
+        xmarkButton.layer.borderWidth = 4
+        xmarkButton.layer.borderColor = .lightAccent
+        xmarkButton.layer.dropShadow(opacity: 0.3, radius: 5)
     }
     
     // MARK: - IBActions
@@ -56,6 +61,12 @@ class LocationFinishedController: UIViewController {
             } else {
                 delegate?.locationFinishedControllerDidTapNextQuestionButton(self)
             }
+        }
+    }
+    
+    @IBAction func xmarkButtonPressed(_ sender: UIButton) {
+        dismiss(animated: true) {
+            self.delegate?.locationFinishedControllerDidTapXmarkButton(self)
         }
     }
 }

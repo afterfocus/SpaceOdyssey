@@ -21,7 +21,7 @@ extension VideoAnswerControllerDelegate {
 
 // MARK: - VideoAnswerControllerDelegate
 
-class VideoAnswerController: UIViewController {
+final class VideoAnswerController: UIViewController {
     
     enum Mode {
         case introVideo, bonusVideo, endRoute, nextQuestion, noAction

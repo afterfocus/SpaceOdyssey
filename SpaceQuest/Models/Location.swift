@@ -7,7 +7,7 @@
 
 import Foundation
 
-class Location {
+final class Location {
     /// Название достопремичательности
     let name: String
     /// Название достопремичательности

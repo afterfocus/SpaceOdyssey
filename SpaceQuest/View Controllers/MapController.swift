@@ -11,7 +11,7 @@ import CoreLocation
 
 // MARK: MapController
 
-class MapController: UIViewController {
+final class MapController: UIViewController {
     
     // MARK: IBOutlets
     
@@ -250,9 +250,7 @@ class MapController: UIViewController {
         } else if routingError.isKind(of: YRTRemoteError.self) {
             errorMessage = "Remote server error"
         }
-        let alert = UIAlertController(title: "YandexMapKit Error", message: errorMessage, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        present(alert, animated: true, completion: nil)
+        present(UIAlertController.ymkErrorAlert(message: errorMessage), animated: true)
     }
 }
 
@@ -353,7 +351,7 @@ extension MapController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if isTrackingEnabled {
-            moveToUserLocation(withAnimationType: .linear, duration: 0.5)
+            moveToUserLocation(withAnimationType: .linear, duration: 1)
         }
         guard let endPoint = routeEndPoint,
               let coordinates = locationManager.location?.coordinate else { return }

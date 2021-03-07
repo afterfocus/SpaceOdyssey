@@ -7,13 +7,13 @@
 
 import Foundation
 import YandexMapsMobile
-//import SwiftSMTP
 
 // MARK: - Question Data
 
 struct QuestionData: Codable {
     var isComplete: Bool
     var score: Int
+    var usedHints: Int
 }
 
 // MARK: - Data To Save
@@ -22,12 +22,13 @@ struct DataToSave: Codable {
     var isRouteFirstTimeLaunched: Bool
     var isMapNightModeEnabled: Bool
     var isRoutingDisabled: Bool
+    var shouldSendRegistrationPrizes: Bool
     var routesData: [[QuestionData]]
 }
 
 // MARK: - Data Model
 
-class DataModel {
+final class DataModel {
 
     // MARK: - Properties
     
@@ -36,6 +37,7 @@ class DataModel {
     var isRouteFirstTimeLaunched = true
     var isMapNightModeEnabled = true
     var isRoutingDisabled = false
+    var shouldSendRegistrationPrizes = false
     
     // MARK: - Init
     
@@ -46,8 +48,10 @@ class DataModel {
         /// Проверить существует ли файл.
         if (try? dataFilePath().checkResourceIsReachable()) ?? false {
             loadFromFile()
+            shouldSendRegistrationPrizes = false
         } else {
             clearUserProgress()
+            shouldSendRegistrationPrizes = true
         }
     }
     
@@ -73,7 +77,7 @@ class DataModel {
     func saveToFile() {
         do {
             let data = try PropertyListEncoder().encode(dataToSave)
-            try data.write(to: dataFilePath(), options: Data.WritingOptions.atomic)
+            try data.write(to: dataFilePath(), options: .atomic)
         } catch {
             print("DATA SAVING ERROR: \(error.localizedDescription)")
         }
@@ -91,11 +95,57 @@ class DataModel {
         }
     }
     
+    /// Отправить призы за регистрацию
+    func sendRegistrationPrize(completion: @escaping (_ statusCode: Int?) -> Void) {
+        var urlComponents = URLComponents(string: "https://odysseymars.com/api/v0/sendemail")!
+        urlComponents.queryItems = postServiceQueryItems + [URLQueryItem(name: "prize", value: "registration")]
+        var request = URLRequest(url: urlComponents.url!)
+        request.httpMethod = "POST"
+
+        let dataTask = URLSession.shared.dataTask(with: request) {
+            (data, response, error) in
+            let response = response as? HTTPURLResponse
+            DispatchQueue.main.async {
+                completion(response?.statusCode)
+            }
+        }
+        dataTask.resume()
+    }
+    
+    /// Отправить призы за маршрут
+    func sendRoutePrize(route: Route, completion: ((_ statusCode: Int?) -> Void)? = nil) {
+        var urlComponents = URLComponents(string: "https://odysseymars.com/api/v0/sendemail")!
+        urlComponents.queryItems = postServiceQueryItems + [
+            URLQueryItem(name: "route", value: route.id),
+            URLQueryItem(name: "prize", value: "walk"),
+            URLQueryItem(name: "distance", value: "\(Double(route.distancePassed) / 1000)"),
+            URLQueryItem(name: "ccal", value: "\(route.caloriesBurned)"),
+            URLQueryItem(name: "score", value: "\(route.score)")
+        ]
+        var request = URLRequest(url: urlComponents.url!)
+        request.httpMethod = "POST"
+
+        let dataTask = URLSession.shared.dataTask(with: request) {
+            (data, response, error) in
+            let response = response as? HTTPURLResponse
+            DispatchQueue.main.async {
+                completion?(response?.statusCode)
+            }
+        }
+        dataTask.resume()
+    }
+    
     // MARK: - Private Functions
     
     /// Имя файла с данными для текущего вользователя
     private var filename: String {
-        return "\(userName) - \(email).plist"
+        "\(userName) - \(email).plist"
+    }
+    
+    private var postServiceQueryItems: [URLQueryItem] {
+        [URLQueryItem(name: "key", value: DataModel.postServerApiKey),
+         URLQueryItem(name: "email", value: email),
+         URLQueryItem(name: "name", value: userName)]
     }
     
     /// Подготовить данные для сохранения
@@ -104,6 +154,7 @@ class DataModel {
         return DataToSave(isRouteFirstTimeLaunched: isRouteFirstTimeLaunched,
                           isMapNightModeEnabled: isMapNightModeEnabled,
                           isRoutingDisabled: isRoutingDisabled,
+                          shouldSendRegistrationPrizes: shouldSendRegistrationPrizes,
                           routesData: routesData)
     }
     
@@ -118,12 +169,14 @@ class DataModel {
         isRouteFirstTimeLaunched = data.isRouteFirstTimeLaunched
         isMapNightModeEnabled = data.isMapNightModeEnabled
         isRoutingDisabled = data.isRoutingDisabled
+        shouldSendRegistrationPrizes = data.shouldSendRegistrationPrizes
         
         for (routeIndex, questionsData) in data.routesData.enumerated() {
             for (questionIndex, questionData) in questionsData.enumerated() {
                 let question = DataModel.routes[routeIndex][questionIndex]
                 question.isComplete = questionData.isComplete
                 question.score = questionData.score
+                question.usedHints = questionData.usedHints
             }
         }
     }
@@ -134,35 +187,10 @@ class DataModel {
             for question in route.questions {
                 question.isComplete = false
                 question.score = 0
+                question.usedHints = 0
             }
         }
     }
-    
-    /*
-    func sendEmail() {
-        let smtp = SMTP(hostname: "smtp.gmail.com",
-                        email: "",
-                        password: "")
-        
-        let sender = Mail.User(name: "Одиссея Марса", email: "spacequest@gmail.com")
-        let reciever = Mail.User(name: userName, email: email)
-        
-        let mail = Mail(
-            from: sender,
-            to: [reciever],
-            subject: "Одиссея Марса - Награды за прохождение маршрута",
-            text: ""
-        )
-        
-        smtp.send(mail) { (error) in
-            if let error = error {
-                print(error)
-            } else {
-                print("Письмо отправлено")
-            }
-        }
-    }
- */
 }
     
 
@@ -190,6 +218,10 @@ extension DataModel {
         }
     }
     
+    static var postServerApiKey: String {
+        return "ZfMtsgkd$2RpkWWx"
+    }
+    
     static func setYandexMapsAPIKey() {
         YMKMapKit.setApiKey("7ab269af-7c79-4c99-bb21-9afad48c1db9")
     }
@@ -214,7 +246,6 @@ extension DataModel {
     private static var userDefaults: UserDefaults {
         return UserDefaults.standard
     }
-    
     
     
     // MARK: - Authors
@@ -351,1066 +382,950 @@ extension DataModel {
                          aboutAuthorFull: "Академик РАН, заслуженный деятель науки Российской Федерации,\nПрезидент Самарского университета",
                          photoFilename: "Соифер"),
         "Степанова": Author(surname: "Степанова",
-                            name: "Анастасия",
-                            patronymic: "Александровна",
-                            aboutAuthor: "Участник «Марc 160»\nИспытатель-исследователь",
-                            aboutAuthorFull: "Ведущий инженер Института медико-биологических проблем РАН,\nУчастница международного проекта Марс 160,\n Испытатель-исследователь экипажа изоляционного имитационного полета к Луне «SIRIUS-19»,\nКосмический журналист, волонтер-спасатель отряда Спасрезерв",
-                            photoFilename: "Степанова"),
+                                     name: "Анастасия",
+                                     patronymic: "Александровна",
+                                     aboutAuthor: "Участник «Марc 160»\nИспытатель-исследователь",
+                                     aboutAuthorFull: "Ведущий инженер Института медико-биологических проблем РАН,\nУчастница международного проекта Марс 160,\n Испытатель-исследователь экипажа изоляционного имитационного полета к Луне «SIRIUS-19»,\nКосмический журналист, волонтер-спасатель отряда Спасрезерв",
+                                     photoFilename: "Степанова"),
         "Титов": Author(surname: "Титов",
-                        name: "Владимир",
-                        patronymic: "Георгиевич",
-                        aboutAuthor: "Герой СССР\nЛётчик-космонавт",
-                        aboutAuthorFull: "Герой Советского Союза,\nЛётчик-космонавт СССР,\n  Космонавт 54/118 (России/мира),\n4 полёта – 387 сут. 00 час. 45 мин.,\n4 выхода в открытый космос – 18 час. 48 мин.",
-                        photoFilename: "Титов"),
+                             name: "Владимир",
+                             patronymic: "Георгиевич",
+                             aboutAuthor: "Герой СССР\nЛётчик-космонавт",
+                             aboutAuthorFull: "Герой Советского Союза,\nЛётчик-космонавт СССР,\n  Космонавт 54/118 (России/мира),\n4 полёта – 387 сут. 00 час. 45 мин.,\n4 выхода в открытый космос – 18 час. 48 мин.",
+                             photoFilename: "Титов"),
         "Тихонов": Author(surname: "Тихонов",
-                          name: "Николай",
-                          patronymic: "Владимирович",
-                          aboutAuthor: "Космонавт-испытатель Роскосмоса",
-                          aboutAuthorFull: "Космонавт-испытатель отряда космонавтов Роскосмоса,\nИнженер РКК «Энергия»",
-                          photoFilename: "Тихонов"),
+                                 name: "Николай",
+                                 patronymic: "Владимирович",
+                                 aboutAuthor: "Космонавт-испытатель Роскосмоса",
+                                 aboutAuthorFull: "Космонавт-испытатель отряда космонавтов Роскосмоса,\nИнженер РКК «Энергия»",
+                                 photoFilename: "Тихонов"),
         "Федяев": Author(surname: "Федяев",
-                         name: "Андрей",
-                         patronymic: "Валерьевич",
-                         aboutAuthor: "Космонавт-испытатель Роскосмоса",
-                         aboutAuthorFull: "Космонавт-испытатель отряда космонавтов Роскосмоса,\nВоенный летчик 2-го класса",
-                         photoFilename: "Федяев"),
+                               name: "Андрей",
+                               patronymic: "Валерьевич",
+                               aboutAuthor: "Космонавт-испытатель Роскосмоса",
+                               aboutAuthorFull: "Космонавт-испытатель отряда космонавтов Роскосмоса,\nВоенный летчик 2-го класса",
+                               photoFilename: "Федяев"),
         "Филатова": Author(surname: "Филатова",
-                           name: "Тамара",
-                           patronymic: "Дмитриевна",
-                           aboutAuthor: "Племянница Ю.А. Гагарина",
-                           aboutAuthorFull: "Племянница первого космонавта Ю.А. Гагарина,\nЗаведующая мемориальным отделом Объединенного мемориального музея Ю.А. Гагарина (г. Гагарин)",
-                           photoFilename: "Филатова"),
+                                   name: "Тамара",
+                                   patronymic: "Дмитриевна",
+                                   aboutAuthor: "Племянница Ю.А. Гагарина",
+                                   aboutAuthorFull: "Племянница первого космонавта Ю.А. Гагарина,\nЗаведующая мемориальным отделом Объединенного мемориального музея Ю.А. Гагарина (г. Гагарин)",
+                                   photoFilename: "Филатова"),
         "Черкасов": Author(surname: "Черкасов",
-                           name: "Андрей",
-                           patronymic: "Николаевич",
-                           aboutAuthor: "Инженер-испытатель\nНПП «Звезда»",
-                           aboutAuthorFull: "Инженер-испытатель АО «НПП «Звезда»",
-                           photoFilename: "Черкасов"),
+                                   name: "Андрей",
+                                   patronymic: "Николаевич",
+                                   aboutAuthor: "Инженер-испытатель\nНПП «Звезда»",
+                                   aboutAuthorFull: "Инженер-испытатель АО «НПП «Звезда»",
+                                   photoFilename: "Черкасов"),
         "Юрченко": Author(surname: "Юрченко",
-                          name: "Екатерина",
-                          patronymic: "Сергеевна",
-                          aboutAuthor: "Инструктор по исследованию Земли из космоса",
-                          aboutAuthorFull: "Инструктор по подготовке к экспериментам по исследованию Земли из космоса Центра подготовки космонавтов имени Ю. А. Гагарина",
-                          photoFilename: "Юрченко"),
+                                 name: "Екатерина",
+                                 patronymic: "Сергеевна",
+                                 aboutAuthor: "Инструктор по исследованию Земли из космоса",
+                                 aboutAuthorFull: "Инструктор по подготовке к экспериментам по исследованию Земли из космоса Центра подготовки космонавтов имени Ю. А. Гагарина",
+                                 photoFilename: "Юрченко"),
         "Шкаплеров": Author(surname: "Шкаплеров",
-                            name: "Антон",
-                            patronymic: "Николаевич",
-                            aboutAuthor: "Герой РФ\nЛётчик-космонавт",
-                            aboutAuthorFull: "Герой Российской Федерации,\nЛётчик-космонавт РФ,\nКосмонавт 111/521 (России/мира),\n3 полёта – 533 сут. 05 час. 31 мин.,\n2 выхода в открытый космос – 14 час. 28 мин.",
-                            photoFilename: "Шкаплеров")
+                                     name: "Антон",
+                                     patronymic: "Николаевич",
+                                     aboutAuthor: "Герой РФ\nЛётчик-космонавт",
+                                     aboutAuthorFull: "Герой Российской Федерации,\nЛётчик-космонавт РФ,\nКосмонавт 111/521 (России/мира),\n3 полёта – 533 сут. 05 час. 31 мин.,\n2 выхода в открытый космос – 14 час. 28 мин.",
+                                     photoFilename: "Шкаплеров")
     ]
-
+    
     // MARK: - Routes
     
     // MARK: - Космическая столица России
-    static let routes = [
-            Route(imageFileName: "background1.png",
-                  title: "Космическая столица России",
-                  subtitle: "Историческая часть города",
-                  questions: [
-                    Question(
-                        title: "Перед стартом",
-                        location: Location(name: "МВЦ «Самара Космическая»",
-                                           address: "Проспект Ленина 21",
-                                           latitude: 53.212677,
-                                           longtitude: 50.145232,
-                                           photoFilename: "МВЦ Самара Космическая"),
-                        author: authors["Корзун"]!,
-                        questionText: "Посмотрите внимательно на ракету. Так она выглядит за 2,5 часа до старта. Назовите настоящий цвет ракеты «Союз» до того, как она становится белой.",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/33hnI0SLtnw?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/9nKjkbawOEI?playsinline=1"),
-                        answer: ["СЕРЫЙ"],
-                        answerCharacters: "СРЧРЕБИЫЕНИЛСЙ",
-                        isComplete: false,
-                        score: 0),
-                    
-                    Question(
-                        title: "Великолепная шестёрка",
-                        location: Location(name: "Памятник Д.И.Козлову",
-                                           address: "Проспект Ленина 1",
-                                           latitude: 53.212891,
-                                           longtitude: 50.145006,
-                                           photoFilename: "Памятник Козлову"),
-                        author: authors["Баранов"]!,
-                        questionText: "В 1946 году перед ведущими конструкторами СССР ставилась единая цель – создание баллистических, а затем и космических ракет. Для управления этой системой был создан координационный орган, который хоть и имел совещательно-консультативные функции, однако его члены обладали необходимыми полномочиями для формирования направления развития советской ракетно-космической программы и смежных исследований. Назовите название этого совещательного органа.",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/TIvJebiqV9o?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/R50m7lnY5AM?playsinline=1"),
-                        answer: ["СОВЕТ", "ГЛАВНЫХ"],
-                        answerCharacters: "СТСВГЛХЫВЕОАЮНОЗ",
-                        isComplete: false,
-                        score: 0),
-                    
-                    Question(
-                        title: "Дом-рекордсмен",
-                        location: Location(name: "Сквер им. В.И.Фадеева",
-                                           address: "Проспект Ленина 1",
-                                           latitude: 53.205983,
-                                           longtitude: 50.132470,
-                                           photoFilename: "Сквер Фадеева"),
-                        author: authors["Авдеев"]!,
-                        questionText: "Дмитрий Ильич Козлов всю жизнь защищал Родину, причем в молодости ему пришлось делать это собственной кровью. 1 июля 1941 года студент пятого курса института Дмитрий Козлов добровольцем записался в народное ополчение, прошел всю Великую Отечественную войну, был трижды ранен и потерял руку. Получил несколько боевых наград. Медалью за оборону какого города был награжден Козлов?",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/iVOB-crqAmQ?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/UU4D150Q6pQ?playsinline=1"),
-                        answer: ["ЛЕНИНГРАД"],
-                        answerCharacters: "ЛРСАНДЕРТНГМАИАСА",
-                        isComplete: false,
-                        score: 0),
-                    
-                    Question(
-                        title: "Семейные узы",
-                        location: Location(name: "Дворец бракосочетания",
-                                           address: "Молодогвардейская 238",
-                                           latitude: 53.207977,
-                                           longtitude: 50.122220,
-                                           photoFilename: "Дворец бракосочетания"),
-                        author: authors["Черкасов"]!,
-                        questionText: "В истории отечественной космонавтики есть потомственные космонавты, когда дети осознанно выбирают путь своих отцов и становятся достойными их продолжателями в профессии космонавта. Назовите фамилии двух основателей космических династий.",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/aCGk9x3gKEQ?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/XgjiacSNFk8?playsinline=1"),
-                        answer: ["ВОЛКОВ", "РОМАНЕНКО"],
-                        answerCharacters: "ВЛАОКОКВГАЕНОРНРАОМИН",
-                        isComplete: false,
-                        score: 0),
-                    
-                    Question(
-                        title: "К звёздам",
-                        location: Location(name: "Скульптура «Первый спутник»",
-                                           address: "Волжский проспект 36",
-                                           latitude: 53.208451,
-                                           longtitude: 50.114155,
-                                           photoFilename: "Скульптура Первыи Спутник"),
-                        author: authors["Шкаплеров"]!,
-                        questionText: "Сегодня самарский РКЦ «Прогресс» - единственное в мире предприятие, осуществляющее пуски ракет-носителей с четырех площадок. Перечислите названия этих космодромов в алфавитном порядке.",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/K7OAFKBM3ho?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/eWtvOw_tK4k?playsinline=1"),
-                        answer: ["БАЙКОНУР", "ВОСТОЧНЫЙ", "КУРУ", "ПЛЕСЕЦК"],
-                        answerCharacters: "БНЕУВАЫПНУЙСРКЕЛРЙСОКОТЦОЧКУ",
-                        isComplete: false,
-                        score: 0),
-                    
-                    Question(
-                        title: "Покорившая небо",
-                        location: Location(name: "Спортивный комплекс ЦСКА ВВС",
-                                           address: "Волжский проспект 10",
-                                           latitude: 53.205375,
-                                           longtitude: 50.106455,
-                                           photoFilename: "Спортивныи комплекс ЦСКА ВВС"),
-                        author: authors["Кикина"]!,
-                        questionText: "Один из основных факторов космического полёта — элемент риска и опасности, заставляющий быть готовым быстро принимать правильные решения, — моделирует специальная парашютная подготовка. У истоков парашютной подготовки космонавтов стояла ЭТА удивительная хрупкая женщина. К моменту зачисления в отряд космонавтов она уже выполнила около 700 прыжков. А общее число прыжков — около 2500. Кроме того она является полковником ВВС в отставке, дублёром Валентины Терешковой. Назовите фамилию этой женщины.",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/xRIKovb9Eh4?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/UxBcOgDIg58?playsinline=1"),
-                        answer: ["СОЛОВЬЁВА"],
-                        answerCharacters: "СВЬАЛКГЁОГРРВОАИОАН",
-                        isComplete: false,
-                        score: 0),
-                    
-                    Question(
-                        title: "Родной край",
-                        location: Location(name: "Монумент «Гордость, честь и слава»",
-                                           address: "Площадь Славы, лестница",
-                                           latitude: 53.204076,
-                                           longtitude: 50.109611,
-                                           photoFilename: "Монумент Гордость, Честь и Слава"),
-                        author: authors["Корниенко"]!,
-                        questionText: "Четыре космонавта родились в Самарской области. Назовите их фамилии в алфавитном порядке.",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/yxZzwP_OYCc?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/JWYIcLjgWWw?playsinline=1"),
-                        answer: ["АВДЕЕВ", "АТЬКОВ", "ГУБАРЕВ", "КОРНИЕНКО"],
-                        answerCharacters: "КАЕКНУАЕРИТЕНОБОВРВАДГЕВКОЬВ",
-                        isComplete: false,
-                        score: 0),
-                    
-                    Question(
-                        title: "Счёт на секунды",
-                        location: Location(name: "Монумент Славы",
-                                           address: "Площадь Славы",
-                                           latitude: 53.203791,
-                                           longtitude: 50.109941,
-                                           photoFilename: "Монумент Славы"),
-                        author: authors["Титов"]!,
-                        questionText: "Назовите фамилию руководителя стартовой команды корабля «Союз-Т-10-1» – Героя Социалистического Труда, заместителя генерального конструктора «ЦСКБ-Прогресс».",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/vulFYcCDSr0?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/2O7px0BRJWQ?playsinline=1"),
-                        answer: ["СОЛДАТЕНКОВ"],
-                        answerCharacters: "СЁНТОВАЕЛДКОРК",
-                        isComplete: false,
-                        score: 0),
-                    
-                    Question(
-                        title: "На удачу",
-                        location: Location(name: "Мемориальная доска\nА.М. Солдатенкову",
-                                           address: "Молодогвардейская 218",
-                                           latitude: 53.203951,
-                                           longtitude: 50.113508,
-                                           photoFilename: "Мемориальная доска Солдатенкову"),
-                        author: authors["Лазаренко"]!,
-                        questionText: "У Сергея Павловича Королева был любимый головной убор, который он всегда носил с осени и до ранней весны. Сергей Павлович был также весьма суеверным человеком, и этот предмет непременно был на нем во время каждого старта. О каком головном уборе идет речь?",
-                        questionVideoUrl: nil,
-                        answerVideoUrl: nil,
-                        answer: ["ШЛЯПА"],
-                        answerCharacters: "ШСРАЕЗКПКЕПЯКОКЫБЛАРА",
-                        isComplete: false,
-                        score: 0),
-                   
-                    Question(
-                        title: "Заключённый",
-                        location: Location(name: "Памятник Д.Ф. Устинову",
-                                           address: "Самарская площадь",
-                                           latitude: 53.200971,
-                                           longtitude: 50.112744,
-                                           photoFilename: "Памятник Устинову"),
-                        author: authors["Артемьев"]!,
-                        questionText: "В 1944 г. отечественные инженеры впервые получили возможность ознакомиться с немецкой ракетной техникой: в их распоряжение попали элементы конструкции ракеты А-4. Назовите общеизвестное название этой ракеты.",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/CHzZXM1yMms?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/LPd9HiORRQw?playsinline=1"),
-                        answer: ["ФАУ-2"],
-                        answerCharacters: "ФОНРИДУАСК1234",
-                        isComplete: false,
-                        score: 0),
-                   
-                    Question(
-                        title: "Вечный двигатель",
-                        location: Location(name: "1 корпус Самарского университета",
-                                           address: "Молодогвардейская 151",
-                                           latitude: 53.200992,
-                                           longtitude: 50.108462,
-                                           photoFilename: "1 корпус Самарского университета"),
-                        author: authors["Сойфер"]!,
-                        questionText: "Сколько маршевых двигателей у ракеты-носителя Союз-2, предназначенных для вывода кораблей Союз-МС?",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/XNvl2r3nJHY?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/assyWByROes?playsinline=1"),
-                        answer: ["6"],
-                        answerCharacters: "0123456",
-                        isComplete: false,
-                        score: 0),
-                    
-                    Question(
-                        title: "Музыкальная пауза",
-                        location: Location(name: "Памятник Дмитрию Шостаковичу",
-                                           address: "Площадь Куйбышева, Галактионовская",
-                                           latitude: 53.193476,
-                                           longtitude: 50.102042,
-                                           photoFilename: "Памятник Дмитрию Шостаковичу"),
-                        author: authors["Филатова"]!,
-                        questionText: "Песня, написанная Дмитрием Шостаковичем на слова Евгения Долматовского в 1950 году, неразрывно связана с началом космической эры. Первоначально она создавалась как «песня-позывной» для лётчика. Стала известна в исполнении солиста и хора, ещё большую популярность песня получила после того, как её спел Юрий Алексеевич Гагарин в первом космическом полёте. Назовите название этой песни.",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/Meilc24vjuM?playsinline=1"),
-                        answerVideoUrl: nil,
-                        answer: ["РОДИНА", "СЛЫШИТ"],
-                        answerCharacters: "РАВЫОТЛЗНЁСИДИШОТ",
-                        isComplete: false,
-                        score: 0),
-                   
-                    Question(
-                        title: "Железный конь",
-                        location: Location(name: "Бункер Сталина",
-                                           address: "Фрунзе 167",
-                                           latitude: 53.196744,
-                                           longtitude: 50.098099,
-                                           photoFilename: "Бункер Сталина"),
-                        author: authors["Бабкин"]!,
-                        questionText: "История РКЦ «Прогресс» началась в Москве в 1894 году, когда обрусевший немец Ю. Меллер основал небольшую мастерскую по ремонту популярного в то время вида транспорта. О каком транспортом средстве идет речь?",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/pqXqCznx6FU?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/nJ5PIYGle4w?playsinline=1"),
-                        answer: ["ВЕЛОСИПЕД"],
-                        answerCharacters: "ВАЕСЕЛДОМКАПИТ",
-                        isComplete: false,
-                        score: 0),
-                   
-                    Question(
-                        title: "Разведка",
-                        location: Location(name: "Мемориальная доска «Кембриджской пятерке»",
-                                           address: "Фрунзе 179",
-                                           latitude: 53.197983,
-                                           longtitude: 50.098590,
-                                           photoFilename: "Мемориальная доска Кембриджскои пятерке"),
-                        author: authors["Королёва"]!,
-                        questionText: "Когда и каким космическим аппаратом была сфотографирована обратная сторона Луны?",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/aOMuZ2cWb8M?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/s3JETFgFLY0?playsinline=1"),
-                        answer: ["04.10.1959", "ЛУНА-3"],
-                        answerCharacters: "ЛНМРАУС310450919",
-                        isComplete: false,
-                        score: 0),
-                    
-                    Question(
-                        title: "Космическая физика",
-                        location: Location(name: "Композиция «Дама с ракеткой»",
-                                           address: "Пушкинский сквер",
-                                           latitude: 53.198556,
-                                           longtitude: 50.097990,
-                                           photoFilename: "Композиция Дама с ракеткои"),
-                        author: authors["Прокопьев"]!,
-                        questionText: "В классической механике существует теорема теннисной ракетки о неустойчивости вращения твёрдого тела относительно второй главной оси инерции. Проявление этой теоремы в невесомости названо в честь советского космонавта, который заметил это явление 25 июня 1985 года, находясь на борту космической станции «Салют-7». Назовите фамилию этого космонавта.",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/g2kjgqjdGwg?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/as-ln4yFwUo?playsinline=1"),
-                        answer: ["ДЖАНИБЕКОВ"],
-                        answerCharacters: "ДБЖЕЕКНОБЗВАИЕ",
-                        isComplete: false,
-                        score: 0),
-                  
-                    Question(
-                        title: "Про любовь",
-                        location: Location(name: "Памятник товарищу Сухову",
-                                           address: "Максима Горького 115",
-                                           latitude: 53.190846,
-                                           longtitude: 50.083693,
-                                           photoFilename: "Памятник Сухову"),
-                        author: authors["Котов"]!,
-                        questionText: "Памятник товарищу Сухову посвящён главному персонажу фильма, которого блестяще сыграл актёр Анатолий Борисович Кузнецов. Этот памятник расположен здесь не случайно. Ведь именно в Самару писал свои трогательные письма красноармеец Сухов. Назовите имя «единственной и незабвенной» Фёдора Ивановича.",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/eEPryrDe9Jw?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/N-uvsQSjs7c?playsinline=1"),
-                        answer: ["КАТЕРИНА"],
-                        answerCharacters: "КАТЕНАРЕНИАЛЯН",
-                        isComplete: false,
-                        score: 0),
-                  
-                    Question(
-                        title: "Астрокошка",
-                        location: Location(name: "Фонтан «Парус»",
-                                           address: "М. Горького 107",
-                                           latitude: 53.189641,
-                                           longtitude: 50.082413,
-                                           photoFilename: "Фонтан Парус"),
-                        author: authors["Котельников"]!,
-                        questionText: "В космос успешно запускали не только собак, но и наиболее близких человеку по физиологии обезьян. А вот судьба кошек-космонавтов, к сожалению, не сложилась. На данный момент достоверно подтверждён полет в космос единственного представителя вида. Назовите имя этой астрокошки.",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/uXlN_zx5Gkw?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/1ar5imu87vI?playsinline=1"),
-                        answer: ["ФЕЛИСЕТТ"],
-                        answerCharacters: "ФЕКТМАИЕРУЛСТА",
-                        isComplete: false,
-                        score: 0),
-                   
-                    Question(
-                        title: "Космический художник",
-                        location: Location(name: "Композиция «Бурлаки на Волге»",
-                                           address: "М. Горького 107",
-                                           latitude: 53.189791,
-                                           longtitude: 50.082047,
-                                           photoFilename: "Бурлаки на Волге"),
-                        author: authors["Просочкина"]!,
-                        questionText: "Среди космонавтов тоже есть талантливые художники. Картины этого человека хранятся в Третьяковской галереи. Назовите фамилию первого космического художника.",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/Y0e44G3izrE?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/8fbB8usbTbo?playsinline=1"),
-                        answer: ["ЛЕОНОВ"],
-                        answerCharacters: "ЛОРНЕГАГВОИАНВ",
-                        isComplete: false,
-                        score: 0),
-                   
-                    Question(
-                        title: "Свет далёких планет",
-                        location: Location(name: "Речной вокзал",
-                                           address: "М. Горького 82",
-                                           latitude: 53.187425,
-                                           longtitude: 50.078923,
-                                           photoFilename: "Речнои вокзал"),
-                        author: authors["Королёв"]!,
-                        questionText: "Исследование каких двух планет проводилось под руководством С.П. Королева?",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/tXaxZzYRiHw?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/-EqX3bQOp9M?playsinline=1"),
-                        answer: ["ВЕНЕРА", "МАРС"],
-                        answerCharacters: "ВАРПСЮЕУИАНПЕЛАЕМРНТР",
-                        isComplete: false,
-                        score: 0),
-                   
-                    Question(
-                        title: "Секреты космонавтики",
-                        location: Location(name: "Мемориальная доска С.Г. Хумарьяну",
-                                           address: "Степана Разина 31",
-                                           latitude: 53.182427,
-                                           longtitude: 50.083386,
-                                           photoFilename: "Мемориальная доска Хумарьяну"),
-                        author: authors["Артемьев"]!,
-                        questionText: "С.П. Королев был настолько засекречен, что когда он 12 апреля 1961 года приехал в, так называемый, «домик на Волге» и хотел войти, сотрудник КГБ попытался этому воспрепятствовать. Так как в лицо его знали только начальники. Назовите фамилию человека, к которому на встречу шел Королев.",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/szt07mZFoqg?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/tu3ecFZI5LY?playsinline=1"),
-                        answer: ["ГАГАРИН"],
-                        answerCharacters: "ГИДОВТНИАТВЕАГЕАР",
-                        isComplete: false,
-                        score: 0)
-                  ],
-                  variations: [
-                    RouteVariation(length: 6.3, duration: 90, questionIndexes: [4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]),
-                    RouteVariation(length: 7.5, duration: 120, questionIndexes: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]),
-                    RouteVariation(length: 10.7, duration: 180, questionIndexes: Array(0...19))
-            ]),
+    static var routes = [
+        Route(id: "spacecapital",
+              imageFileName: "background1.png",
+              title: "Космическая столица России",
+              subtitle: "Историческая часть города",
+              questions: [
+                Question(
+                    title: "Перед стартом",
+                    location: Location(name: "МВЦ «Самара Космическая»",
+                                       address: "Проспект Ленина 21",
+                                       latitude: 53.212677,
+                                       longtitude: 50.145232,
+                                       photoFilename: "МВЦ Самара Космическая"),
+                    author: authors["Корзун"]!,
+                    questionText: "Посмотрите внимательно на ракету. Так она выглядит за 2,5 часа до старта. Назовите настоящий цвет ракеты «Союз» до того, как она становится белой.",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/33hnI0SLtnw?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/9nKjkbawOEI?playsinline=1"),
+                    answer: ["СЕРЫЙ"],
+                    answerCharacters: "СРЧРЕБИЫЕНИЛСЙ"),
+                
+                Question(
+                    title: "Великолепная шестёрка",
+                    location: Location(name: "Памятник Д.И.Козлову",
+                                       address: "Проспект Ленина 1",
+                                       latitude: 53.212891,
+                                       longtitude: 50.145006,
+                                       photoFilename: "Памятник Козлову"),
+                    author: authors["Баранов"]!,
+                    questionText: "В 1946 году перед ведущими конструкторами СССР ставилась единая цель – создание баллистических, а затем и космических ракет. Для управления этой системой был создан координационный орган, который хоть и имел совещательно-консультативные функции, однако его члены обладали необходимыми полномочиями для формирования направления развития советской ракетно-космической программы и смежных исследований. Назовите название этого совещательного органа.",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/TIvJebiqV9o?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/R50m7lnY5AM?playsinline=1"),
+                    answer: ["СОВЕТ", "ГЛАВНЫХ"],
+                    answerCharacters: "СТСВГЛХЫВЕОАЮНОЗ"),
+                
+                Question(
+                    title: "Дом-рекордсмен",
+                    location: Location(name: "Сквер им. В.И.Фадеева",
+                                       address: "Проспект Ленина 1",
+                                       latitude: 53.205983,
+                                       longtitude: 50.132470,
+                                       photoFilename: "Сквер Фадеева"),
+                    author: authors["Авдеев"]!,
+                    questionText: "Дмитрий Ильич Козлов всю жизнь защищал Родину, причем в молодости ему пришлось делать это собственной кровью. 1 июля 1941 года студент пятого курса института Дмитрий Козлов добровольцем записался в народное ополчение, прошел всю Великую Отечественную войну, был трижды ранен и потерял руку. Получил несколько боевых наград. Медалью за оборону какого города был награжден Козлов?",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/iVOB-crqAmQ?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/UU4D150Q6pQ?playsinline=1"),
+                    answer: ["ЛЕНИНГРАД"],
+                    answerCharacters: "ЛРСАНДЕРТНГМАИАСА"),
+                
+                Question(
+                    title: "Семейные узы",
+                    location: Location(name: "Дворец бракосочетания",
+                                       address: "Молодогвардейская 238",
+                                       latitude: 53.207977,
+                                       longtitude: 50.122220,
+                                       photoFilename: "Дворец бракосочетания"),
+                    author: authors["Черкасов"]!,
+                    questionText: "В истории отечественной космонавтики есть потомственные космонавты, когда дети осознанно выбирают путь своих отцов и становятся достойными их продолжателями в профессии космонавта. Назовите фамилии двух основателей космических династий.",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/aCGk9x3gKEQ?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/XgjiacSNFk8?playsinline=1"),
+                    answer: ["ВОЛКОВ", "РОМАНЕНКО"],
+                    answerCharacters: "ВЛАОКОКВГАЕНОРНРАОМИН"),
+                
+                Question(
+                    title: "К звёздам",
+                    location: Location(name: "Скульптура «Первый спутник»",
+                                       address: "Волжский проспект 36",
+                                       latitude: 53.208451,
+                                       longtitude: 50.114155,
+                                       photoFilename: "Скульптура Первыи Спутник"),
+                    author: authors["Шкаплеров"]!,
+                    questionText: "Сегодня самарский РКЦ «Прогресс» - единственное в мире предприятие, осуществляющее пуски ракет-носителей с четырех площадок. Перечислите названия этих космодромов в алфавитном порядке.",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/K7OAFKBM3ho?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/eWtvOw_tK4k?playsinline=1"),
+                    answer: ["БАЙКОНУР", "ВОСТОЧНЫЙ", "КУРУ", "ПЛЕСЕЦК"],
+                    answerCharacters: "БНЕУВАЫПНУЙСРКЕЛРЙСОКОТЦОЧКУ"),
+                
+                Question(
+                    title: "Покорившая небо",
+                    location: Location(name: "Спортивный комплекс ЦСКА ВВС",
+                                       address: "Волжский проспект 10",
+                                       latitude: 53.205375,
+                                       longtitude: 50.106455,
+                                       photoFilename: "Спортивныи комплекс ЦСКА ВВС"),
+                    author: authors["Кикина"]!,
+                    questionText: "Один из основных факторов космического полёта — элемент риска и опасности, заставляющий быть готовым быстро принимать правильные решения, — моделирует специальная парашютная подготовка. У истоков парашютной подготовки космонавтов стояла ЭТА удивительная хрупкая женщина. К моменту зачисления в отряд космонавтов она уже выполнила около 700 прыжков. А общее число прыжков — около 2500. Кроме того она является полковником ВВС в отставке, дублёром Валентины Терешковой. Назовите фамилию этой женщины.",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/xRIKovb9Eh4?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/UxBcOgDIg58?playsinline=1"),
+                    answer: ["СОЛОВЬЁВА"],
+                    answerCharacters: "СВЬАЛКГЁОГРРВОАИОАН"),
+                
+                Question(
+                    title: "Родной край",
+                    location: Location(name: "Монумент «Гордость, честь и слава»",
+                                       address: "Площадь Славы, лестница",
+                                       latitude: 53.204076,
+                                       longtitude: 50.109611,
+                                       photoFilename: "Монумент Гордость, Честь и Слава"),
+                    author: authors["Корниенко"]!,
+                    questionText: "Четыре космонавта родились в Самарской области. Назовите их фамилии в алфавитном порядке.",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/yxZzwP_OYCc?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/JWYIcLjgWWw?playsinline=1"),
+                    answer: ["АВДЕЕВ", "АТЬКОВ", "ГУБАРЕВ", "КОРНИЕНКО"],
+                    answerCharacters: "КАЕКНУАЕРИТЕНОБОВРВАДГЕВКОЬВ"),
+                
+                Question(
+                    title: "Счёт на секунды",
+                    location: Location(name: "Монумент Славы",
+                                       address: "Площадь Славы",
+                                       latitude: 53.203791,
+                                       longtitude: 50.109941,
+                                       photoFilename: "Монумент Славы"),
+                    author: authors["Титов"]!,
+                    questionText: "Назовите фамилию руководителя стартовой команды корабля «Союз-Т-10-1» – Героя Социалистического Труда, заместителя генерального конструктора «ЦСКБ-Прогресс».",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/vulFYcCDSr0?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/2O7px0BRJWQ?playsinline=1"),
+                    answer: ["СОЛДАТЕНКОВ"],
+                    answerCharacters: "СЁНТОВАЕЛДКОРК"),
+                
+                Question(
+                    title: "На удачу",
+                    location: Location(name: "Мемориальная доска\nА.М. Солдатенкову",
+                                       address: "Молодогвардейская 218",
+                                       latitude: 53.203951,
+                                       longtitude: 50.113508,
+                                       photoFilename: "Мемориальная доска Солдатенкову"),
+                    author: authors["Лазаренко"]!,
+                    questionText: "У Сергея Павловича Королева был любимый головной убор, который он всегда носил с осени и до ранней весны. Сергей Павлович был также весьма суеверным человеком, и этот предмет непременно был на нем во время каждого старта. О каком головном уборе идет речь?",
+                    questionVideoUrl: nil,
+                    answerVideoUrl: nil,
+                    answer: ["ШЛЯПА"],
+                    answerCharacters: "ШСРАЕЗКПКЕПЯКОКЫБЛАРА"),
+                
+                Question(
+                    title: "Заключённый",
+                    location: Location(name: "Памятник Д.Ф. Устинову",
+                                       address: "Самарская площадь",
+                                       latitude: 53.200971,
+                                       longtitude: 50.112744,
+                                       photoFilename: "Памятник Устинову"),
+                    author: authors["Артемьев"]!,
+                    questionText: "В 1944 г. отечественные инженеры впервые получили возможность ознакомиться с немецкой ракетной техникой: в их распоряжение попали элементы конструкции ракеты А-4. Назовите общеизвестное название этой ракеты.",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/CHzZXM1yMms?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/LPd9HiORRQw?playsinline=1"),
+                    answer: ["ФАУ-2"],
+                    answerCharacters: "ФОНРИДУАСК1234"),
+                
+                Question(
+                    title: "Вечный двигатель",
+                    location: Location(name: "1 корпус Самарского университета",
+                                       address: "Молодогвардейская 151",
+                                       latitude: 53.200992,
+                                       longtitude: 50.108462,
+                                       photoFilename: "1 корпус Самарского университета"),
+                    author: authors["Сойфер"]!,
+                    questionText: "Сколько маршевых двигателей у ракеты-носителя Союз-2, предназначенных для вывода кораблей Союз-МС?",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/XNvl2r3nJHY?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/assyWByROes?playsinline=1"),
+                    answer: ["6"],
+                    answerCharacters: "0123456"),
+                
+                Question(
+                    title: "Музыкальная пауза",
+                    location: Location(name: "Памятник Дмитрию Шостаковичу",
+                                       address: "Площадь Куйбышева, Галактионовская",
+                                       latitude: 53.193476,
+                                       longtitude: 50.102042,
+                                       photoFilename: "Памятник Дмитрию Шостаковичу"),
+                    author: authors["Филатова"]!,
+                    questionText: "Песня, написанная Дмитрием Шостаковичем на слова Евгения Долматовского в 1950 году, неразрывно связана с началом космической эры. Первоначально она создавалась как «песня-позывной» для лётчика. Стала известна в исполнении солиста и хора, ещё большую популярность песня получила после того, как её спел Юрий Алексеевич Гагарин в первом космическом полёте. Назовите название этой песни.",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/Meilc24vjuM?playsinline=1"),
+                    answerVideoUrl: nil,
+                    answer: ["РОДИНА", "СЛЫШИТ"],
+                    answerCharacters: "РАВЫОТЛЗНЁСИДИШОТ"),
+                
+                Question(
+                    title: "Железный конь",
+                    location: Location(name: "Бункер Сталина",
+                                       address: "Фрунзе 167",
+                                       latitude: 53.196744,
+                                       longtitude: 50.098099,
+                                       photoFilename: "Бункер Сталина"),
+                    author: authors["Бабкин"]!,
+                    questionText: "История РКЦ «Прогресс» началась в Москве в 1894 году, когда обрусевший немец Ю. Меллер основал небольшую мастерскую по ремонту популярного в то время вида транспорта. О каком транспортом средстве идет речь?",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/pqXqCznx6FU?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/nJ5PIYGle4w?playsinline=1"),
+                    answer: ["ВЕЛОСИПЕД"],
+                    answerCharacters: "ВАЕСЕЛДОМКАПИТ"),
+                
+                Question(
+                    title: "Разведка",
+                    location: Location(name: "Мемориальная доска «Кембриджской пятерке»",
+                                       address: "Фрунзе 179",
+                                       latitude: 53.197983,
+                                       longtitude: 50.098590,
+                                       photoFilename: "Мемориальная доска Кембриджскои пятерке"),
+                    author: authors["Королёва"]!,
+                    questionText: "Когда и каким космическим аппаратом была сфотографирована обратная сторона Луны?",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/aOMuZ2cWb8M?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/s3JETFgFLY0?playsinline=1"),
+                    answer: ["04.10.1959", "ЛУНА-3"],
+                    answerCharacters: "ЛНМРАУС310450919"),
+                
+                Question(
+                    title: "Космическая физика",
+                    location: Location(name: "Композиция «Дама с ракеткой»",
+                                       address: "Пушкинский сквер",
+                                       latitude: 53.198556,
+                                       longtitude: 50.097990,
+                                       photoFilename: "Композиция Дама с ракеткои"),
+                    author: authors["Прокопьев"]!,
+                    questionText: "В классической механике существует теорема теннисной ракетки о неустойчивости вращения твёрдого тела относительно второй главной оси инерции. Проявление этой теоремы в невесомости названо в честь советского космонавта, который заметил это явление 25 июня 1985 года, находясь на борту космической станции «Салют-7». Назовите фамилию этого космонавта.",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/g2kjgqjdGwg?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/as-ln4yFwUo?playsinline=1"),
+                    answer: ["ДЖАНИБЕКОВ"],
+                    answerCharacters: "ДБЖЕЕКНОБЗВАИЕ"),
+                
+                Question(
+                    title: "Про любовь",
+                    location: Location(name: "Памятник товарищу Сухову",
+                                       address: "Максима Горького 115",
+                                       latitude: 53.190846,
+                                       longtitude: 50.083693,
+                                       photoFilename: "Памятник Сухову"),
+                    author: authors["Котов"]!,
+                    questionText: "Памятник товарищу Сухову посвящён главному персонажу фильма, которого блестяще сыграл актёр Анатолий Борисович Кузнецов. Этот памятник расположен здесь не случайно. Ведь именно в Самару писал свои трогательные письма красноармеец Сухов. Назовите имя «единственной и незабвенной» Фёдора Ивановича.",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/eEPryrDe9Jw?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/N-uvsQSjs7c?playsinline=1"),
+                    answer: ["КАТЕРИНА"],
+                    answerCharacters: "КАТЕНАРЕНИАЛЯН"),
+                
+                Question(
+                    title: "Астрокошка",
+                    location: Location(name: "Фонтан «Парус»",
+                                       address: "М. Горького 107",
+                                       latitude: 53.189641,
+                                       longtitude: 50.082413,
+                                       photoFilename: "Фонтан Парус"),
+                    author: authors["Котельников"]!,
+                    questionText: "В космос успешно запускали не только собак, но и наиболее близких человеку по физиологии обезьян. А вот судьба кошек-космонавтов, к сожалению, не сложилась. На данный момент достоверно подтверждён полет в космос единственного представителя вида. Назовите имя этой астрокошки.",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/uXlN_zx5Gkw?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/1ar5imu87vI?playsinline=1"),
+                    answer: ["ФЕЛИСЕТТ"],
+                    answerCharacters: "ФЕКТМАИЕРУЛСТА"),
+                
+                Question(
+                    title: "Космический художник",
+                    location: Location(name: "Композиция «Бурлаки на Волге»",
+                                       address: "М. Горького 107",
+                                       latitude: 53.189791,
+                                       longtitude: 50.082047,
+                                       photoFilename: "Бурлаки на Волге"),
+                    author: authors["Просочкина"]!,
+                    questionText: "Среди космонавтов тоже есть талантливые художники. Картины этого человека хранятся в Третьяковской галереи. Назовите фамилию первого космического художника.",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/Y0e44G3izrE?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/8fbB8usbTbo?playsinline=1"),
+                    answer: ["ЛЕОНОВ"],
+                    answerCharacters: "ЛОРНЕГАГВОИАНВ"),
+                
+                Question(
+                    title: "Свет далёких планет",
+                    location: Location(name: "Речной вокзал",
+                                       address: "М. Горького 82",
+                                       latitude: 53.187425,
+                                       longtitude: 50.078923,
+                                       photoFilename: "Речнои вокзал"),
+                    author: authors["Королёв"]!,
+                    questionText: "Исследование каких двух планет проводилось под руководством С.П. Королева?",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/tXaxZzYRiHw?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/-EqX3bQOp9M?playsinline=1"),
+                    answer: ["ВЕНЕРА", "МАРС"],
+                    answerCharacters: "ВАРПСЮЕУИАНПЕЛАЕМРНТР"),
+                
+                Question(
+                    title: "Секреты космонавтики",
+                    location: Location(name: "Мемориальная доска С.Г. Хумарьяну",
+                                       address: "Степана Разина 31",
+                                       latitude: 53.182427,
+                                       longtitude: 50.083386,
+                                       photoFilename: "Мемориальная доска Хумарьяну"),
+                    author: authors["Артемьев"]!,
+                    questionText: "С.П. Королев был настолько засекречен, что когда он 12 апреля 1961 года приехал в, так называемый, «домик на Волге» и хотел войти, сотрудник КГБ попытался этому воспрепятствовать. Так как в лицо его знали только начальники. Назовите фамилию человека, к которому на встречу шел Королев.",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/szt07mZFoqg?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/tu3ecFZI5LY?playsinline=1"),
+                    answer: ["ГАГАРИН"],
+                    answerCharacters: "ГИДОВТНИАТВЕАГЕАР")
+              ],
+              variations: [
+                RouteVariation(length: 6.3, duration: 90, questionIndexes: [4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]),
+                RouteVariation(length: 7.5, duration: 120, questionIndexes: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]),
+                RouteVariation(length: 10.7, duration: 180, questionIndexes: Array(0...19))
+              ]),
         
         
-            // MARK: - Космос и культура
+        // MARK: - Космос и культура
         
-            Route(imageFileName: "background2.png",
-                  title: "Космос и культура",
-                  subtitle: "Историческая часть города",
-                  questions: [
-                    Question(
-                        title: "Священное писание",
-                        location: Location(name: "Стела «Ладья»",
-                                           address: "Стела «Ладья»",
-                                           latitude: 53.215900,
-                                           longtitude: 50.132266,
-                                           photoFilename: "Ладья"),
-                        author: authors["Лазаренко"]!,
-                        questionText: "В одной книге рассказывается о первых космических полетах. Автор шутит, что люди отправили в космос разделённый на части груз этого «плавательного средства». Оно отсылает нас к одной из священных книг. Назовите это плавательное средство, состоящее из двух слов.",
-                        questionVideoUrl: nil,
-                        answerVideoUrl: nil,
-                        answer: ["НОЕВ", "КОВЧЕГ"],
-                        answerCharacters: "НЕОККОЧГВДОВЕЛ",
-                        isComplete: false,
-                        score: 0),
-                    
-                    Question(
-                        title: "Учитель",
-                        location: Location(name: "Скульптурная композиция «Колыбель человечества»",
-                                           address: "Волжский проспект 49",
-                                           latitude: 53.211678,
-                                           longtitude: 50.121983,
-                                           photoFilename: "Колыбель человечества"),
-                        author: authors["Бабкин"]!,
-                        questionText: "Этот человек происходил из польского дворянского рода, но был «обычным» сельским учителем. Автор научно-фантастических произведений, сторонник и пропагандист идей освоения космического пространства. Его именем назван кратер на Луне и малая планета «1590», открытая 1 июля 1933 года. В 2015 году его имя присвоено городу, построенному близ космодрома «Восточный». В Самаре, Москве, Санкт-Петербурге, а также во многих других населённых пунктах есть улицы его имени. Назовите фамилию этого человека.",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/eOs_G65fE_8?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/Mrchfp3YFtM?playsinline=1"),
-                        answer: ["ЦИОЛКОВСКИЙ"],
-                        answerCharacters: "ЦКИОИЛЙОВККОСН",
-                        isComplete: false,
-                        score: 0),
-                   
-                    Question(
-                        title: "Древние цивилизации",
-                        location: Location(name: "Скульптура «Первый спутник»",
-                                           address: "Волжский проспект 36",
-                                           latitude: 53.208451,
-                                           longtitude: 50.114155,
-                                           photoFilename: "Скульптура Первыи Спутник"),
-                        author: authors["Артемьев"]!,
-                        questionText: "Константин Эдуардович Циолковский из-за глухоты рано оказался наедине с собой, со своими мыслями, он мерил жизнь и мир собственной меркой, иначе определял границы между реальным и воображаемым. И стирал их. Своё отношение к жизни он описал в одной очень увлекательной книге, в которой отмечал, что самое важное для него – «не прожить даром жизнь». О какой книге идёт речь?",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/clmAWfZ8SWI?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/5aUkc15McW4?playsinline=1"),
-                        answer: ["КОСМИЧЕСКАЯ", "ФИЛОСОФИЯ"],
-                        answerCharacters: "КИАИЛОЯЕОСФСЧССИКФМОЯ",
-                        isComplete: false,
-                        score: 0),
-                   
-                    Question(
-                        title: "Космическая «нетленка»",
-                        location: Location(name: "Скульптура «Открытая книга»",
-                                           address: "Волжский проспект 10",
-                                           latitude: 53.206004,
-                                           longtitude: 50.107852,
-                                           photoFilename: "Открытая книга"),
-                        author: authors["Филатова"]!,
-                        questionText: "Однажды осенью 1960 года срочно потребовалась песня о завоевании космического пространства великим советским народом — позже выяснилось, что задание о песне было спущено с самого верха, от советского правительства. Сотрудник Всесоюзного радио Владимир Войнович, набравшись храбрости, предложил в качестве поэта себя. На другое утро он показал комиссии свои стихи. Музыка О.Фельцмана была готова уже через несколько часов, а Владимира Трошина стал первым исполнителем. Назовите название этой песни на слова Войновича, планы озвученные в которой спустя почти 60 лет так и остаются пока мечтой.",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/cG78ZItzT6o?playsinline=1"),
-                        answerVideoUrl: nil,
-                        answer: ["14 МИНУТ", "ДО СТАРТА"],
-                        answerCharacters: "12432МОДАРНУТТТСИА",
-                        isComplete: false,
-                        score: 0),
-                   
-                    Question(
-                        title: "Мёртвая станция",
-                        location: Location(name: "Памятник отопительной батарее",
-                                           address: "Волжский проспект 11",
-                                           latitude: 53.202746,
-                                           longtitude: 50.103302,
-                                           photoFilename: "Памятник отопительнои батарее"),
-                        author: authors["Прокопьев"]!,
-                        questionText: "Вы находитесь около памятника отопительной батарее. Об этом предмете в 1987 году в космосе мечтали два космонавта, когда, прилетев на станцию, они узнали, что температура внутри нее 3 – 5°С. Запасы воды, оставшиеся на станции, замёрзли. Температура была настолько низкой, что приходилось надевать тёплые комбинезоны, шерстяные шапки и варежки. Это произошло из-за сбоя системы ориентации солнечных батарей, что повлекло отключение всей системы электропитания станции. Эта история описана в книге «Записки с мертвой станции», а в 2017 году по этой книге был снят фильм. Назовите фамилии двух космонавтов и название «мертвой» станции.",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/NyTrU0KgXCo?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/ISkp7OZlg9o?playsinline=1"),
-                        answer: ["ДЖАНИБЕКОВ", "САВИНЫХ", "САЛЮТ-7"],
-                        answerCharacters: "СДАИНХАКОИЫСЮАБНВЕЛЖВТ7",
-                        isComplete: false,
-                        score: 0),
-                   
-                    Question(
-                        title: "Искусство обмана",
-                        location: Location(name: "Самарский академ. театр драмы им. М.Горького",
-                                           address: "Чапаева 1",
-                                           latitude: 53.197366,
-                                           longtitude: 50.097198,
-                                           photoFilename: "Театр драмы"),
-                        author: authors["Юрченко"]!,
-                        questionText: "Айзек Азимов писал, что, когда женщина занимается макияжем, она творит из Хаоса ЭТО. Что имел ввиду известный фантаст?",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/EDC5uqBB4y8?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/gZkx07CMYRY?playsinline=1"),
-                        answer: ["КОСМОС"],
-                        answerCharacters: "КЕОМСВЛОАССЕНЯ",
-                        isComplete: false,
-                        score: 0),
-                  
-                    Question(
-                        title: "Ключ на старт",
-                        location: Location(name: "Буратино. Музей-усадьба А. Толстого",
-                                           address: "Фрунзе, 155",
-                                           latitude: 53.193640,
-                                           longtitude: 50.095622,
-                                           photoFilename: "Буратино"),
-                        author: authors["Титов"]!,
-                        questionText: "Все космонавты берут с собой на борт игрушку. На какой минуте полета игрушка выполняет свое предназначение?",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/s8W9_QDu_4w?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/V1rmyaAigQ4?playsinline=1"),
-                        answer: ["8"],
-                        alternativeAnswer: ["9"],
-                        answerCharacters: "123456789",
-                        isComplete: false,
-                        score: 0),
-                   
-                    Question(
-                        title: "Знаете, каким он парнем был",
-                        location: Location(name: "Самарская гос. филармония",
-                                           address: "Фрунзе, 141",
-                                           latitude: 53.191646,
-                                           longtitude: 50.094859,
-                                           photoFilename: "Самарская филармония"),
-                        author: authors["Черкасов"]!,
-                        questionText: "Одной из самых известных его песен стала – «Знаете, каким он парнем был». Песня-посвящение Ю.А. Гагарину. Назовите фамилии композитора и автора стихов данного произведения.",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/zznNR8-Yco0?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/9gzWVaZ0feE?playsinline=1"),
-                        answer: ["ДОБРОНРАВОВ", "ПАХМУТОВА"],
-                        answerCharacters: "ДОНВООТВАБМВОХУАРРПАН",
-                        isComplete: false,
-                        score: 0),
-                   
-                    Question(
-                        title: "Сила духа",
-                        location: Location(name: "Дядя Стёпа",
-                                           address: "Молодогвардейская 72",
-                                           latitude: 53.186435,
-                                           longtitude: 50.095572,
-                                           photoFilename: "Дядя Степа"),
-                        author: authors["Корниенко"]!,
-                        questionText: "Чтобы сократить после полёта время реабилитации, на МКС космонавт должен ежедневно заниматься около двух с половиной часов. Силовых упражнений нет — только аэробные: если нарастить мышечную массу, можно не поместиться в кресло, и тогда вернуться на Землю будет затруднительно. Назовите явление, которое является главным «врагом» мышц в космосе.",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/kooxsq4aE3w?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/p7b6OzE9FuM?playsinline=1"),
-                        answer: ["НЕВЕСОМОСТЬ"],
-                        answerCharacters: "НСМТМООДЬОХЕЬТОВЕЛСАН",
-                        isComplete: false,
-                        score: 0),
-                   
-                    Question(
-                        title: "Поля без границ",
-                        location: Location(name: "Стела в честь 150-летия Самарской Губернии",
-                                           address: "Куйбышева, 99",
-                                           latitude: 53.187927,
-                                           longtitude: 50.089384,
-                                           photoFilename: "Стела в честь 150-летия Самарскои Губернии"),
-                        author: authors["Лазуткин"]!,
-                        questionText: "Играли ли когда-нибудь люди в космосе в гольф? Назовите количество раз (0, если не играли никогда).",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/F5qeCjrx6yA?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/Lv4PR8yrJfM?playsinline=1"),
-                        answer: ["2"],
-                        answerCharacters: "0123456",
-                        isComplete: false,
-                        score: 0),
-                  
-                    Question(
-                        title: "Хвостатые герои",
-                        location: Location(name: "Памятник бравому солдату Швейку",
-                                           address: "Некрасовская, 26",
-                                           latitude: 53.190364,
-                                           longtitude: 50.090982,
-                                           photoFilename: "Памятник Швеику"),
-                        author: authors["Королёва"]!,
-                        questionText: "Какие до полета в космос были имена у собак Белки и Стрелки?",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/mbOapNVz1WE?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/WhKzzm9DJx4?playsinline=1"),
-                        answer: ["ВИЛЬНА", "КАПЛЯ"],
-                        answerCharacters: "ВБОЬАИЛЯКЛИАПНБК",
-                        isComplete: false,
-                        score: 0),
-                  
-                    Question(
-                        title: "Про любовь",
-                        location: Location(name: "Памятник товарищу Сухову",
-                                           address: "Максима Горького 115",
-                                           latitude: 53.190846,
-                                           longtitude: 50.083693,
-                                           photoFilename: "Памятник Сухову"),
-                        author: authors["Котов"]!,
-                        questionText: "Памятник товарищу Сухову посвящён главному персонажу фильма, которого блестяще сыграл актёр Анатолий Борисович Кузнецов. Этот памятник расположен здесь не случайно. Ведь именно в Самару писал свои трогательные письма красноармеец Сухов. Назовите имя «единственной и незабвенной» Фёдора Ивановича.",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/eEPryrDe9Jw?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/N-uvsQSjs7c?playsinline=1"),
-                        answer: ["КАТЕРИНА"],
-                        answerCharacters: "КЕАТТЯААРНЬТИН",
-                        isComplete: false,
-                        score: 0),
-                  
-                    Question(
-                        title: "Поэма о космонавте",
-                        location: Location(name: "Фонтан «Парус»",
-                                           address: "Максима Горького 107",
-                                           latitude: 53.189641,
-                                           longtitude: 50.082413,
-                                           photoFilename: "Фонтан Парус"),
-                        author: authors["Сойфер"]!,
-                        questionText: "В стихотворении В. Высоцкого «Поэма о космонавте» есть такие строки:\n\tВот мой дублер, который мог быть Первым,\n\tКоторый смог впервые стать вторым.\n\tПока что на него не тратят шрифта —\n\tЗапас заглавных букв на одного.\n\tМы с ним вдвоем прошли весь путь до лифта,\n\tНо дальше я поднялся без него.\nНазовите фамилию этого известного всем Героя.",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/fw6dEOdLvHI?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/C4p1b2dsmNQ?playsinline=1"),
-                        answer: ["ТИТОВ"],
-                        answerCharacters: "ГГАТТЁИОРКОВРА",
-                        isComplete: false,
-                        score: 0),
-                  
-                    Question(
-                        title: "Космический художник",
-                        location: Location(name: "Композиция «Бурлаки на Волге»",
-                                           address: "Максима Горького 107",
-                                           latitude: 53.189791,
-                                           longtitude: 50.082047,
-                                           photoFilename: "Бурлаки на Волге"),
-                        author: authors["Просочкина"]!,
-                        questionText: "Среди космонавтов тоже есть талантливые художники. Картины этого человека хранятся в Третьяковской галереи. Назовите фамилию первого космического художника.",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/Y0e44G3izrE?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/8fbB8usbTbo?playsinline=1"),
-                        answer: ["ЛЕОНОВ"],
-                        answerCharacters: "РЛАНИГОГЕАНОЬВ",
-                        isComplete: false,
-                        score: 0),
-                   
-                    Question(
-                        title: "Океан вселенной",
-                        location: Location(name: "Речной вокзал",
-                                           address: "Максима Горького 82",
-                                           latitude: 53.187425,
-                                           longtitude: 50.078923,
-                                           photoFilename: "Речнои вокзал"),
-                        author: authors["Артемьев"]!,
-                        questionText: "Отбытие экипажа на старт всегда сопровождает песня сверхпопулярной некогда группы «Земляне». Вспомните название этой песни.",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/ODWOj9HfrLU?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/5R4NGIii8YI?playsinline=1"),
-                        answer: ["ТРАВА", "У ДОМА"],
-                        answerCharacters: "УМАСРАЕАДОТВВА",
-                        isComplete: false,
-                        score: 0)
-                  ],
-                  variations: [
-                    RouteVariation(length: 7.3, duration: 120, questionIndexes: Array(0...14))
-            ]),
+        Route(id: "spaceculture",
+              imageFileName: "background2.png",
+              title: "Космос и культура",
+              subtitle: "Историческая часть города",
+              questions: [
+                Question(
+                    title: "Священное писание",
+                    location: Location(name: "Стела «Ладья»",
+                                       address: "Стела «Ладья»",
+                                       latitude: 53.215900,
+                                       longtitude: 50.132266,
+                                       photoFilename: "Ладья"),
+                    author: authors["Лазаренко"]!,
+                    questionText: "В одной книге рассказывается о первых космических полетах. Автор шутит, что люди отправили в космос разделённый на части груз этого «плавательного средства». Оно отсылает нас к одной из священных книг. Назовите это плавательное средство, состоящее из двух слов.",
+                    questionVideoUrl: nil,
+                    answerVideoUrl: nil,
+                    answer: ["НОЕВ", "КОВЧЕГ"],
+                    answerCharacters: "НЕОККОЧГВДОВЕЛ"),
+                
+                Question(
+                    title: "Учитель",
+                    location: Location(name: "Скульптурная композиция «Колыбель человечества»",
+                                       address: "Волжский проспект 49",
+                                       latitude: 53.211678,
+                                       longtitude: 50.121983,
+                                       photoFilename: "Колыбель человечества"),
+                    author: authors["Бабкин"]!,
+                    questionText: "Этот человек происходил из польского дворянского рода, но был «обычным» сельским учителем. Автор научно-фантастических произведений, сторонник и пропагандист идей освоения космического пространства. Его именем назван кратер на Луне и малая планета «1590», открытая 1 июля 1933 года. В 2015 году его имя присвоено городу, построенному близ космодрома «Восточный». В Самаре, Москве, Санкт-Петербурге, а также во многих других населённых пунктах есть улицы его имени. Назовите фамилию этого человека.",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/eOs_G65fE_8?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/Mrchfp3YFtM?playsinline=1"),
+                    answer: ["ЦИОЛКОВСКИЙ"],
+                    answerCharacters: "ЦКИОИЛЙОВККОСН"),
+                
+                Question(
+                    title: "Древние цивилизации",
+                    location: Location(name: "Скульптура «Первый спутник»",
+                                       address: "Волжский проспект 36",
+                                       latitude: 53.208451,
+                                       longtitude: 50.114155,
+                                       photoFilename: "Скульптура Первыи Спутник"),
+                    author: authors["Артемьев"]!,
+                    questionText: "Константин Эдуардович Циолковский из-за глухоты рано оказался наедине с собой, со своими мыслями, он мерил жизнь и мир собственной меркой, иначе определял границы между реальным и воображаемым. И стирал их. Своё отношение к жизни он описал в одной очень увлекательной книге, в которой отмечал, что самое важное для него – «не прожить даром жизнь». О какой книге идёт речь?",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/clmAWfZ8SWI?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/5aUkc15McW4?playsinline=1"),
+                    answer: ["КОСМИЧЕСКАЯ", "ФИЛОСОФИЯ"],
+                    answerCharacters: "КИАИЛОЯЕОСФСЧССИКФМОЯ"),
+                
+                Question(
+                    title: "Космическая «нетленка»",
+                    location: Location(name: "Скульптура «Открытая книга»",
+                                       address: "Волжский проспект 10",
+                                       latitude: 53.206004,
+                                       longtitude: 50.107852,
+                                       photoFilename: "Открытая книга"),
+                    author: authors["Филатова"]!,
+                    questionText: "Однажды осенью 1960 года срочно потребовалась песня о завоевании космического пространства великим советским народом — позже выяснилось, что задание о песне было спущено с самого верха, от советского правительства. Сотрудник Всесоюзного радио Владимир Войнович, набравшись храбрости, предложил в качестве поэта себя. На другое утро он показал комиссии свои стихи. Музыка О.Фельцмана была готова уже через несколько часов, а Владимира Трошина стал первым исполнителем. Назовите название этой песни на слова Войновича, планы озвученные в которой спустя почти 60 лет так и остаются пока мечтой.",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/cG78ZItzT6o?playsinline=1"),
+                    answerVideoUrl: nil,
+                    answer: ["14 МИНУТ", "ДО СТАРТА"],
+                    answerCharacters: "12432МОДАРНУТТТСИА"),
+                
+                Question(
+                    title: "Мёртвая станция",
+                    location: Location(name: "Памятник отопительной батарее",
+                                       address: "Волжский проспект 11",
+                                       latitude: 53.202746,
+                                       longtitude: 50.103302,
+                                       photoFilename: "Памятник отопительнои батарее"),
+                    author: authors["Прокопьев"]!,
+                    questionText: "Вы находитесь около памятника отопительной батарее. Об этом предмете в 1987 году в космосе мечтали два космонавта, когда, прилетев на станцию, они узнали, что температура внутри нее 3 – 5°С. Запасы воды, оставшиеся на станции, замёрзли. Температура была настолько низкой, что приходилось надевать тёплые комбинезоны, шерстяные шапки и варежки. Это произошло из-за сбоя системы ориентации солнечных батарей, что повлекло отключение всей системы электропитания станции. Эта история описана в книге «Записки с мертвой станции», а в 2017 году по этой книге был снят фильм. Назовите фамилии двух космонавтов и название «мертвой» станции.",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/NyTrU0KgXCo?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/ISkp7OZlg9o?playsinline=1"),
+                    answer: ["ДЖАНИБЕКОВ", "САВИНЫХ", "САЛЮТ-7"],
+                    answerCharacters: "СДАИНХАКОИЫСЮАБНВЕЛЖВТ7"),
+                
+                Question(
+                    title: "Искусство обмана",
+                    location: Location(name: "Самарский академ. театр драмы им. М.Горького",
+                                       address: "Чапаева 1",
+                                       latitude: 53.197366,
+                                       longtitude: 50.097198,
+                                       photoFilename: "Театр драмы"),
+                    author: authors["Юрченко"]!,
+                    questionText: "Айзек Азимов писал, что, когда женщина занимается макияжем, она творит из Хаоса ЭТО. Что имел ввиду известный фантаст?",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/EDC5uqBB4y8?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/gZkx07CMYRY?playsinline=1"),
+                    answer: ["КОСМОС"],
+                    answerCharacters: "КЕОМСВЛОАССЕНЯ"),
+                
+                Question(
+                    title: "Ключ на старт",
+                    location: Location(name: "Буратино. Музей-усадьба А. Толстого",
+                                       address: "Фрунзе, 155",
+                                       latitude: 53.193640,
+                                       longtitude: 50.095622,
+                                       photoFilename: "Буратино"),
+                    author: authors["Титов"]!,
+                    questionText: "Все космонавты берут с собой на борт игрушку. На какой минуте полета игрушка выполняет свое предназначение?",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/s8W9_QDu_4w?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/V1rmyaAigQ4?playsinline=1"),
+                    answer: ["8"],
+                    alternativeAnswer: ["9"],
+                    answerCharacters: "123456789"),
+                
+                Question(
+                    title: "Знаете, каким он парнем был",
+                    location: Location(name: "Самарская гос. филармония",
+                                       address: "Фрунзе, 141",
+                                       latitude: 53.191646,
+                                       longtitude: 50.094859,
+                                       photoFilename: "Самарская филармония"),
+                    author: authors["Черкасов"]!,
+                    questionText: "Одной из самых известных его песен стала – «Знаете, каким он парнем был». Песня-посвящение Ю.А. Гагарину. Назовите фамилии композитора и автора стихов данного произведения.",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/zznNR8-Yco0?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/9gzWVaZ0feE?playsinline=1"),
+                    answer: ["ДОБРОНРАВОВ", "ПАХМУТОВА"],
+                    answerCharacters: "ДОНВООТВАБМВОХУАРРПАН"),
+                
+                Question(
+                    title: "Сила духа",
+                    location: Location(name: "Дядя Стёпа",
+                                       address: "Молодогвардейская 72",
+                                       latitude: 53.186435,
+                                       longtitude: 50.095572,
+                                       photoFilename: "Дядя Степа"),
+                    author: authors["Корниенко"]!,
+                    questionText: "Чтобы сократить после полёта время реабилитации, на МКС космонавт должен ежедневно заниматься около двух с половиной часов. Силовых упражнений нет — только аэробные: если нарастить мышечную массу, можно не поместиться в кресло, и тогда вернуться на Землю будет затруднительно. Назовите явление, которое является главным «врагом» мышц в космосе.",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/kooxsq4aE3w?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/p7b6OzE9FuM?playsinline=1"),
+                    answer: ["НЕВЕСОМОСТЬ"],
+                    answerCharacters: "НСМТМООДЬОХЕЬТОВЕЛСАН"),
+                
+                Question(
+                    title: "Поля без границ",
+                    location: Location(name: "Стела в честь 150-летия Самарской Губернии",
+                                       address: "Куйбышева, 99",
+                                       latitude: 53.187927,
+                                       longtitude: 50.089384,
+                                       photoFilename: "Стела в честь 150-летия Самарскои Губернии"),
+                    author: authors["Лазуткин"]!,
+                    questionText: "Играли ли когда-нибудь люди в космосе в гольф? Назовите количество раз (0, если не играли никогда).",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/F5qeCjrx6yA?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/Lv4PR8yrJfM?playsinline=1"),
+                    answer: ["2"],
+                    answerCharacters: "0123456"),
+                
+                Question(
+                    title: "Хвостатые герои",
+                    location: Location(name: "Памятник бравому солдату Швейку",
+                                       address: "Некрасовская, 26",
+                                       latitude: 53.190364,
+                                       longtitude: 50.090982,
+                                       photoFilename: "Памятник Швеику"),
+                    author: authors["Королёва"]!,
+                    questionText: "Какие до полета в космос были имена у собак Белки и Стрелки?",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/mbOapNVz1WE?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/WhKzzm9DJx4?playsinline=1"),
+                    answer: ["ВИЛЬНА", "КАПЛЯ"],
+                    answerCharacters: "ВБОЬАИЛЯКЛИАПНБК"),
+                
+                Question(
+                    title: "Про любовь",
+                    location: Location(name: "Памятник товарищу Сухову",
+                                       address: "Максима Горького 115",
+                                       latitude: 53.190846,
+                                       longtitude: 50.083693,
+                                       photoFilename: "Памятник Сухову"),
+                    author: authors["Котов"]!,
+                    questionText: "Памятник товарищу Сухову посвящён главному персонажу фильма, которого блестяще сыграл актёр Анатолий Борисович Кузнецов. Этот памятник расположен здесь не случайно. Ведь именно в Самару писал свои трогательные письма красноармеец Сухов. Назовите имя «единственной и незабвенной» Фёдора Ивановича.",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/eEPryrDe9Jw?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/N-uvsQSjs7c?playsinline=1"),
+                    answer: ["КАТЕРИНА"],
+                    answerCharacters: "КЕАТТЯААРНЬТИН"),
+                
+                Question(
+                    title: "Поэма о космонавте",
+                    location: Location(name: "Фонтан «Парус»",
+                                       address: "Максима Горького 107",
+                                       latitude: 53.189641,
+                                       longtitude: 50.082413,
+                                       photoFilename: "Фонтан Парус"),
+                    author: authors["Сойфер"]!,
+                    questionText: "В стихотворении В. Высоцкого «Поэма о космонавте» есть такие строки:\n\tВот мой дублер, который мог быть Первым,\n\tКоторый смог впервые стать вторым.\n\tПока что на него не тратят шрифта —\n\tЗапас заглавных букв на одного.\n\tМы с ним вдвоем прошли весь путь до лифта,\n\tНо дальше я поднялся без него.\nНазовите фамилию этого известного всем Героя.",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/fw6dEOdLvHI?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/C4p1b2dsmNQ?playsinline=1"),
+                    answer: ["ТИТОВ"],
+                    answerCharacters: "ГГАТТЁИОРКОВРА"),
+                
+                Question(
+                    title: "Космический художник",
+                    location: Location(name: "Композиция «Бурлаки на Волге»",
+                                       address: "Максима Горького 107",
+                                       latitude: 53.189791,
+                                       longtitude: 50.082047,
+                                       photoFilename: "Бурлаки на Волге"),
+                    author: authors["Просочкина"]!,
+                    questionText: "Среди космонавтов тоже есть талантливые художники. Картины этого человека хранятся в Третьяковской галереи. Назовите фамилию первого космического художника.",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/Y0e44G3izrE?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/8fbB8usbTbo?playsinline=1"),
+                    answer: ["ЛЕОНОВ"],
+                    answerCharacters: "РЛАНИГОГЕАНОЬВ"),
+                
+                Question(
+                    title: "Океан вселенной",
+                    location: Location(name: "Речной вокзал",
+                                       address: "Максима Горького 82",
+                                       latitude: 53.187425,
+                                       longtitude: 50.078923,
+                                       photoFilename: "Речнои вокзал"),
+                    author: authors["Артемьев"]!,
+                    questionText: "Отбытие экипажа на старт всегда сопровождает песня сверхпопулярной некогда группы «Земляне». Вспомните название этой песни.",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/ODWOj9HfrLU?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/5R4NGIii8YI?playsinline=1"),
+                    answer: ["ТРАВА", "У ДОМА"],
+                    answerCharacters: "УМАСРАЕАДОТВВА")
+              ],
+              variations: [
+                RouteVariation(length: 7.3, duration: 120, questionIndexes: Array(0...14))
+              ]),
         
         
         
-            // MARK: - Первые шаги. Почему Куйбышев?
+        // MARK: - Первые шаги. Почему Куйбышев?
         
-            Route(imageFileName: "background3.png",
-                  title: "Первые шаги. Почему Куйбышев?",
-                  subtitle: "Центральная часть города",
-                  questions: [
-                    Question(
-                        title: "Опередивший время",
-                        location: Location(name: "Монумент «Энергия-Буран»",
-                                           address: "Московское шоссе 34",
-                                           latitude: 53.211518,
-                                           longtitude: 50.176868,
-                                           photoFilename: "Монумент Энергия-Буран"),
-                        author: authors["Корзун"]!,
-                        questionText: "15 ноября 1988 года состоялся полет советского многоразового орбитального корабля «Буран». Впервые в истории «челнок» успешно приземлился в автоматическом режиме и попал в книгу рекордов Гиннесса. «Шаттлы» сажали исключительно вручную. Назовите фамилию летчика-космонавта, научившего «летать» Буран.",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/X1LlOO46lzU?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/HZ_1CR-VCYo?playsinline=1"),
-                        answer: ["ВОЛК"],
-                        answerCharacters: "КЕЛВРАТЕМОЬОРВ",
-                        isComplete: false,
-                        score: 0),
-                    
-                    Question(
-                        title: "Кузница кадров",
-                        location: Location(name: "Административный корпус",
-                                           address: "Московское шоссе 34",
-                                           latitude: 53.212032,
-                                           longtitude: 50.177602,
-                                           photoFilename: "Административныи корпус"),
-                        author: authors["Лазуткин"]!,
-                        questionText: "Заведующим кафедрой динамики полета и систем управления, а также кафедрой летательных аппаратов в КуАИ и СГАУ более 20 лет был последователь С.П. Королева, прошедший ВОВ, ведущий конструктор знаменитой «семёрки». Назовите его фамилию.",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/jWBza3HR_20?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/ZOnsglvUHDQ?playsinline=1"),
-                        answer: ["КОЗЛОВ"],
-                        answerCharacters: "КМОЕВЕТОЬЛЗРАН",
-                        isComplete: false,
-                        score: 0),
-                   
-                    Question(
-                        title: "Новый старт",
-                        location: Location(name: "Бюст С.П. Королёва",
-                                           address: "Московское шоссе 34",
-                                           latitude: 53.212421,
-                                           longtitude: 50.178640,
-                                           photoFilename: "Бюст Королева"),
-                        author: authors["Рень"]!,
-                        questionText: "Назовите космодром, при пуске с которого трасса выведения пилотируемого транспортного корабля в основном проходит над водной поверхностью.",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/4fiE4VgggOo?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/BUvmG0p_Oj0?playsinline=1"),
-                        answer: ["ВОСТОЧНЫЙ"],
-                        answerCharacters: "ВСЧАУТКРЙНБОЫО",
-                        isComplete: false,
-                        score: 0),
-                   
-                    Question(
-                        title: "На земле и в космосе",
-                        location: Location(name: "Ботанический сад",
-                                           address: "Ботанический сад",
-                                           latitude: 53.212826,
-                                           longtitude: 50.179764,
-                                           photoFilename: "Ботаническии сад"),
-                        author: authors["Филатова"]!,
-                        questionText: "В честь Гагарина называли улицы, скверы, школы, университеты и прочее. Кроме этого, существует сорт гладиолусов, посвященный Гагарину. Как называются эти гладиолусы?",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/rV8dIlAgCYU?playsinline=1"),
-                        answerVideoUrl: nil,
-                        answer: ["УЛЫБКА", "ГАГАРИНА"],
-                        answerCharacters: "УАЫНАГЛИЕЮБКАГРАИ",
-                        isComplete: false,
-                        score: 0),
-                   
-                    Question(
-                        title: "Костюмчик на выход",
-                        location: Location(name: "Памятник М.В. Ломоносову",
-                                           address: "Академика Павлова 1",
-                                           latitude: 53.222732,
-                                           longtitude: 50.173088,
-                                           photoFilename: "Памятник Ломоносову"),
-                        author: authors["Котельников"]!,
-                        questionText: "Невесомость приводит к общему ухудшению состояния здоровья. Сегодня космические экспедиции длятся около полугода. Во время них космонавты каждый день занимаются спортом минимум два часа, а перед возвращением на Землю используют нагрузочный костюм. С помощью специальных прорезиненных жгутов он позволяет придать телу нагрузку, похожую на земную. Как называется нагрузочный костюм, благодаря которому космонавты возвращаются на Землю немного ослабевшими, но все же здоровыми?",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/SbRvHT1ZvZs?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/XB2TG19tmpM?playsinline=1"),
-                        answer: ["ПИНГВИН"],
-                        answerCharacters: "ПГИАИТТЛНСВЕНК",
-                        isComplete: false,
-                        score: 0),
-                   
-                    Question(
-                        title: "Домик над Волгой",
-                        location: Location(name: "Загородный парк",
-                                           address: "Ново-Садовая 106",
-                                           latitude: 53.227521,
-                                           longtitude: 50.173981,
-                                           photoFilename: "Загородныи парк"),
-                        author: authors["Лазуткин"]!,
-                        questionText: "Перед полётом в космос Юрий Гагарин имел звание старшего лейтенанта. Какое воинское звание было присвоено ему в городе Куйбышеве после полета в космос?",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/n6JTh09TNqY?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/b5WhVuJlar0?playsinline=1"),
-                        answer: ["МАЙОР"],
-                        answerCharacters: "МНИЙЙЕАТАКРОЛН",
-                        isComplete: false,
-                        score: 0),
-                   
-                    Question(
-                        title: "Путь из космоса",
-                        location: Location(name: "Телебашня, ГТРК «Самара»",
-                                           address: "Советской Армии, 205",
-                                           latitude: 53.230631,
-                                           longtitude: 50.192130,
-                                           photoFilename: "Телебашня"),
-                        author: authors["Федяев"]!,
-                        questionText: "Улица Гагарина – одна из основных транспортных магистралей города Самары. Она получила свое название 15 апреля 1961 года решением Горисполкома Куйбышева. По этой дороге, сразу после возвращения из космоса, проехал Юрий Гагарин, следуя с заводского аэродрома на Безымянке на обкомовскую дачу на берегу Волги. Назовите название улицы, которое она носила до апреля 1961 года.",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/mvV5Y0pInIk?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/7z3wSGbdQsA?playsinline=1"),
-                        answer: ["ЧЕРНОВСКОЕ", "ШОССЕ"],
-                        answerCharacters: "ЕЕНСОШОВОЧРМСКОЕССК",
-                        isComplete: false,
-                        score: 0),
-                   
-                    Question(
-                        title: "На пыльных дорожках",
-                        location: Location(name: "«Космические» ворота",
-                                           address: "Парк культуры и отдыха имени Юрия Гагарина",
-                                           latitude: 53.229117,
-                                           longtitude: 50.195489,
-                                           photoFilename: "Космические ворота"),
-                        author: authors["Степанова"]!,
-                        questionText: "Средняя температура Марса –55 градусов, его атмосфера на 95% состоит из углекислого газа. Диаметр Марса почти в 2 раза меньше диаметра Земли. А сколько процентов составляет сила тяжести на поверхности Красной планеты относительно земной?",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/Sn7bxOzAC5A?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/ibnAGcoK2gI?playsinline=1"),
-                        answer: ["37"],
-                        answerCharacters: "1234567",
-                        isComplete: false,
-                        score: 0),
-                   
-                    Question(
-                        title: "Первопроходец",
-                        location: Location(name: "Бюст Ю.А. Гагарина",
-                                           address: "Парк культуры и отдыха имени Юрия Гагарина",
-                                           latitude: 53.228681,
-                                           longtitude: 50.196993,
-                                           photoFilename: "Бюст Гагарина"),
-                        author: authors["Артемьев"]!,
-                        questionText: "12 апреля 1961 года первый космонавт Ю.А. Гагарин приземлился на поле колхоза имени Шевченко, близь деревни Смеловка в 27 километрах южнее города Энгельса. После посадки подобравшего его вертолета удивленный председатель колхоза вручил ему награду. Как называется первая медаль, которой был награжден Юрий Алексеевич после полета?",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/8TQvAiMfyC0?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/9K3m7RproCQ?playsinline=1"),
-                        answer: ["ЗА ОСВОЕНИЕ", "ЦЕЛИННЫХ", "ЗЕМЕЛЬ"],
-                        answerCharacters: "ЗВНННИМАЛЕЕЕЫХОЕЦОИЗСЛЕЬ",
-                        isComplete: false,
-                        score: 0),
-                   
-                    Question(
-                        title: "Минуты, изменившие мир",
-                        location: Location(name: "Мост через пруд",
-                                           address: "Парк культуры и отдыха имени Юрия Гагарина",
-                                           latitude: 53.228771,
-                                           longtitude: 50.198803,
-                                           photoFilename: "Мост через пруд"),
-                        author: authors["Королёва"]!,
-                        questionText: "Сколько минут длился первый в мире полет человека в космос?",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/uLZ5GC9Uey8?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/Jtiu9n3VUkQ?playsinline=1"),
-                        answer: ["108"],
-                        answerCharacters: "1523806",
-                        isComplete: false,
-                        score: 0),
-                   
-                    Question(
-                        title: "Звёздный сосед",
-                        location: Location(name: "Колесо обозрения",
-                                           address: "Парк культуры и отдыха имени Юрия Гагарина",
-                                           latitude: 53.230543,
-                                           longtitude: 50.198083,
-                                           photoFilename: "Колесо обозрения"),
-                        author: authors["Виноградов"]!,
-                        questionText: "Как называется звезда самая близкая к Солнцу и нашей Солнечной системе?",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/AU98WbhIzEw?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/P6Kpsv3rH78?playsinline=1"),
-                        answer: ["АЛЬФА", "ЦЕНТАВРА"],
-                        answerCharacters: "ФЛТАВСАРЦЕЬНАА",
-                        isComplete: false,
-                        score: 0),
-                    
-                    Question(
-                        title: "Космос-арена",
-                        location: Location(name: "Ипподром",
-                                           address: "пр. Кирова 320",
-                                           latitude: 53.250156,
-                                           longtitude: 50.219906,
-                                           photoFilename: "Ипподром"),
-                        author: authors["Прокопьев"]!,
-                        questionText: "Какое природное явление космонавты видят 16 раз в сутки?",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/BQnXb6XYikw?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/Nj2y-oT8DNI?playsinline=1"),
-                        answer: ["ВОСХОД"],
-                        answerCharacters: "ОЗДАКАВХАЕСОРВ",
-                        isComplete: false,
-                        score: 0),
-                    
-                    Question(
-                        title: "Летающий танк",
-                        location: Location(name: "Штурмовик Ил-2",
-                                           address: "Московское шоссе / пр. Кирова",
-                                           latitude: 53.251052,
-                                           longtitude: 50.222563,
-                                           photoFilename: "Штурмовик Ил-2"),
-                        author: authors["Тихонов"]!,
-                        questionText: "Ил-2 изначально разрабатывался как двухместный самолет. Но в ходе испытаний были выявлены некоторые серьезные недостатки. Ильюшин решил пойти на хитрость, сделав Ил-2 одноместным. Вместо кабины штурмана был установлен еще один бензобак. Бронекорпус был уменьшен. Это позволило сделать штурмовик легче. Ил-2 называли БШ-2 «Бронированным штурмовиком». Для улучшения обзора кабину пилота приподняли, после чего Ил-2 приобрёл другое прозвище. Какое новое прозвище получил Ил-2?",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/H98rGx4yrQ0?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/re4MJulRoc0?playsinline=1"),
-                        answer: ["ГОРБАТЫЙ"],
-                        answerCharacters: "ОЫТГБКЛРАЕГЙИН",
-                        isComplete: false,
-                        score: 0)
-                  ],
-                  variations: [
-                    RouteVariation(length: 6.2, duration: 90, questionIndexes: [0,1,2,3,4,5,6,7,8,9,10]),
-                    RouteVariation(length: 9.7, duration: 160, questionIndexes: Array(0...12))
-            ]),
+        Route(id: "firststeps",
+              imageFileName: "background3.png",
+              title: "Первые шаги. Почему Куйбышев?",
+              subtitle: "Центральная часть города",
+              questions: [
+                Question(
+                    title: "Опередивший время",
+                    location: Location(name: "Монумент «Энергия-Буран»",
+                                       address: "Московское шоссе 34",
+                                       latitude: 53.211518,
+                                       longtitude: 50.176868,
+                                       photoFilename: "Монумент Энергия-Буран"),
+                    author: authors["Корзун"]!,
+                    questionText: "15 ноября 1988 года состоялся полет советского многоразового орбитального корабля «Буран». Впервые в истории «челнок» успешно приземлился в автоматическом режиме и попал в книгу рекордов Гиннесса. «Шаттлы» сажали исключительно вручную. Назовите фамилию летчика-космонавта, научившего «летать» Буран.",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/X1LlOO46lzU?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/HZ_1CR-VCYo?playsinline=1"),
+                    answer: ["ВОЛК"],
+                    answerCharacters: "КЕЛВРАТЕМОЬОРВ"),
+                
+                Question(
+                    title: "Кузница кадров",
+                    location: Location(name: "Административный корпус",
+                                       address: "Московское шоссе 34",
+                                       latitude: 53.212032,
+                                       longtitude: 50.177602,
+                                       photoFilename: "Административныи корпус"),
+                    author: authors["Лазуткин"]!,
+                    questionText: "Заведующим кафедрой динамики полета и систем управления, а также кафедрой летательных аппаратов в КуАИ и СГАУ более 20 лет был последователь С.П. Королева, прошедший ВОВ, ведущий конструктор знаменитой «семёрки». Назовите его фамилию.",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/jWBza3HR_20?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/ZOnsglvUHDQ?playsinline=1"),
+                    answer: ["КОЗЛОВ"],
+                    answerCharacters: "КМОЕВЕТОЬЛЗРАН"),
+                
+                Question(
+                    title: "Новый старт",
+                    location: Location(name: "Бюст С.П. Королёва",
+                                       address: "Московское шоссе 34",
+                                       latitude: 53.212421,
+                                       longtitude: 50.178640,
+                                       photoFilename: "Бюст Королева"),
+                    author: authors["Рень"]!,
+                    questionText: "Назовите космодром, при пуске с которого трасса выведения пилотируемого транспортного корабля в основном проходит над водной поверхностью.",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/4fiE4VgggOo?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/BUvmG0p_Oj0?playsinline=1"),
+                    answer: ["ВОСТОЧНЫЙ"],
+                    answerCharacters: "ВСЧАУТКРЙНБОЫО"),
+                
+                Question(
+                    title: "На земле и в космосе",
+                    location: Location(name: "Ботанический сад",
+                                       address: "Ботанический сад",
+                                       latitude: 53.212826,
+                                       longtitude: 50.179764,
+                                       photoFilename: "Ботаническии сад"),
+                    author: authors["Филатова"]!,
+                    questionText: "В честь Гагарина называли улицы, скверы, школы, университеты и прочее. Кроме этого, существует сорт гладиолусов, посвященный Гагарину. Как называются эти гладиолусы?",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/rV8dIlAgCYU?playsinline=1"),
+                    answerVideoUrl: nil,
+                    answer: ["УЛЫБКА", "ГАГАРИНА"],
+                    answerCharacters: "УАЫНАГЛИЕЮБКАГРАИ"),
+                
+                Question(
+                    title: "Костюмчик на выход",
+                    location: Location(name: "Памятник М.В. Ломоносову",
+                                       address: "Академика Павлова 1",
+                                       latitude: 53.222732,
+                                       longtitude: 50.173088,
+                                       photoFilename: "Памятник Ломоносову"),
+                    author: authors["Котельников"]!,
+                    questionText: "Невесомость приводит к общему ухудшению состояния здоровья. Сегодня космические экспедиции длятся около полугода. Во время них космонавты каждый день занимаются спортом минимум два часа, а перед возвращением на Землю используют нагрузочный костюм. С помощью специальных прорезиненных жгутов он позволяет придать телу нагрузку, похожую на земную. Как называется нагрузочный костюм, благодаря которому космонавты возвращаются на Землю немного ослабевшими, но все же здоровыми?",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/SbRvHT1ZvZs?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/XB2TG19tmpM?playsinline=1"),
+                    answer: ["ПИНГВИН"],
+                    answerCharacters: "ПГИАИТТЛНСВЕНК"),
+                
+                Question(
+                    title: "Домик над Волгой",
+                    location: Location(name: "Загородный парк",
+                                       address: "Ново-Садовая 106",
+                                       latitude: 53.227521,
+                                       longtitude: 50.173981,
+                                       photoFilename: "Загородныи парк"),
+                    author: authors["Лазуткин"]!,
+                    questionText: "Перед полётом в космос Юрий Гагарин имел звание старшего лейтенанта. Какое воинское звание было присвоено ему в городе Куйбышеве после полета в космос?",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/n6JTh09TNqY?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/b5WhVuJlar0?playsinline=1"),
+                    answer: ["МАЙОР"],
+                    answerCharacters: "МНИЙЙЕАТАКРОЛН"),
+                
+                Question(
+                    title: "Путь из космоса",
+                    location: Location(name: "Телебашня, ГТРК «Самара»",
+                                       address: "Советской Армии, 205",
+                                       latitude: 53.230631,
+                                       longtitude: 50.192130,
+                                       photoFilename: "Телебашня"),
+                    author: authors["Федяев"]!,
+                    questionText: "Улица Гагарина – одна из основных транспортных магистралей города Самары. Она получила свое название 15 апреля 1961 года решением Горисполкома Куйбышева. По этой дороге, сразу после возвращения из космоса, проехал Юрий Гагарин, следуя с заводского аэродрома на Безымянке на обкомовскую дачу на берегу Волги. Назовите название улицы, которое она носила до апреля 1961 года.",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/mvV5Y0pInIk?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/7z3wSGbdQsA?playsinline=1"),
+                    answer: ["ЧЕРНОВСКОЕ", "ШОССЕ"],
+                    answerCharacters: "ЕЕНСОШОВОЧРМСКОЕССК"),
+                
+                Question(
+                    title: "На пыльных дорожках",
+                    location: Location(name: "«Космические» ворота",
+                                       address: "Парк культуры и отдыха имени Юрия Гагарина",
+                                       latitude: 53.229117,
+                                       longtitude: 50.195489,
+                                       photoFilename: "Космические ворота"),
+                    author: authors["Степанова"]!,
+                    questionText: "Средняя температура Марса –55 градусов, его атмосфера на 95% состоит из углекислого газа. Диаметр Марса почти в 2 раза меньше диаметра Земли. А сколько процентов составляет сила тяжести на поверхности Красной планеты относительно земной?",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/Sn7bxOzAC5A?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/ibnAGcoK2gI?playsinline=1"),
+                    answer: ["37"],
+                    answerCharacters: "1234567"),
+                
+                Question(
+                    title: "Первопроходец",
+                    location: Location(name: "Бюст Ю.А. Гагарина",
+                                       address: "Парк культуры и отдыха имени Юрия Гагарина",
+                                       latitude: 53.228681,
+                                       longtitude: 50.196993,
+                                       photoFilename: "Бюст Гагарина"),
+                    author: authors["Артемьев"]!,
+                    questionText: "12 апреля 1961 года первый космонавт Ю.А. Гагарин приземлился на поле колхоза имени Шевченко, близь деревни Смеловка в 27 километрах южнее города Энгельса. После посадки подобравшего его вертолета удивленный председатель колхоза вручил ему награду. Как называется первая медаль, которой был награжден Юрий Алексеевич после полета?",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/8TQvAiMfyC0?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/9K3m7RproCQ?playsinline=1"),
+                    answer: ["ЗА ОСВОЕНИЕ", "ЦЕЛИННЫХ", "ЗЕМЕЛЬ"],
+                    answerCharacters: "ЗВНННИМАЛЕЕЕЫХОЕЦОИЗСЛЕЬ"),
+                
+                Question(
+                    title: "Минуты, изменившие мир",
+                    location: Location(name: "Мост через пруд",
+                                       address: "Парк культуры и отдыха имени Юрия Гагарина",
+                                       latitude: 53.228771,
+                                       longtitude: 50.198803,
+                                       photoFilename: "Мост через пруд"),
+                    author: authors["Королёва"]!,
+                    questionText: "Сколько минут длился первый в мире полет человека в космос?",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/uLZ5GC9Uey8?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/Jtiu9n3VUkQ?playsinline=1"),
+                    answer: ["108"],
+                    answerCharacters: "1523806"),
+                
+                Question(
+                    title: "Звёздный сосед",
+                    location: Location(name: "Колесо обозрения",
+                                       address: "Парк культуры и отдыха имени Юрия Гагарина",
+                                       latitude: 53.230543,
+                                       longtitude: 50.198083,
+                                       photoFilename: "Колесо обозрения"),
+                    author: authors["Виноградов"]!,
+                    questionText: "Как называется звезда самая близкая к Солнцу и нашей Солнечной системе?",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/AU98WbhIzEw?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/P6Kpsv3rH78?playsinline=1"),
+                    answer: ["АЛЬФА", "ЦЕНТАВРА"],
+                    answerCharacters: "ФЛТАВСАРЦЕЬНАА"),
+                
+                Question(
+                    title: "Космос-арена",
+                    location: Location(name: "Ипподром",
+                                       address: "пр. Кирова 320",
+                                       latitude: 53.250156,
+                                       longtitude: 50.219906,
+                                       photoFilename: "Ипподром"),
+                    author: authors["Прокопьев"]!,
+                    questionText: "Какое природное явление космонавты видят 16 раз в сутки?",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/BQnXb6XYikw?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/Nj2y-oT8DNI?playsinline=1"),
+                    answer: ["ВОСХОД"],
+                    answerCharacters: "ОЗДАКАВХАЕСОРВ"),
+                
+                Question(
+                    title: "Летающий танк",
+                    location: Location(name: "Штурмовик Ил-2",
+                                       address: "Московское шоссе / пр. Кирова",
+                                       latitude: 53.251052,
+                                       longtitude: 50.222563,
+                                       photoFilename: "Штурмовик Ил-2"),
+                    author: authors["Тихонов"]!,
+                    questionText: "Ил-2 изначально разрабатывался как двухместный самолет. Но в ходе испытаний были выявлены некоторые серьезные недостатки. Ильюшин решил пойти на хитрость, сделав Ил-2 одноместным. Вместо кабины штурмана был установлен еще один бензобак. Бронекорпус был уменьшен. Это позволило сделать штурмовик легче. Ил-2 называли БШ-2 «Бронированным штурмовиком». Для улучшения обзора кабину пилота приподняли, после чего Ил-2 приобрёл другое прозвище. Какое новое прозвище получил Ил-2?",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/H98rGx4yrQ0?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/re4MJulRoc0?playsinline=1"),
+                    answer: ["ГОРБАТЫЙ"],
+                    answerCharacters: "ОЫТГБКЛРАЕГЙИН")
+              ],
+              variations: [
+                RouteVariation(length: 6.2, duration: 90, questionIndexes: [0,1,2,3,4,5,6,7,8,9,10]),
+                RouteVariation(length: 9.7, duration: 160, questionIndexes: Array(0...12))
+              ]),
         
         
         
-            // MARK: - Самарские предприятия, проложившие путь в космос
+        // MARK: - Самарские предприятия, проложившие путь в космос
         
-            Route(imageFileName: "background4.png",
-                  title: "Самарские предприятия, проложившие путь в космос",
-                  subtitle: "Аллея трудовой славы",
-                  questions: [
-                    Question(
-                        title: "К полёту готов",
-                        location: Location(name: "Фонтан «Царевна-Лебедь»",
-                                           address: "Парк культуры и отдыха 50-летия Октября",
-                                           latitude: 53.235150,
-                                           longtitude: 50.267655,
-                                           photoFilename: "Фонтан Царевна-Лебедь"),
-                        author: authors["Лазуткин"]!,
-                        questionText: "Вне зависимости от типа и предназначения все российские скафандры названы в честь НИХ. О ком идет речь?",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/yWdd2Hx1JAs?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/FwZgfQFVwEU?playsinline=1"),
-                        answer: ["ПТИЦЫ"],
-                        answerCharacters: "ПБКЦОТШКИИСЫАР",
-                        isComplete: false,
-                        score: 0),
-                  
-                    Question(
-                        title: "Как за каменной стеной",
-                        location: Location(name: "АО «Арконик СМЗ»",
-                                           address: "пр. Юных Пионеров 167Г",
-                                           latitude: 53.233293,
-                                           longtitude: 50.264262,
-                                           photoFilename: "АО Арконик СМЗ"),
-                        author: authors["Шкаплеров"]!,
-                        questionText: "Какова толщина стенок герметичной оболочки Международной космической Станции (в миллиметрах)?",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/pQfw7ZVmtn4?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/TvvNnkJAp20?playsinline=1"),
-                        answer: ["3"],
-                        answerCharacters: "1234567",
-                        isComplete: false,
-                        score: 0),
-                  
-                    Question(
-                        title: "Космическая эстафета",
-                        location: Location(name: "Стела в честь первого магистрального газопровода",
-                                           address: "пр. Юных Пионеров 167В",
-                                           latitude: 53.232963,
-                                           longtitude: 50.263508,
-                                           photoFilename: "Стела в честь первого магистрального газопровода"),
-                        author: authors["Котов"]!,
-                        questionText: "«Сердце» этого предмета, было изготовлено специалистами ПАО «Кузнецов» и учеными Самарского аэрокосмического университета. Он стал главным символом мероприятия, которое состоялось в 2014 году в Сочи. Перед этим событием уменьшенная копия этого предмета впервые побывала в открытом космосе. Назовите предмет, о котором идёт речь.",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/L_8nHkB7q1k?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/OKTzzU8HGFA?playsinline=1"),
-                        answer: ["ФАКЕЛ"],
-                        answerCharacters: "АРДВФЕКЛТЕАКЗА",
-                        isComplete: false,
-                        score: 0),
-                   
-                    Question(
-                        title: "Вопреки",
-                        location: Location(name: "ПАО «Кузнецов»",
-                                           address: "пр. Юных Пионеров 165",
-                                           latitude: 53.231881,
-                                           longtitude: 50.260880,
-                                           photoFilename: "ПАО Кузнецов"),
-                        author: authors["Корниенко"]!,
-                        questionText: "Этот Двигатель создавался в Куйбышеве коллективом под руководством Генерального конструктора Н.Д. Кузнецова в конце 60-х – начале 70-х годов для первой ступени «лунной» ракеты Н1-Л3. К сожалению, в 1974 году «лунная программа» была закрыта. Этот двигатель получил своё второе рождение спустя более чем 20 лет: он применялся в первой ступени американской РН «Антарес», и сейчас используется в первой ступени РН легкого класса «Союз-2.1в». Как называется этот двигатель?",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/kXStxFIS6RU?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/dc-_hKzb4J0?playsinline=1"),
-                        answer: ["НК-33"],
-                        answerCharacters: "ЛНРК373",
-                        isComplete: false,
-                        score: 0),
-                   
-                    Question(
-                        title: "За гранью возможного",
-                        location: Location(name: "Монумент подшипникового завода",
-                                           address: "пр. Юных Пионеров 155",
-                                           latitude: 53.231065,
-                                           longtitude: 50.259496,
-                                           photoFilename: "Монумент подшипникового завода"),
-                        author: authors["Королёв"]!,
-                        questionText: "Перечислите в алфавитном порядке названия пилотируемых кораблей, созданных под руководством С.П. Королева.",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/YsshUKGTC_Y?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/Y3p4HJAQa8A?playsinline=1"),
-                        answer: ["ВОСТОК", "ВОСХОД", "СОЮЗ"],
-                        answerCharacters: "СЗОВОСКНКХЮСОТОВОД",
-                        isComplete: false,
-                        score: 0),
-                  
-                    Question(
-                        title: "Пешком вокруг земли",
-                        location: Location(name: "Центральная композиция аллеи",
-                                           address: "пр. Юных Пионеров 143",
-                                           latitude: 53.230229,
-                                           longtitude: 50.257340,
-                                           photoFilename: "Центральная композиция аллеи"),
-                        author: authors["Артемьев"]!,
-                        questionText: "Скорость бега космонавтов на тренировках составляет примерно 7-14 км/ч. За 5 лет на беговой дорожке космонавты провели около 4000 часов и преодолели путь равный экватору Земли. Сколько километров пробежали космонавты по беговой дорожке БД-2?",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/fL_N8bNBeaQ?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/hohri1xNzEA?playsinline=1"),
-                        answer: ["40075"],
-                        answerCharacters: "0023457",
-                        isComplete: false,
-                        score: 0),
-                  
-                    Question(
-                        title: "Упавшая звезда",
-                        location: Location(name: "Монумент Куйбышевкабель",
-                                           address: "пр. Юных Пионеров 139",
-                                           latitude: 53.229717,
-                                           longtitude:  50.256493,
-                                           photoFilename: "Монумент Куибышевкабель"),
-                        author: authors["Рень"]!,
-                        questionText: "Что проходят в Центре подготовки космонавтов при подготовке к космическим полетам для того, чтобы члены экипажа сохранили жизнь и здоровье?",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/VDAvGeSl76c?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/JBA_Z4e67LM?playsinline=1"),
-                        answer: ["ТРЕНИРОВКИ", "ПО", "ВЫЖИВАНИЮ"],
-                        answerCharacters: "ТРИЫИЕОКПОРИИВЖВВАННЮ",
-                        isComplete: false,
-                        score: 0),
-                  
-                    Question(
-                        title: "Трещин нет!",
-                        location: Location(name: "Куйбышевский авиационный завод",
-                                           address: "пр. Юных Пионеров 136",
-                                           latitude: 53.228337,
-                                           longtitude: 50.253214,
-                                           photoFilename: "Куибышевскии авиационныи завод"),
-                        author: authors["Артемьев"]!,
-                        questionText: "Начало пути Юрия Алексеевича Гагарина в авиации тоже было связано с посадкой. Он был невысокого роста и во время обучения в летном училище оказался на грани отчисления, так как не мог корректно выполнить посадку. Заметив это, один из руководителей предложил Юрию положить на сидение самолета этот предмет. Назовите этот предмет.",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/5ZMVn6dqFA8?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/yYWdTxiNrco?playsinline=1"),
-                        answer: ["ПОДУШКА"],
-                        answerCharacters: "ПАОГИКЛИКУНДША",
-                        isComplete: false,
-                        score: 0),
-                  
-                    Question(
-                        title: "Война и космос",
-                        location: Location(name: "Мемориал «Триумфальная арка»",
-                                           address: "пр. Юных Пионеров 134",
-                                           latitude: 53.228092,
-                                           longtitude: 50.252851,
-                                           photoFilename: "Триумфальная арка"),
-                        author: authors["Авдеев"]!,
-                        questionText: "Победители в Великой Отечественной стали и победителями в освоении космоса, среди них много конструкторов и рабочих. Кроме того, и в отряде космонавтов был человек, прошедший всю войну. И ставший единственным, кто удостоен первой звезды Героя за Великую Отечественную войну, а второй — за полёт в космос. Назовите фамилию этого человека.",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/PeU5f2T-UKE?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/3HmbOv1m6YI?playsinline=1"),
-                        answer: ["БЕРЕГОВОЙ"],
-                        answerCharacters: "БВЕКОРЗГЕУОЕНЙ",
-                        isComplete: false,
-                        score: 0),
-                  
-                    Question(
-                        title: "Восточный",
-                        location: Location(name: "Монумент РКЦ «Прогресс»",
-                                           address: "пр. Юных Пионеров 130А",
-                                           latitude: 53.227167,
-                                           longtitude: 50.250851,
-                                           photoFilename: "Монумент РКЦ Прогресс"),
-                        author: authors["Сердюк"]!,
-                        questionText: "Назовите область, в которой расположен космодром Восточный и как называется наукоград при космодроме?",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/DZAbvh2EZSs?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/DiXX00YnvVA?playsinline=1"),
-                        answer: ["АМУРСКАЯ", "ЦИОЛКОВСКИЙ"],
-                        answerCharacters: "ЦВКРООУКААСЛЙСИИКМЯ",
-                        isComplete: false,
-                        score: 0),
-                   
-                    Question(
-                        title: "Пункт назначения",
-                        location: Location(name: "Монумент завода Авиаагрегат",
-                                           address: "пр. Юных Пионеров 116",
-                                           latitude: 53.226298,
-                                           longtitude: 50.248775,
-                                           photoFilename: "Монумент завода Авиаагрегат"),
-                        author: authors["Степанова"]!,
-                        questionText: "Транспортное сообщение между двумя этими пунктами налажено около 50 лет назад, но грузообмен явно неравномерен. В пункте Б на данный момент находится примерно 170 тонн различных грузов и материалов, доставленных из пункта А, в то время как пункт А за все это время получил всего 382 килограмма из пункта Б. Назовите пункты А и Б в правильном порядке.",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/nmCpguXTaA8?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/8692mPIK3Iw?playsinline=1"),
-                        answer: ["ЗЕМЛЯ", "ЛУНА"],
-                        answerCharacters: "ЛЕЛРУМНЯМНААЗС",
-                        isComplete: false,
-                        score: 0),
-                   
-                    Question(
-                        title: "Космические посадки",
-                        location: Location(name: "Парк культуры и отдыха «Молодежный»",
-                                           address: "Городской парк культуры и отдыха «Молодёжный»",
-                                           latitude: 53.223446,
-                                           longtitude: 50.239791,
-                                           photoFilename: "Парк Молодежныи"),
-                        author: authors["Лазаренко"]!,
-                        questionText: "За сколько часов происходит возвращение космонавтов с орбиты: от момента расстыковки корабля с МКС до посадки?",
-                        questionVideoUrl: URL(string: "https://www.youtube.com/embed/Y_JK9ZhypaI?playsinline=1"),
-                        answerVideoUrl: URL(string: "https://www.youtube.com/embed/ZVZmUfUp-sA?playsinline=1"),
-                        answer: ["3"],
-                        alternativeAnswer: ["4"],
-                        answerCharacters: "1234567",
-                        isComplete: false,
-                        score: 0)
-                  ],
-                  variations: [
-                    RouteVariation(length: 4, duration: 60, questionIndexes: Array(0...11))
-            ])
-         
+        Route(id: "spaceindustry",
+              imageFileName: "background4.png",
+              title: "Самарские предприятия, проложившие путь в космос",
+              subtitle: "Аллея трудовой славы",
+              questions: [
+                Question(
+                    title: "К полёту готов",
+                    location: Location(name: "Фонтан «Царевна-Лебедь»",
+                                       address: "Парк культуры и отдыха 50-летия Октября",
+                                       latitude: 53.235150,
+                                       longtitude: 50.267655,
+                                       photoFilename: "Фонтан Царевна-Лебедь"),
+                    author: authors["Лазуткин"]!,
+                    questionText: "Вне зависимости от типа и предназначения все российские скафандры названы в честь НИХ. О ком идет речь?",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/yWdd2Hx1JAs?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/FwZgfQFVwEU?playsinline=1"),
+                    answer: ["ПТИЦЫ"],
+                    answerCharacters: "ПБКЦОТШКИИСЫАР"),
+                
+                Question(
+                    title: "Как за каменной стеной",
+                    location: Location(name: "АО «Арконик СМЗ»",
+                                       address: "пр. Юных Пионеров 167Г",
+                                       latitude: 53.233293,
+                                       longtitude: 50.264262,
+                                       photoFilename: "АО Арконик СМЗ"),
+                    author: authors["Шкаплеров"]!,
+                    questionText: "Какова толщина стенок герметичной оболочки Международной космической Станции (в миллиметрах)?",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/pQfw7ZVmtn4?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/TvvNnkJAp20?playsinline=1"),
+                    answer: ["3"],
+                    answerCharacters: "1234567"),
+                
+                Question(
+                    title: "Космическая эстафета",
+                    location: Location(name: "Стела в честь первого магистрального газопровода",
+                                       address: "пр. Юных Пионеров 167В",
+                                       latitude: 53.232963,
+                                       longtitude: 50.263508,
+                                       photoFilename: "Стела в честь первого магистрального газопровода"),
+                    author: authors["Котов"]!,
+                    questionText: "«Сердце» этого предмета, было изготовлено специалистами ПАО «Кузнецов» и учеными Самарского аэрокосмического университета. Он стал главным символом мероприятия, которое состоялось в 2014 году в Сочи. Перед этим событием уменьшенная копия этого предмета впервые побывала в открытом космосе. Назовите предмет, о котором идёт речь.",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/L_8nHkB7q1k?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/OKTzzU8HGFA?playsinline=1"),
+                    answer: ["ФАКЕЛ"],
+                    answerCharacters: "АРДВФЕКЛТЕАКЗА"),
+                
+                Question(
+                    title: "Вопреки",
+                    location: Location(name: "ПАО «Кузнецов»",
+                                       address: "пр. Юных Пионеров 165",
+                                       latitude: 53.231881,
+                                       longtitude: 50.260880,
+                                       photoFilename: "ПАО Кузнецов"),
+                    author: authors["Корниенко"]!,
+                    questionText: "Этот Двигатель создавался в Куйбышеве коллективом под руководством Генерального конструктора Н.Д. Кузнецова в конце 60-х – начале 70-х годов для первой ступени «лунной» ракеты Н1-Л3. К сожалению, в 1974 году «лунная программа» была закрыта. Этот двигатель получил своё второе рождение спустя более чем 20 лет: он применялся в первой ступени американской РН «Антарес», и сейчас используется в первой ступени РН легкого класса «Союз-2.1в». Как называется этот двигатель?",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/kXStxFIS6RU?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/dc-_hKzb4J0?playsinline=1"),
+                    answer: ["НК-33"],
+                    answerCharacters: "ЛНРК373"),
+                
+                Question(
+                    title: "За гранью возможного",
+                    location: Location(name: "Монумент подшипникового завода",
+                                       address: "пр. Юных Пионеров 155",
+                                       latitude: 53.231065,
+                                       longtitude: 50.259496,
+                                       photoFilename: "Монумент подшипникового завода"),
+                    author: authors["Королёв"]!,
+                    questionText: "Перечислите в алфавитном порядке названия пилотируемых кораблей, созданных под руководством С.П. Королева.",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/YsshUKGTC_Y?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/Y3p4HJAQa8A?playsinline=1"),
+                    answer: ["ВОСТОК", "ВОСХОД", "СОЮЗ"],
+                    answerCharacters: "СЗОВОСКНКХЮСОТОВОД"),
+                
+                Question(
+                    title: "Пешком вокруг земли",
+                    location: Location(name: "Центральная композиция аллеи",
+                                       address: "пр. Юных Пионеров 143",
+                                       latitude: 53.230229,
+                                       longtitude: 50.257340,
+                                       photoFilename: "Центральная композиция аллеи"),
+                    author: authors["Артемьев"]!,
+                    questionText: "Скорость бега космонавтов на тренировках составляет примерно 7-14 км/ч. За 5 лет на беговой дорожке космонавты провели около 4000 часов и преодолели путь равный экватору Земли. Сколько километров пробежали космонавты по беговой дорожке БД-2?",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/fL_N8bNBeaQ?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/hohri1xNzEA?playsinline=1"),
+                    answer: ["40075"],
+                    answerCharacters: "0023457"),
+                
+                Question(
+                    title: "Упавшая звезда",
+                    location: Location(name: "Монумент Куйбышевкабель",
+                                       address: "пр. Юных Пионеров 139",
+                                       latitude: 53.229717,
+                                       longtitude:  50.256493,
+                                       photoFilename: "Монумент Куибышевкабель"),
+                    author: authors["Рень"]!,
+                    questionText: "Что проходят в Центре подготовки космонавтов при подготовке к космическим полетам для того, чтобы члены экипажа сохранили жизнь и здоровье?",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/VDAvGeSl76c?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/JBA_Z4e67LM?playsinline=1"),
+                    answer: ["ТРЕНИРОВКИ", "ПО", "ВЫЖИВАНИЮ"],
+                    answerCharacters: "ТРИЫИЕОКПОРИИВЖВВАННЮ"),
+                
+                Question(
+                    title: "Трещин нет!",
+                    location: Location(name: "Куйбышевский авиационный завод",
+                                       address: "пр. Юных Пионеров 136",
+                                       latitude: 53.228337,
+                                       longtitude: 50.253214,
+                                       photoFilename: "Куибышевскии авиационныи завод"),
+                    author: authors["Артемьев"]!,
+                    questionText: "Начало пути Юрия Алексеевича Гагарина в авиации тоже было связано с посадкой. Он был невысокого роста и во время обучения в летном училище оказался на грани отчисления, так как не мог корректно выполнить посадку. Заметив это, один из руководителей предложил Юрию положить на сидение самолета этот предмет. Назовите этот предмет.",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/5ZMVn6dqFA8?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/yYWdTxiNrco?playsinline=1"),
+                    answer: ["ПОДУШКА"],
+                    answerCharacters: "ПАОГИКЛИКУНДША"),
+                
+                Question(
+                    title: "Война и космос",
+                    location: Location(name: "Мемориал «Триумфальная арка»",
+                                       address: "пр. Юных Пионеров 134",
+                                       latitude: 53.228092,
+                                       longtitude: 50.252851,
+                                       photoFilename: "Триумфальная арка"),
+                    author: authors["Авдеев"]!,
+                    questionText: "Победители в Великой Отечественной стали и победителями в освоении космоса, среди них много конструкторов и рабочих. Кроме того, и в отряде космонавтов был человек, прошедший всю войну. И ставший единственным, кто удостоен первой звезды Героя за Великую Отечественную войну, а второй — за полёт в космос. Назовите фамилию этого человека.",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/PeU5f2T-UKE?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/3HmbOv1m6YI?playsinline=1"),
+                    answer: ["БЕРЕГОВОЙ"],
+                    answerCharacters: "БВЕКОРЗГЕУОЕНЙ"),
+                
+                Question(
+                    title: "Восточный",
+                    location: Location(name: "Монумент РКЦ «Прогресс»",
+                                       address: "пр. Юных Пионеров 130А",
+                                       latitude: 53.227167,
+                                       longtitude: 50.250851,
+                                       photoFilename: "Монумент РКЦ Прогресс"),
+                    author: authors["Сердюк"]!,
+                    questionText: "Назовите область, в которой расположен космодром Восточный и как называется наукоград при космодроме?",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/DZAbvh2EZSs?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/DiXX00YnvVA?playsinline=1"),
+                    answer: ["АМУРСКАЯ", "ЦИОЛКОВСКИЙ"],
+                    answerCharacters: "ЦВКРООУКААСЛЙСИИКМЯ"),
+                
+                Question(
+                    title: "Пункт назначения",
+                    location: Location(name: "Монумент завода Авиаагрегат",
+                                       address: "пр. Юных Пионеров 116",
+                                       latitude: 53.226298,
+                                       longtitude: 50.248775,
+                                       photoFilename: "Монумент завода Авиаагрегат"),
+                    author: authors["Степанова"]!,
+                    questionText: "Транспортное сообщение между двумя этими пунктами налажено около 50 лет назад, но грузообмен явно неравномерен. В пункте Б на данный момент находится примерно 170 тонн различных грузов и материалов, доставленных из пункта А, в то время как пункт А за все это время получил всего 382 килограмма из пункта Б. Назовите пункты А и Б в правильном порядке.",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/nmCpguXTaA8?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/8692mPIK3Iw?playsinline=1"),
+                    answer: ["ЗЕМЛЯ", "ЛУНА"],
+                    answerCharacters: "ЛЕЛРУМНЯМНААЗС"),
+                
+                Question(
+                    title: "Космические посадки",
+                    location: Location(name: "Парк культуры и отдыха «Молодежный»",
+                                       address: "Городской парк культуры и отдыха «Молодёжный»",
+                                       latitude: 53.223446,
+                                       longtitude: 50.239791,
+                                       photoFilename: "Парк Молодежныи"),
+                    author: authors["Лазаренко"]!,
+                    questionText: "За сколько часов происходит возвращение космонавтов с орбиты: от момента расстыковки корабля с МКС до посадки?",
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/Y_JK9ZhypaI?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/ZVZmUfUp-sA?playsinline=1"),
+                    answer: ["3"],
+                    alternativeAnswer: ["4"],
+                    answerCharacters: "1234567")
+              ],
+              variations: [
+                RouteVariation(length: 4, duration: 60, questionIndexes: Array(0...11))
+              ])
+        
     ]
 }

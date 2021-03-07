@@ -10,7 +10,7 @@ import AudioToolbox
 
 // MARK: QuestionViewController
 
-class QuestionViewController: UIViewController {
+final class QuestionViewController: UIViewController {
     
     // MARK: IBOutlets
     
@@ -41,6 +41,7 @@ class QuestionViewController: UIViewController {
     private var currentQuestion: Question!
     private var score = 3
     private let impactGenerator = UIImpactFeedbackGenerator(style: .light)
+    private var isHintsConfigured = false
     
     // MARK: - View Life Cycle
     
@@ -73,7 +74,7 @@ class QuestionViewController: UIViewController {
         score = currentQuestion.isComplete ? currentQuestion.score : 3
         
         questionControlsView.configure(mode: currentQuestion.isComplete ? .answerVideo : .basic,
-                                       isAnswerVideoButtonEnabled: currentQuestion.answerVideoUrl != nil,
+                                       isAnswerVideoHidden: currentQuestion.answerVideoUrl == nil,
                                        remainingHints: answerFieldView.remainingHints,
                                        score: score,
                                        delegate: self)
@@ -89,6 +90,21 @@ class QuestionViewController: UIViewController {
         super.viewWillAppear(animated)
         UIView.animate(withDuration: 0.3, delay: 0.2, options: []) {
             [weak self] in self?.tabBarController?.tabBar.alpha = 0
+        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        guard !isHintsConfigured else { return }
+        
+        delay(delayTime: 0.25) { [self] in
+            for _ in 0..<currentQuestion.usedHints {
+                score -= 1
+                questionControlsView.reduceScore(newValue: score)
+                questionControlsView.animateHintButton()
+                useHint()
+            }
+            isHintsConfigured = true
         }
     }
     
@@ -179,19 +195,14 @@ class QuestionViewController: UIViewController {
 extension QuestionViewController: QuestionControlsViewDelegate {
     
     func questionControlsViewDidTapHintButton(_ questionControlsView: QuestionControlsView) {
-        let controller = UIAlertController(title: "Использовать подсказку",
-                                           message: "\nИспользовать одну из оставшихся подсказок, чтобы открыть первую и последнюю буквы?\n\nОставшихся подсказок: \(answerFieldView.remainingHints)",
-                                           preferredStyle: .alert)
-        let cancelAction = UIAlertAction(title: "Отменить", style: .cancel)
-        let useAction = UIAlertAction(title: "Использовать", style: .default) { _ in
+        let alert = UIAlertController.useHintAlert(remainingHints: answerFieldView.remainingHints) {
             self.useHint()
             self.score -= 1
+            self.currentQuestion.usedHints += 1
             self.questionControlsView.reduceScore(newValue: self.score)
             self.questionControlsView.animateHintButton()
         }
-        controller.addAction(cancelAction)
-        controller.addAction(useAction)
-        present(controller, animated: true)
+        present(alert, animated: true)
     }
     
     func questionControlsViewDidTapClearButton(_ questionControlsView: QuestionControlsView) {
@@ -248,7 +259,10 @@ extension QuestionViewController: AnswerFieldViewDelegate {
             } else {
                 guard answerFieldView.remainingHints > 0 else { return }
                 questionControlsView.animateHintButton()
-                delay { self.useHint() }
+                delay {
+                    self.useHint()
+                    self.currentQuestion.usedHints += 1
+                }
                 delay(delayTime: 1.5) { self.answerFieldView.clear() }
             }
         }
@@ -270,6 +284,10 @@ extension QuestionViewController: LocationFinishedControllerDelegate {
     
     func locationFinishedControllerDidTapEndRouteButton(_ controller: LocationFinishedController) {
         showRouteCompletedController()
+    }
+    
+    func locationFinishedControllerDidTapXmarkButton(_ controller: LocationFinishedController) {
+        navigationController?.popViewController(animated: true)
     }
 }
 

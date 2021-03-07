@@ -10,7 +10,7 @@ import YandexMapsMobile
 
 // MARK: - LocationInfoContainerController
 
-class LocationInfoContainerController: UIViewController {
+final class LocationInfoContainerController: UIViewController {
     
     // MARK: - IBOutlets
     

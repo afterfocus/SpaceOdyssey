@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MapPlacemarkView: UIView {
+final class MapPlacemarkView: UIView {
     
     private var numberLabel = UILabel()
     

@@ -8,7 +8,7 @@
 import UIKit
 
 /// Представление с градиентом для верхней части экрана
-class TopGradientView: UIView {
+final class TopGradientView: UIView {
     
     var color: UIColor = .topViewGradient
     var startLocation: NSNumber = 0.15

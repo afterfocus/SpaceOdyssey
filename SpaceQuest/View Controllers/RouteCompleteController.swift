@@ -16,7 +16,7 @@ protocol RouteCompleteControllerDelegate: class {
 
 // MARK: - RouteCompleteController
 
-class RouteCompleteController: UIViewController {
+final class RouteCompleteController: UIViewController {
     
     // MARK: IBOutlets
     
@@ -24,6 +24,8 @@ class RouteCompleteController: UIViewController {
     @IBOutlet weak var starImageView: UIImageView!
     @IBOutlet weak var scoredStarsLabel: UILabel!
     @IBOutlet weak var totalStarsLabel: UILabel!
+    @IBOutlet weak var prizesSentLabel: UILabel!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     // MARK: - Segue Properties
     
@@ -64,6 +66,17 @@ class RouteCompleteController: UIViewController {
             [weak self] _ in
             UIView.animate(withDuration: 0.15, delay: 0, options: [.curveEaseOut]) {
                 self?.scoredStarsLabel.transform = .identity
+            }
+        }
+        
+        DataModel.current.sendRoutePrize(route: route) { statusCode in
+            self.activityIndicator.stopAnimating()
+            guard let code = statusCode else {
+                self.present(UIAlertController.routePrizesNotSendWithUndefinedError, animated: true)
+                return
+            }
+            if code != 200 {
+                self.present(UIAlertController.routePrizesNotSend(errorCode: code), animated: true)
             }
         }
     }

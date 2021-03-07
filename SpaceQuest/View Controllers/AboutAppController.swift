@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: AboutAppController
 
-class AboutAppController: UIViewController {
+final class AboutAppController: UIViewController {
     
     // MARK: IBActions
     

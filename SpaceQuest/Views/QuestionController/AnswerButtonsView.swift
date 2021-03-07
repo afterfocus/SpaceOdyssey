@@ -17,7 +17,7 @@ protocol AnswerButtonsViewDelegate: class {
 
 // MARK: - AnswerButtonsView
 
-class AnswerButtonsView: UICollectionView {
+final class AnswerButtonsView: UICollectionView {
     
     @IBOutlet weak var width: NSLayoutConstraint!
     

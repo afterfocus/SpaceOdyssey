@@ -7,7 +7,7 @@
 
 import UIKit
 
-class DifficultyView: UIView {
+final class DifficultyView: UIView {
     @IBOutlet weak var lengthLabel: UILabel!
     @IBOutlet weak var durationLabel: UILabel!
     @IBOutlet weak var progressLabel: UILabel!

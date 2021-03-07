@@ -7,7 +7,7 @@
 
 import UIKit
 
-class AnswerButtonCollectionViewCell: UICollectionViewCell {
+final class AnswerButtonCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var letterLabel: UILabel!
     
     var character: Character {

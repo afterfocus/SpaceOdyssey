@@ -10,7 +10,7 @@ import MessageUI
 
 // MARK: ProfileController
 
-class ProfileController: UIViewController {
+final class ProfileController: UIViewController {
     
     // MARK: IBOutlets
     
@@ -54,7 +54,14 @@ class ProfileController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        scoreLabel.text = "\( DataModel.routes.reduce(into: 0) { $0 += $1.score } )"
+        let (score, distance, calories) = DataModel.routes.reduce(into: (0, 0, 0)) {
+            $0.0 += $1.score
+            $0.1 += $1.distancePassed
+            $0.2 += $1.caloriesBurned
+        }
+        scoreLabel.text = "\(score)"
+        distanceLabel.text = "\(Double(distance) / 1000)"
+        kcalLabel.text = "\(calories)"
     }
     
     // MARK: - IBActions
@@ -98,7 +105,7 @@ class ProfileController: UIViewController {
         if MFMailComposeViewController.canSendMail() {
             let mail = MFMailComposeViewController()
             mail.mailComposeDelegate = self
-            mail.setToRecipients(["afterfocus@icloud.com", "aerotaksimaksim@gmail.com"])
+            mail.setToRecipients(["info@odysseymars.com"])
             mail.setSubject("Одиссея Марса")
             mail.setMessageBody("""
                                 Одиссея Марса - iOS
@@ -113,30 +120,42 @@ class ProfileController: UIViewController {
                                 """, isHTML: false)
             present(mail, animated: true)
         } else {
-            let alert = UIAlertController(title: "Отправка E-mail недоступа.",
-                                          message: "\nОтправка E-mail невозможна в связи с настройками Вашего устройства.",
-                                          preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "ОК", style: .cancel)
-            alert.addAction(okAction)
-            present(alert, animated: true)
+            present(UIAlertController.cannotSendEmailAlert, animated: true)
         }
     }
     
+    @IBAction func resendPrizesButtonPressed(_ sender: UIButton) {
+        let alert = UIAlertController.confirmResendPrizes {
+            self.resendPrizes() { code in
+                if code == 200 {
+                    self.present(UIAlertController.resendPrizesSuccessful, animated: true)
+                } else {
+                    self.present(UIAlertController.routePrizesNotSend(errorCode: code), animated: true)
+                }
+            }
+        }
+        present(alert, animated: true)
+    }
+    
     @IBAction func exitButtonPressed(_ sender: UIButton) {
-        let alert = UIAlertController(title: "Вы действительно хотите выйти?",
-                                      message: "\nВесь прогресс пользователя будет сохранен и восстановлен при следующем входе.",
-                                      preferredStyle: .alert)
-        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
-        let exitAction = UIAlertAction(title: "Выход", style: .default) { _ in
+        let alert = UIAlertController.confirmExitAlert {
             DataModel.logOut()
             guard let loginController = self.storyboard?.instantiateViewController(withIdentifier: "LoginController") else { return }
             loginController.modalPresentationStyle = .fullScreen
             loginController.modalTransitionStyle = .flipHorizontal
             self.present(loginController, animated: true)
         }
-        alert.addAction(exitAction)
-        alert.addAction(cancelAction)
         present(alert, animated: true)
+    }
+    
+    private func resendPrizes(completion: @escaping (Int) -> Void) {
+        dataModel.sendRegistrationPrize { statusCode in
+            completion(statusCode ?? 408)
+            
+            for route in DataModel.routes where route.isCompleted {
+                self.dataModel.sendRoutePrize(route: route)
+            }
+        }
     }
 }
 
@@ -149,19 +168,9 @@ extension ProfileController: LoginControllerEditingDelegate {
         if dataModel.editUser(newName: userName, newEmail: email) {
             userNameLabel.text = userName
             emailLabel.text = email
-            let alert = UIAlertController(title: "Данные изменены",
-                                          message: "Для повторного входа необходимо использовать новое имя пользователя и электронную почту.",
-                                          preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "ОК", style: .cancel)
-            alert.addAction(okAction)
-            present(alert, animated: true)
+            present(UIAlertController.profileEditSuccessAlert, animated: true)
         } else {
-            let alert = UIAlertController(title: "Ошибка изменения данных",
-                                          message: "Пользователь с таким именем и электронной почтой уже зарегистрирован на устройстве.\nПожалуйста, осуществите вход в профиль данного пользователя или укажите другую комбинацию имени и электронной почты.",
-                                          preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "ОК", style: .cancel)
-            alert.addAction(okAction)
-            present(alert, animated: true)
+            present(UIAlertController.profileEditFailedAlert, animated: true)
         }
     }
 }

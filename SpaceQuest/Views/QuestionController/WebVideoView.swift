@@ -10,7 +10,7 @@ import WebKit
 // MARK: - WebVideoView
 
 /// Представление для отображения YouTube-видео
-class WebVideoView: UIView {
+final class WebVideoView: UIView {
     
     // MARK: IBOutlets
     

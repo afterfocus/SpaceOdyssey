@@ -13,7 +13,7 @@ protocol QuestionControlsViewDelegate: class {
     func questionControlsViewDidTapVideoAnswerButton(_ questionControlsView: QuestionControlsView)
 }
 
-class QuestionControlsView: UIStackView {
+final class QuestionControlsView: UIStackView {
     
     enum QuestionControlsMode {
         case answerVideo, basic
@@ -62,15 +62,14 @@ class QuestionControlsView: UIStackView {
     // MARK: - Internal Functions
     
     func configure(mode: QuestionControlsMode,
-                   isAnswerVideoButtonEnabled: Bool,
+                   isAnswerVideoHidden: Bool,
                    remainingHints: Int,
                    score: Int,
                    delegate: QuestionControlsViewDelegate?) {
         hintView.isHidden = mode == .answerVideo
         clearView.isHidden = mode == .answerVideo
-        answerVideoView.isHidden = mode == .basic
+        answerVideoView.isHidden = mode == .basic || isAnswerVideoHidden
         
-        answerVideoButton.isEnabled = isAnswerVideoButtonEnabled
         setRemainingHints(remainingHints)
         self.delegate = delegate
         

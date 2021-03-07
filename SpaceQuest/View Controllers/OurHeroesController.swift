@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: OurHeroesController
 
-class OurHeroesController: UIViewController {
+final class OurHeroesController: UIViewController {
     
     // MARK: Private Properties
     

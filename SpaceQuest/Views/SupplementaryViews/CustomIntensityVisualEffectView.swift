@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CustomIntensityVisualEffectView: UIVisualEffectView {
+final class CustomIntensityVisualEffectView: UIVisualEffectView {
     
     private var animator: UIViewPropertyAnimator!
     private var isBlurred = false

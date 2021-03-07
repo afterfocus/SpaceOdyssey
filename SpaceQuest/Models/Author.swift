@@ -8,7 +8,7 @@
 import Foundation
 
 /// Автор вопроса
-class Author {
+final class Author {
     /// Фамилия
     let surname: String
     /// Имя

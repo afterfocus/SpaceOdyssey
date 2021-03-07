@@ -10,7 +10,7 @@ import Foundation
 // MARK: - RouteVariation
 
 /// Вариация сложности маршурта
-class RouteVariation {
+final class RouteVariation {
     /// Длина маршрута в километрах
     let length: Double
     /// Длительность маршрута в минутах
@@ -32,7 +32,9 @@ class RouteVariation {
 // MARK: - Route
 
 /// Маршрут
-class Route {
+final class Route {
+    /// Имя маршрута для отправки наград
+    let id: String
     /// Название файла изобрежния-заставки
     let imageFileName: String
     /// Название маршрута
@@ -51,8 +53,24 @@ class Route {
     var maxScore: Int {
         return questions.count * 3
     }
+    /// Пройденная дистанция
+    var distancePassed: Int {
+        return questions.count * 500
+    }
+    /// Соженные калории
+    var caloriesBurned: Int {
+        return Int(0.06 * Double(distancePassed))
+    }
     
-    init(imageFileName: String, title: String, subtitle: String, questions: [Question], variations: [RouteVariation]) {
+    var isCompleted: Bool {
+        for variation in variations where isVariationComplete(variation) {
+            return true
+        }
+        return false
+    }
+    
+    init(id: String, imageFileName: String, title: String, subtitle: String, questions: [Question], variations: [RouteVariation]) {
+        self.id = id
         self.imageFileName = imageFileName
         self.title = title
         self.subtitle = subtitle
@@ -92,7 +110,7 @@ class Route {
     
     func dataToSave() -> [QuestionData] {
         return questions.map {
-            QuestionData(isComplete: $0.isComplete, score: $0.score)
+            QuestionData(isComplete: $0.isComplete, score: $0.score, usedHints: $0.usedHints)
         }
     }
 }

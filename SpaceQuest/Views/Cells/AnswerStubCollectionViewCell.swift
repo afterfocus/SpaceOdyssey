@@ -7,6 +7,6 @@
 
 import UIKit
 
-class AnswerStubCollectionViewCell: UICollectionViewCell {
+final class AnswerStubCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var stubLabel: UILabel!
 }
