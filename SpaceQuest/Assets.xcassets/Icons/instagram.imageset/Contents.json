@@ -1,15 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "instagramm.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "instagramm@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "instagramm@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

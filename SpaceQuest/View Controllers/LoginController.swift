@@ -13,14 +13,20 @@ protocol LoginControllerEditingDelegate: class {
 
 final class LoginController: UIViewController {
     
+    // MARK: - IBOutlet
+    
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var cancelButton: UIButton!
     
+    // MARK: - Internal Properties
+    
     var isInEditingMode = false
     var editingDelegate: LoginControllerEditingDelegate?
+    
+    // MARK: - View Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,12 +40,19 @@ final class LoginController: UIViewController {
         
         loginButton.setTitle(isInEditingMode ? "Сохранить" : "Войти", for: .normal)
         cancelButton.isHidden = !isInEditingMode
+        
+        NotificationCenter.default.addObserver(
+            self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(
+            self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         nameTextField.text = isInEditingMode ? DataModel.current.userName : ""
         emailTextField.text = isInEditingMode ? DataModel.current.email : ""
     }
+    
+    // MARK: - IBAction
     
     @IBAction func loginButtonPressed(_ sender: UIButton) {
         guard validateNameAndEmail(),
@@ -66,6 +79,14 @@ final class LoginController: UIViewController {
     
     // MARK: - Private Functions
     
+    @objc private func keyboardWillShow() {
+        view.frame.origin.y = min(0, UIScreen.main.bounds.height - loginButton.frame.maxY - 240)
+    }
+    
+    @objc private func keyboardWillHide() {
+        view.frame.origin.y = 0
+    }
+    
     @objc private func dismissKeyboard() {
         view.endEditing(true)
     }
@@ -91,6 +112,8 @@ final class LoginController: UIViewController {
         return true
     }
 }
+
+// MARK: - UITextFieldDelegate
 
 extension LoginController: UITextFieldDelegate {
     

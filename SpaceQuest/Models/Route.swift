@@ -11,6 +11,8 @@ import Foundation
 
 /// Вариация сложности маршурта
 final class RouteVariation {
+    
+    // MARK: - Internal Properties
     /// Длина маршрута в километрах
     let length: Double
     /// Длительность маршрута в минутах
@@ -33,6 +35,8 @@ final class RouteVariation {
 
 /// Маршрут
 final class Route {
+    
+    // MARK: - Internal Properties
     /// Имя маршрута для отправки наград
     let id: String
     /// Название файла изобрежния-заставки
@@ -55,19 +59,26 @@ final class Route {
     }
     /// Пройденная дистанция
     var distancePassed: Int {
-        return questions.count * 500
+        let distance = questions.reduce(into: 0) {
+            $0 += $1.location.isVisited ? $1.location.distance : 0
+        }
+        return Int(Double(distance) * 1.1)
     }
     /// Соженные калории
     var caloriesBurned: Int {
         return Int(0.06 * Double(distancePassed))
     }
-    
+    /// Завершен ли маршрут
     var isCompleted: Bool {
-        for variation in variations where isVariationComplete(variation) {
-            return true
-        }
-        return false
+        return variations.contains { isVariationComplete($0) }
     }
+    /// Посещена ли большая часть локаций
+    var isMoreThanHalfVisited: Bool {
+        let visitedCount = questions.filter { $0.location.isVisited }.count
+        return visitedCount * 2 > questions.count
+    }
+    
+    // MARK: - Initializers
     
     init(id: String, imageFileName: String, title: String, subtitle: String, questions: [Question], variations: [RouteVariation]) {
         self.id = id
@@ -78,39 +89,31 @@ final class Route {
         self.variations = variations
     }
     
+    // MARK: - Internal Methods
+    
     subscript(index: Int) -> Question {
         get { return questions[index] }
     }
     
     /// Процент прохождения вариации маршрута пользователем
     func progress(for variation: RouteVariation) -> Int {
-        let completed = variation.questionIndexes.reduce(into: 0) {
-            $0 += questions[$1].isComplete ? 1 : 0
-        }
-        return (completed * 100) / variation.questionIndexes.count
+        let completedCount = variation.questionIndexes.filter { questions[$0].isComplete }.count
+        return (completedCount * 100) / variation.questionIndexes.count
     }
     
     /// Первый не пройденный вопрос для заданной вариации маршрута
     func firstIncompleteIndex(for variation: RouteVariation) -> Int? {
-        for (index, questionIndex) in variation.questionIndexes.enumerated() {
-            if !questions[questionIndex].isComplete {
-                return index
-            }
+        return variation.questionIndexes.firstIndex {
+            !questions[$0].isComplete
         }
-        return nil
     }
     
     /// Пройдена ли указанная вариация маршрута
     func isVariationComplete(_ variation: RouteVariation) -> Bool {
-        for questionIndex in variation.questionIndexes where !questions[questionIndex].isComplete {
-            return false
-        }
-        return true
+        return firstIncompleteIndex(for: variation) == nil
     }
     
     func dataToSave() -> [QuestionData] {
-        return questions.map {
-            QuestionData(isComplete: $0.isComplete, score: $0.score, usedHints: $0.usedHints)
-        }
+        return questions.map { $0.dataToSave }
     }
 }

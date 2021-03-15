@@ -9,6 +9,8 @@ import Foundation
 
 /// Автор вопроса
 final class Author {
+    
+    // MARK: - Internal Properties
     /// Фамилия
     let surname: String
     /// Имя
@@ -23,12 +25,15 @@ final class Author {
     let photoFilename: String
     /// Фамилия и инициалы
     var initials: String {
-        return "\(surname) \(name.first!)." + (patronymic.count > 0 ? " \(patronymic.first!)." : "")
+        let patronymicString = patronymic.count > 0 ? " \(patronymic.first!)." : ""
+        return "\(surname) \(name.first!).\(patronymicString)"
     }
     /// Полное ФИО
     var fio: String {
         return "\(surname) \(name)" + (patronymic.count > 0 ? " \(patronymic)" : "")
     }
+    
+    // MARK: - Initializers
     
     init(surname: String, name: String, patronymic: String, aboutAuthor: String, aboutAuthorFull: String, photoFilename: String) {
         self.surname = surname

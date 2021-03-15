@@ -8,6 +8,8 @@
 import Foundation
 
 final class Location {
+    
+    // MARK: - Internal Properties
     /// Название достопремичательности
     let name: String
     /// Название достопремичательности
@@ -15,15 +17,26 @@ final class Location {
     /// Широта
     let latitude: Double
     /// Долгота
-    let longtitude: Double
+    let longitude: Double
     /// Название файла с фотографией
     let photoFilename: String
+    /// Радиус активации вопроса
+    let activationRadius: Double
+    /// Расстояние до локации от предыдущей точки (в метрах)
+    let distance: Int
+    /// Посещена ли локация
+    var isVisited: Bool
     
-    init(name: String, address: String, latitude: Double, longtitude: Double, photoFilename: String) {
+    // MARK: - Initializers
+    
+    init(name: String, address: String, latitude: Double, longitude: Double, photoFilename: String, activationRadius: Double = 35, distance: Int, isVisited: Bool = false) {
         self.name = name
         self.address = address
         self.latitude = latitude
-        self.longtitude = longtitude
+        self.longitude = longitude
         self.photoFilename = photoFilename
+        self.activationRadius = activationRadius
+        self.isVisited = isVisited
+        self.distance = distance
     }
 }

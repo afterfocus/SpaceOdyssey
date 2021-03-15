@@ -12,7 +12,7 @@ final class UserAnswer {
     private var answer: [[Character]]
     
     var count: Int {
-        answer.count
+        return answer.count
     }
     
     init(rightAnswer: [String], isComplete: Bool) {
@@ -57,10 +57,8 @@ final class UserAnswer {
     }
     
     func isInputCompleted() -> Bool {
-        for row in answer {
-            for char in row where char == "_" {
-                return false
-            }
+        for row in answer where row.contains(where: { $0 == "_" }) {
+            return false
         }
         return true
     }

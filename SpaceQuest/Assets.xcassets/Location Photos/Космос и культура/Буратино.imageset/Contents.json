@@ -1,15 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "Буратино.jpg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "Буратино@2x.jpg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "Буратино@3x.jpg",
       "idiom" : "universal",
       "scale" : "3x"
     }

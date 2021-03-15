@@ -1,15 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "Монумент Энергия-Буран.jpg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "Монумент Энергия-Буран@2x.jpg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "Монумент Энергия-Буран@3x.jpg",
       "idiom" : "universal",
       "scale" : "3x"
     }

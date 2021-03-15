@@ -95,7 +95,7 @@ final class QuestionViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        guard !isHintsConfigured else { return }
+        guard !isHintsConfigured, !currentQuestion.isComplete else { return }
         
         delay(delayTime: 0.25) { [self] in
             for _ in 0..<currentQuestion.usedHints {
@@ -279,7 +279,11 @@ extension QuestionViewController: LocationFinishedControllerDelegate {
     }
     
     func locationFinishedControllerDidTapNextQuestionButton(_ controller: LocationFinishedController) {
-        showNextQuestion()
+        if DataModel.current.isRoutingDisabled {
+            showNextQuestion()
+        } else {
+            navigationController?.popViewController(animated: true)
+        }
     }
     
     func locationFinishedControllerDidTapEndRouteButton(_ controller: LocationFinishedController) {
@@ -308,7 +312,11 @@ extension QuestionViewController: RouteCompleteControllerDelegate {
 extension QuestionViewController: VideoAnswerControllerDelegate {
     
     func videoAnswerControllerDidTapNextQuestionButton(_ controller: VideoAnswerController) {
-        showNextQuestion()
+        if DataModel.current.isRoutingDisabled {
+            showNextQuestion()
+        } else {
+            navigationController?.popViewController(animated: true)
+        }
     }
     
     func videoAnswerControllerDidTapEndRouteButton(_ controller: VideoAnswerController) {

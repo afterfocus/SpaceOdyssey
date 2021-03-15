@@ -1,15 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "Стела в честь 150-летия Самарскои Губернии.jpg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "Стела в честь 150-летия Самарскои Губернии@2x.jpg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "Стела в честь 150-летия Самарскои Губернии@3x.jpg",
       "idiom" : "universal",
       "scale" : "3x"
     }

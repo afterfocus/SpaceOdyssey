@@ -1,15 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "Телебашня.jpg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "Телебашня@2x.jpg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "Телебашня@3x.jpg",
       "idiom" : "universal",
       "scale" : "3x"
     }

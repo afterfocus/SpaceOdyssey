@@ -1,15 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "rubber.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "rubber@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "rubber@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

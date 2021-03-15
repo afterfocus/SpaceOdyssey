@@ -36,9 +36,15 @@ final class QuestionListViewController: UIViewController {
         startButton.isHidden = route.isVariationComplete(routeVariation)
         startButton.layer.dropShadow(opacity: 0.3, offset: CGSize(width: 0, height: 3), radius: 7)
         
-        cellSpacing = UIScreen.main.bounds.width > 320 ? 20 : 10
-        let width = (UIScreen.main.bounds.width - 3 * cellSpacing) / 2
-        cellSize = CGSize(width: width, height: 138)
+        let screenWidth = UIScreen.main.bounds.width
+        if screenWidth > 320 {
+            cellSpacing = screenWidth > 375 ? 20 : 11
+            let width = (screenWidth - 3 * cellSpacing) / 2
+            cellSize = CGSize(width: width, height: 138)
+        } else {
+            cellSpacing = 15
+            cellSize = CGSize(width: 260, height: 120)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -63,7 +69,11 @@ final class QuestionListViewController: UIViewController {
     // MARK: - IBActions
     
     @IBAction func startButtonPressed(_ sender: UIButton) {
-        showQuestionController(questionIndex: firstIncompleteIndex!)
+        if DataModel.current.isRoutingDisabled {
+            showQuestionController(questionIndex: firstIncompleteIndex!)
+        } else {
+            showMapController()
+        }
     }
     
     @IBAction func mapButtonPressed(_ sender: UIBarButtonItem) {
@@ -100,7 +110,11 @@ extension QuestionListViewController: UICollectionViewDelegate {
         if cell.backView.isHidden {
             cell.flip()
         } else {
-            showQuestionController(questionIndex: indexPath.row)
+            if indexPath.row == firstIncompleteIndex && !DataModel.current.isRoutingDisabled {
+                showMapController()
+            } else {
+                showQuestionController(questionIndex: indexPath.row)
+            }
         }
     }
     

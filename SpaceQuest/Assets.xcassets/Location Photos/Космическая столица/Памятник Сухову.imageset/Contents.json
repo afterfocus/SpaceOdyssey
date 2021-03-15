@@ -1,15 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "Памятник Сухову.jpg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "Памятник Сухову@2x.jpg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "Памятник Сухову@3x.jpg",
       "idiom" : "universal",
       "scale" : "3x"
     }

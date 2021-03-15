@@ -1,15 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "Космические ворота.jpg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "Космические ворота@2x.jpg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "Космические ворота@3x.jpg",
       "idiom" : "universal",
       "scale" : "3x"
     }

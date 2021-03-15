@@ -1,15 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "Самарская филармония.jpg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "Самарская филармония@2x.jpg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "Самарская филармония@3x.jpg",
       "idiom" : "universal",
       "scale" : "3x"
     }

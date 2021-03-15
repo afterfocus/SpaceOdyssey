@@ -33,7 +33,11 @@
 		B53B8AFC25DC08DC00D284A9 /* UITextFieldExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53B8AFB25DC08DC00D284A9 /* UITextFieldExtension.swift */; };
 		B53B8B0125DEB14300D284A9 /* UIDeviceExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53B8B0025DEB14300D284A9 /* UIDeviceExtension.swift */; };
 		B549E2092573D30E00260121 /* QuestionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B549E2082573D30E00260121 /* QuestionViewController.swift */; };
+		B54F863D25FFF97700AA156D /* LaunchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54F863C25FFF97700AA156D /* LaunchViewController.swift */; };
+		B5704A0925FE426D006C57A2 /* YMKPointExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5704A0825FE426D006C57A2 /* YMKPointExtension.swift */; };
 		B575826D25F4907A007A9C8D /* UIAlertControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B575826C25F4907A007A9C8D /* UIAlertControllerExtension.swift */; };
+		B575827325F69773007A9C8D /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B575827225F69773007A9C8D /* MapView.swift */; };
+		B575827725F6BA2B007A9C8D /* PlacemarkData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B575827625F6BA2B007A9C8D /* PlacemarkData.swift */; };
 		B57B3CD32593BCC000270D8E /* AnswerFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57B3CD22593BCC000270D8E /* AnswerFieldView.swift */; };
 		B57B3CD62593BCCC00270D8E /* AnswerButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57B3CD52593BCCC00270D8E /* AnswerButtonsView.swift */; };
 		B57B3CDF259515CA00270D8E /* UserAnswer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57B3CDE259515CA00270D8E /* UserAnswer.swift */; };
@@ -90,7 +94,11 @@
 		B53B8AFB25DC08DC00D284A9 /* UITextFieldExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITextFieldExtension.swift; sourceTree = "<group>"; };
 		B53B8B0025DEB14300D284A9 /* UIDeviceExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDeviceExtension.swift; sourceTree = "<group>"; };
 		B549E2082573D30E00260121 /* QuestionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionViewController.swift; sourceTree = "<group>"; };
+		B54F863C25FFF97700AA156D /* LaunchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchViewController.swift; sourceTree = "<group>"; };
+		B5704A0825FE426D006C57A2 /* YMKPointExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YMKPointExtension.swift; sourceTree = "<group>"; };
 		B575826C25F4907A007A9C8D /* UIAlertControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIAlertControllerExtension.swift; sourceTree = "<group>"; };
+		B575827225F69773007A9C8D /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
+		B575827625F6BA2B007A9C8D /* PlacemarkData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacemarkData.swift; sourceTree = "<group>"; };
 		B57B3CD22593BCC000270D8E /* AnswerFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerFieldView.swift; sourceTree = "<group>"; };
 		B57B3CD52593BCCC00270D8E /* AnswerButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerButtonsView.swift; sourceTree = "<group>"; };
 		B57B3CDE259515CA00270D8E /* UserAnswer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAnswer.swift; sourceTree = "<group>"; };
@@ -164,6 +172,7 @@
 			isa = PBXGroup;
 			children = (
 				B5373E6C25D1BC8200F91820 /* MapCalloutView.xib */,
+				B575827225F69773007A9C8D /* MapView.swift */,
 				B5373E6F25D1C4CB00F91820 /* MapCalloutView.swift */,
 				B5373E6325BCA0A400F91820 /* MapPlacemarkView.swift */,
 			);
@@ -173,6 +182,7 @@
 		B5AD43B02568467D00110AE8 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				B5704A0825FE426D006C57A2 /* YMKPointExtension.swift */,
 				B575826C25F4907A007A9C8D /* UIAlertControllerExtension.swift */,
 				B5AD43B12568469400110AE8 /* UIImageViewExtension.swift */,
 				B5BF7AA4257BCF7D009AA0A3 /* UIColorExtension.swift */,
@@ -250,6 +260,7 @@
 				B51F5103256305A700A9AA53 /* Question.swift */,
 				B5373E7525D1C73300F91820 /* Location.swift */,
 				B51F5106256305B800A9AA53 /* Route.swift */,
+				B575827625F6BA2B007A9C8D /* PlacemarkData.swift */,
 				B57B3CDE259515CA00270D8E /* UserAnswer.swift */,
 				B51F51092567C09800A9AA53 /* DataModel.swift */,
 			);
@@ -272,6 +283,7 @@
 		B5EFD4A82562BDB500B0C5E7 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				B54F863C25FFF97700AA156D /* LaunchViewController.swift */,
 				B53B8AF725DC00B800D284A9 /* LoginController.swift */,
 				B5EFD4922562B95A00B0C5E7 /* RouteListViewController.swift */,
 				B5BDDC3D256829DB0043737B /* QuestionListViewController.swift */,
@@ -410,6 +422,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				B514B014257BF08600F587B6 /* AnswerButtonCollectionViewCell.swift in Sources */,
+				B54F863D25FFF97700AA156D /* LaunchViewController.swift in Sources */,
+				B575827325F69773007A9C8D /* MapView.swift in Sources */,
 				B5BDDC4125682A0F0043737B /* TopGradientView.swift in Sources */,
 				B57B3CD62593BCCC00270D8E /* AnswerButtonsView.swift in Sources */,
 				B57B3CDF259515CA00270D8E /* UserAnswer.swift in Sources */,
@@ -433,6 +447,7 @@
 				B51C2D9E2599053900107378 /* LocationCompleteController.swift in Sources */,
 				B5BDDC3A256828A60043737B /* QuestionCollectionViewCell.swift in Sources */,
 				B510A18525D45A2000D905D5 /* LocationInfoController.swift in Sources */,
+				B575827725F6BA2B007A9C8D /* PlacemarkData.swift in Sources */,
 				B5EFD4932562B95A00B0C5E7 /* RouteListViewController.swift in Sources */,
 				B5F953552588853200E4344E /* AnswerStubCollectionViewCell.swift in Sources */,
 				B51F50FD2563030100A9AA53 /* ReusableView.swift in Sources */,
@@ -446,6 +461,7 @@
 				B53B8AEE25D975A100D284A9 /* AboutAppController.swift in Sources */,
 				B5ADEDB4258E0B3E007703C3 /* Author.swift in Sources */,
 				B53B8AF825DC00B800D284A9 /* LoginController.swift in Sources */,
+				B5704A0925FE426D006C57A2 /* YMKPointExtension.swift in Sources */,
 				B51F510A2567C09900A9AA53 /* DataModel.swift in Sources */,
 				B51F5104256305A700A9AA53 /* Question.swift in Sources */,
 				B5EFD48F2562B95A00B0C5E7 /* AppDelegate.swift in Sources */,
@@ -611,7 +627,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3.1;
+				MARKETING_VERSION = 0.5.0;
 				PRODUCT_BUNDLE_IDENTIFIER = MaximGolov.SpaceQuest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -633,7 +649,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3.1;
+				MARKETING_VERSION = 0.5.0;
 				PRODUCT_BUNDLE_IDENTIFIER = MaximGolov.SpaceQuest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

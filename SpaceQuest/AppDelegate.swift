@@ -20,9 +20,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             DataModel.logIn()
         }
         
+        // "TabBarController"
         window = UIWindow(frame: UIScreen.main.bounds)
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let controlledIdentifier = DataModel.isLoggedIn ? "TabBarController" : "LoginController"
+        let controlledIdentifier = DataModel.isLoggedIn ? "LaunchController" : "LoginController"
         let initialViewController = storyboard.instantiateViewController(withIdentifier: controlledIdentifier)
         window?.rootViewController = initialViewController
         window?.makeKeyAndVisible()

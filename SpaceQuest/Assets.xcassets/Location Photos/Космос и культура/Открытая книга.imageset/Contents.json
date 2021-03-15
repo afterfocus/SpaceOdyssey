@@ -1,15 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "Открытая книга.jpg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "Открытая книга@2x.jpg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "Открытая книга@3x.jpg",
       "idiom" : "universal",
       "scale" : "3x"
     }

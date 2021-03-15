@@ -1,15 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "Ладья.jpg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "Ладья@2x.jpg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "Ладья@3x.jpg",
       "idiom" : "universal",
       "scale" : "3x"
     }

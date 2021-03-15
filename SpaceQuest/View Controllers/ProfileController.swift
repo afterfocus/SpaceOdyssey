@@ -14,6 +14,7 @@ final class ProfileController: UIViewController {
     
     // MARK: IBOutlets
     
+    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var imageBackgroundView: UIView!
     @IBOutlet weak var userNameLabel: UILabel!
@@ -38,6 +39,7 @@ final class ProfileController: UIViewController {
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         navigationController?.navigationBar.shadowImage = UIImage()
         
+        scrollView.contentInset.top = UIScreen.main.bounds.height * 0.2
         containerView.layer.cornerRadius = 30
         containerView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         imageBackgroundView.layer.borderWidth = 3.5
@@ -54,11 +56,12 @@ final class ProfileController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        let (score, distance, calories) = DataModel.routes.reduce(into: (0, 0, 0)) {
+        var (score, distance, calories) = DataModel.routes.reduce(into: (0, 0, 0)) {
             $0.0 += $1.score
             $0.1 += $1.distancePassed
             $0.2 += $1.caloriesBurned
         }
+        distance = Int(distance / 10) * 10
         scoreLabel.text = "\(score)"
         distanceLabel.text = "\(Double(distance) / 1000)"
         kcalLabel.text = "\(calories)"
@@ -71,7 +74,21 @@ final class ProfileController: UIViewController {
     }
     
     @IBAction func routingModeSwitched(_ sender: UISwitch) {
-        dataModel.isRoutingDisabled = sender.isOn
+        let alert: UIAlertController
+        if sender.isOn {
+            alert = UIAlertController.confirmDisableRouting {
+                self.dataModel.isRoutingDisabled = true
+            } onCancel: {
+                sender.setOn(false, animated: true)
+            }
+        } else {
+            alert = UIAlertController.confirmEnableRouting {
+                self.dataModel.isRoutingDisabled = false
+            } onCancel: {
+                sender.setOn(true, animated: true)
+            }
+        }
+        present(alert, animated: true)
     }
     
     @IBAction func editButtonPressed(_ sender: UIButton) {

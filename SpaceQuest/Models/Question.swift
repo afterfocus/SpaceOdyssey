@@ -7,8 +7,24 @@
 
 import Foundation
 
+// MARK: - Question Data
+
+struct QuestionData: Codable {
+    
+    // MARK: - Internal Properties
+    
+    var isComplete: Bool
+    var score: Int
+    var usedHints: Int
+    var isVisited: Bool
+}
+
+// MARK: - Question
+
 /// Вопрос
 final class Question {
+    
+    // MARK: - Internal Properties
     /// Название вопроса
     let title: String
     /// Локация
@@ -33,16 +49,16 @@ final class Question {
     var score = 0
     /// Использовано подсказок
     var usedHints = 0
-    
-    var answerLength: Int {
-        var count = 0
-        for row in answer {
-            Array(row).forEach {
-                if $0.isLetter || $0.isNumber { count += 1 }
-            }
-        }
-        return count
+    /// Данные, подлежащие сохранению в файл
+    var dataToSave: QuestionData {
+        return QuestionData(
+            isComplete: isComplete,
+            score: score,
+            usedHints: usedHints,
+            isVisited: location.isVisited)
     }
+    
+    // MARK: - Initializers
     
     init(title: String, location: Location, author: Author, questionText: String, questionVideoUrl: URL?, answerVideoUrl: URL?, answer: [String], alternativeAnswer: [String]? = nil, answerCharacters: String) {
         self.title = title

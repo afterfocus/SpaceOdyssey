@@ -1,15 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "Монумент Гордость, Честь и Слава.jpg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "Монумент Гордость, Честь и Слава@2x.jpg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "Монумент Гордость, Честь и Слава@3x.jpg",
       "idiom" : "universal",
       "scale" : "3x"
     }

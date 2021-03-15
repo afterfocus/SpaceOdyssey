@@ -102,7 +102,9 @@ final class AnswerFieldView: UICollectionView {
         cellBackgroundColor = .answerCellDefault
         for section in 0..<rightAnswer.count {
             for item in 0..<rightAnswer[section].count where !isFixed[section][item] {
-                removeCharacter(at: IndexPath(item: item, section: section))
+                if rightAnswer[section][item].isNumber || rightAnswer[section][item].isLetter {
+                    removeCharacter(at: IndexPath(item: item, section: section))
+                }
             }
         }
         reloadData()

@@ -1,15 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "Монумент Куибышевкабель.jpg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "Монумент Куибышевкабель@2x.jpg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "Монумент Куибышевкабель@3x.jpg",
       "idiom" : "universal",
       "scale" : "3x"
     }

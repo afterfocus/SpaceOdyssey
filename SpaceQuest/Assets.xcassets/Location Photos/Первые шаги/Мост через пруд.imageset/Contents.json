@@ -1,15 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "Мост через пруд.jpg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "Мост через пруд@2x.jpg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "Мост через пруд@3x.jpg",
       "idiom" : "universal",
       "scale" : "3x"
     }

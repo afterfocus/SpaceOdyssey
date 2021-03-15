@@ -1,15 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "Штурмовик Ил-2.jpg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "Штурмовик Ил-2@2x.jpg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "Штурмовик Ил-2@3x.jpg",
       "idiom" : "universal",
       "scale" : "3x"
     }

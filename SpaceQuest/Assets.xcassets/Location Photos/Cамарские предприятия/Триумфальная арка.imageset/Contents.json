@@ -1,15 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "Триумфальная арка.jpg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "Триумфальная арка@2x.jpg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "Триумфальная арка@3x.jpg",
       "idiom" : "universal",
       "scale" : "3x"
     }

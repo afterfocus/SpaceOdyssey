@@ -1,15 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "Мемориальная доска Хумарьяну.jpg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "Мемориальная доска Хумарьяну@2x.jpg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "Мемориальная доска Хумарьяну@3x.jpg",
       "idiom" : "universal",
       "scale" : "3x"
     }

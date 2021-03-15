@@ -1,15 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "Памятник Дмитрию Шостаковичу.jpg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "Памятник Дмитрию Шостаковичу@2x.jpg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "Памятник Дмитрию Шостаковичу@3x.jpg",
       "idiom" : "universal",
       "scale" : "3x"
     }

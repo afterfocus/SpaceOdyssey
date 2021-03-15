@@ -1,15 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "Скульптура Первыи Спутник.jpg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "Скульптура Первыи Спутник@2x.jpg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "Скульптура Первыи Спутник@3x.jpg",
       "idiom" : "universal",
       "scale" : "3x"
     }

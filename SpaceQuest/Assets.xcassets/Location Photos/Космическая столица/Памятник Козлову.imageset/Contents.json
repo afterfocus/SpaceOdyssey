@@ -1,15 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "Памятник Козлову.jpg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "Памятник Козлову@2x.jpg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "Памятник Козлову@3x.jpg",
       "idiom" : "universal",
       "scale" : "3x"
     }

@@ -1,15 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "Стелла в честь первого магистрального газопровода.jpg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "Стелла в честь первого магистрального газопровода@2x.jpg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "Стелла в честь первого магистрального газопровода@3x.jpg",
       "idiom" : "universal",
       "scale" : "3x"
     }

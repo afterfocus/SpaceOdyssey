@@ -1,15 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "Памятник Ломоносову.jpg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "Памятник Ломоносову@2x.jpg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "Памятник Ломоносову@3x.jpg",
       "idiom" : "universal",
       "scale" : "3x"
     }

@@ -1,15 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "АО Арконик СМЗ.jpg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "АО Арконик СМЗ@2x.jpg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "АО Арконик СМЗ@3x.jpg",
       "idiom" : "universal",
       "scale" : "3x"
     }

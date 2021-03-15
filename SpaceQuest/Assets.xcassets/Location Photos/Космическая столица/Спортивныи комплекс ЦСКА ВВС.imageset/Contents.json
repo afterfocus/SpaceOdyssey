@@ -1,15 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "Спортивныи комплекс ЦСКА ВВС.jpg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "Спортивныи комплекс ЦСКА ВВС@2x.jpg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "Спортивныи комплекс ЦСКА ВВС@3x.jpg",
       "idiom" : "universal",
       "scale" : "3x"
     }

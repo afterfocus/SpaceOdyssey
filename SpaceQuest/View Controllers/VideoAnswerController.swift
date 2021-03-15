@@ -51,7 +51,7 @@ final class VideoAnswerController: UIViewController {
         if mode == .introVideo || mode == .bonusVideo {
             secondaryLabel.isHidden = false
             tertiaryLabel.isHidden = false
-            buttonCenterYConstraint.constant = 30
+            buttonCenterYConstraint.constant = 60
             
             if mode == .introVideo {
                 titleLabel.text = "Вступление"

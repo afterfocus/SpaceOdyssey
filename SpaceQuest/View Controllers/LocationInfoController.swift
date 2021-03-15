@@ -45,7 +45,7 @@ class LocationInfoController: UIViewController {
     @IBOutlet weak var locationNameLabel: UILabel!
     @IBOutlet weak var mapView: YMKMapView!
     
-    @IBOutlet weak var photoImageViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var photoImageViewWidth: NSLayoutConstraint!
     
     // MARK: - Segue Properties
     
@@ -72,17 +72,18 @@ class LocationInfoController: UIViewController {
         locationNameLabel.text = location.name
         photoImageView.image = UIImage(named: location.photoFilename)!
         
-        let point = YMKPoint(latitude: location.latitude, longitude: location.longtitude)
-        let placemarkView = MapPlacemarkView(index: questionIndex, isComplete: question.isComplete, isLocked: false)
+        let point = YMKPoint(location: location)
+        let placemarkView = MapPlacemarkView(index: questionIndex,
+                                             isComplete: question.isComplete,
+                                             isLocked: false,
+                                             isVisited: question.location.isVisited)
         map.isNightModeEnabled = DataModel.current.isMapNightModeEnabled
         map.mapObjects.addPlacemark(with: point, view: YRTViewProvider(uiView: placemarkView))
         map.move(with: YMKCameraPosition(target: point, zoom: 14.5, azimuth: 0, tilt: 0))
     }
     
     override func viewDidLayoutSubviews() {
-        let ratio = photoImageView.image!.size.height / photoImageView.image!.size.width
-        photoImageViewHeight.constant = photoImageView.bounds.width * ratio
-        height.constant = 170 + photoImageViewHeight.constant + addressLabel.bounds.height + mapView.bounds.height + locationNameLabel.bounds.height
+        height.constant = (UIScreen.main.bounds.width - 48) * 0.75 + 315
     }
     
     // MARK: - IBActions

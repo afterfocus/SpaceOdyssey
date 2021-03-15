@@ -1,15 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "Дядя Степа.jpg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "Дядя Степа@2x.jpg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "Дядя Степа@3x.jpg",
       "idiom" : "universal",
       "scale" : "3x"
     }

@@ -1,15 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "Монумент завода Авиаагрегат.jpg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "Монумент завода Авиаагрегат@2x.jpg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "Монумент завода Авиаагрегат@3x.jpg",
       "idiom" : "universal",
       "scale" : "3x"
     }
