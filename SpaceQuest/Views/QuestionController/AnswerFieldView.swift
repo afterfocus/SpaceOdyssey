@@ -5,6 +5,7 @@
 //  Created by Максим Голов on 23.12.2020.
 //
 
+import AVFoundation
 import UIKit
 
 // MARK: AnswerButtonsViewDelegate
@@ -40,6 +41,8 @@ final class AnswerFieldView: UICollectionView {
     private var usedHints = 0
     private var cellBackgroundColor = UIColor.answerCellDefault
     private var isFixed: [[Bool]]!
+    
+    private let audioPlayer = try? AVAudioPlayer(data: NSDataAsset(name: "location_failed")!.data)
 
     // MARK: - Internal Functions
     
@@ -160,6 +163,7 @@ final class AnswerFieldView: UICollectionView {
             animation.fromValue = NSValue(cgPoint: CGPoint(x: center.x, y: center.y))
             animation.toValue = NSValue(cgPoint: CGPoint(x: center.x, y: center.y - 15))
         } else {
+            audioPlayer?.play()
             animation.fromValue = NSValue(cgPoint: CGPoint(x: center.x - 10, y: center.y))
             animation.toValue = NSValue(cgPoint: CGPoint(x: center.x + 10, y: center.y))
         }

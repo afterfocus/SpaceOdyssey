@@ -5,6 +5,7 @@
 //  Created by Максим Голов on 04.01.2021.
 //
 
+import AVFoundation
 import UIKit
 
 // MARK: RouteCompleteControllerDelegate
@@ -36,6 +37,7 @@ final class RouteCompleteController: UIViewController {
     // MARK: - Private Properties
     
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
+    private let audioPlayer = try? AVAudioPlayer(data: NSDataAsset(name: "route_complete")!.data)
     
     // MARK: - View Life Cycle
     
@@ -65,6 +67,7 @@ final class RouteCompleteController: UIViewController {
         } completion: {
             [weak self] _ in
             UIView.animate(withDuration: 0.15, delay: 0, options: [.curveEaseOut]) {
+                self?.audioPlayer?.play()
                 self?.scoredStarsLabel.transform = .identity
             }
         }

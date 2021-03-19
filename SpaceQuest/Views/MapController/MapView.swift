@@ -21,6 +21,12 @@ protocol MapViewDelegate: class {
 
 final class MapView: UIView {
     
+    // MARK: - Constants
+    
+    private enum Constants {
+        static let cameraAnimationDuration: Float = 0.5
+    }
+    
     // MARK: - IBOutlet
     
     @IBOutlet weak var mapView: YMKMapView!
@@ -31,17 +37,15 @@ final class MapView: UIView {
         get { map.isNightModeEnabled }
         set { map.isNightModeEnabled = newValue }
     }
-    
-    public weak var delegate: MapViewDelegate?
-    
-    public var map: YMKMap {
-        mapView.mapWindow.map
+    public var currentZoom: Float {
+        map.cameraPosition.zoom
     }
-    
+    public weak var delegate: MapViewDelegate?
     public var needsToBuildRoute = true
     
     // MARK: - Private properties
     
+    private var map: YMKMap { mapView.mapWindow.map }
     private let pedestrianRouter = YMKTransport.sharedInstance()!.createPedestrianRouter()
     private var masstransitSession: YMKMasstransitSession?
     
@@ -51,7 +55,6 @@ final class MapView: UIView {
             selectedPlacemark?.zIndex = 1
         }
     }
-    
     private var callout: YMKPlacemarkMapObject! {
         willSet {
             if callout != nil {
@@ -59,6 +62,7 @@ final class MapView: UIView {
             }
         }
     }
+    private var targetCameraPosition = YMKCameraPosition()
     
     // MARK: - Public methods
     
@@ -72,34 +76,42 @@ final class MapView: UIView {
         userLocationLayer.setObjectListenerWith(self)
     }
     
-    func zoomIn(step: Float, duration: Float) {
-        moveCamera(zoom: map.cameraPosition.zoom + step, duration: duration)
+    func zoomIn(step: Float) {
+        moveCamera(zoom: map.cameraPosition.zoom + step)
     }
     
-    func zoomOut(step: Float, duration: Float) {
-        moveCamera(zoom: map.cameraPosition.zoom - step, duration: duration)
+    func zoomOut(step: Float) {
+        moveCamera(zoom: map.cameraPosition.zoom - step)
     }
     
-    func turnToNorth(duration: Float) {
-        moveCamera(azimuth: 0, duration: duration)
+    func turnToNorth() {
+        moveCamera(azimuth: 0)
     }
     
-    func moveCamera(target: YMKPoint? = nil,
+    func moveCamera(point: YMKPoint? = nil,
                     zoom: Float? = nil,
                     azimuth: Float? = nil,
                     tilt: Float? = nil,
                     animationType: YMKAnimationType = .smooth,
-                    duration: Float) {
-        map.move(with: YMKCameraPosition(target: target ?? map.cameraPosition.target,
-                                         zoom: zoom ?? map.cameraPosition.zoom,
-                                         azimuth: azimuth ?? map.cameraPosition.azimuth,
-                                         tilt: tilt ?? map.cameraPosition.tilt),
+                    duration: Float? = nil) {
+        let point = point ?? targetCameraPosition.target
+        let zoom = zoom ?? targetCameraPosition.zoom
+        let azimuth = azimuth ?? targetCameraPosition.azimuth
+        let tilt = tilt ?? targetCameraPosition.tilt
+        let duration = duration ?? Constants.cameraAnimationDuration
+        
+        targetCameraPosition = YMKCameraPosition(target: point, zoom: zoom, azimuth: azimuth, tilt: tilt)
+        map.move(with: targetCameraPosition,
                  animationType: YMKAnimation(type: animationType, duration: duration))
     }
     
     func addPlacemark(location: Location, placemark: MapPlacemarkView) -> YMKPlacemarkMapObject {
         return map.mapObjects.addPlacemark(with: YMKPoint(location: location),
                                            view: YRTViewProvider(uiView: placemark))
+    }
+    
+    func remove(mapObject: YMKMapObject) {
+        map.mapObjects.remove(with: mapObject)
     }
     
     func addGeoCircle(location: Location) {
@@ -132,15 +144,13 @@ final class MapView: UIView {
     func show(mapCallout: MapCalloutView, at point: YMKPoint) -> YMKPlacemarkMapObject {
         let style = YMKIconStyle(anchor: CGPoint(x: 1, y: 1) as NSValue,
                                  rotationType: nil, zIndex: 100, flat: 0, visible: 1, scale: 1, tappableArea: nil)
-        callout = map.mapObjects.addPlacemark(with: point,
-                                              image: convertViewToImage(mapCallout)!,
-                                              style: style)
+        callout = map.mapObjects.addPlacemark(with: point, image: convertViewToImage(mapCallout)!, style: style)
         let deltaX = Float(120 * UIScreen.main.scale)
         let deltaY = Float(135 * UIScreen.main.scale)
         let calloutScreenPoint = mapView.mapWindow.worldToScreen(withWorldPoint: callout.geometry)!
         let ymkScreenPoint = YMKScreenPoint(x: calloutScreenPoint.x - deltaX,
                                             y: calloutScreenPoint.y - deltaY)
-        moveCamera(target: mapView.mapWindow.screenToWorld(with: ymkScreenPoint)!, duration: 0.5)
+        moveCamera(point: mapView.mapWindow.screenToWorld(with: ymkScreenPoint)!)
         return callout
     }
     
@@ -188,6 +198,9 @@ extension MapView: YMKMapCameraListener {
                                  cameraPosition: YMKCameraPosition,
                                  cameraUpdateReason: YMKCameraUpdateReason,
                                  finished: Bool) {
+        if cameraUpdateReason == .gestures {
+            targetCameraPosition = cameraPosition
+        }
         delegate?.mapView(self, didChange: cameraPosition, userInitiated: cameraUpdateReason == .gestures)
     }
 }

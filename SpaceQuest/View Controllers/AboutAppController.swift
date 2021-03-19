@@ -18,4 +18,10 @@ final class AboutAppController: UIViewController {
             UIApplication.shared.open(url)
         }
     }
+    
+    @IBAction func audioAuthorsButtonPressed(_ sender: UIButton) {
+        if let url = URL(string: "https://freesound.org") {
+            UIApplication.shared.open(url)
+        }
+    }
 }

@@ -5,8 +5,8 @@
 //  Created by Максим Голов on 27.12.2020.
 //
 
+import AVFoundation
 import UIKit
-
 
 // MARK: - LocationCompleteController
 
@@ -18,7 +18,12 @@ final class LocationCompleteController: LocationFinishedController {
     
     // MARK: - Private Properties
     
-    let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
+    private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
+    private let audioPlayers = [
+        try? AVAudioPlayer(data: NSDataAsset(name: "star")!.data),
+        try? AVAudioPlayer(data: NSDataAsset(name: "star")!.data),
+        try? AVAudioPlayer(data: NSDataAsset(name: "star")!.data)
+    ]
     
     // MARK: - View Life Cycle
     
@@ -48,6 +53,7 @@ final class LocationCompleteController: LocationFinishedController {
             } completion: {
                 [weak self] _ in
                 self?.feedbackGenerator.impactOccurred()
+                self?.audioPlayers[i]?.play()
                 UIView.animate(withDuration: 0.1, delay: 0, options: [.curveEaseOut]) {
                     self?.starImageViews[i].transform = .identity
                 }

@@ -129,7 +129,7 @@ final class DataModel {
     
     /// Имя файла с данными для текущего вользователя
     private var filename: String {
-        "\(userName) - \(email).plist"
+        "\(userName.lowercased()) - \(email.lowercased()).plist"
     }
     
     private var postServiceQueryItems: [URLQueryItem] {
@@ -289,6 +289,12 @@ extension DataModel {
                              aboutAuthor: "Герой РФ\nЛётчик-космонавт",
                              aboutAuthorFull: "Герой Российской Федерации,\nЛётчик-космонавт РФ,\nКосмонавт 87/363 (России/мира),\n3 полёта – 546 сут. 22 час. 33 мин.,\n7 выходов в открытый космос – 38 час. 27 мин.",
                              photoFilename: "Виноградов"),
+        "Даниленко": Author(surname: "Даниленко",
+                             name: "Александра",
+                             patronymic: "Николаевна",
+                             aboutAuthor: "Доцент, к.т.н.\nПопуляризатор космонавтики",
+                             aboutAuthorFull: "Доцент, к.т.н., популяризатор космонавтики,\nАвтор приложения «Территория космоса: Одиссея Марса»",
+                             photoFilename: "Даниленко"),
         "Котельников": Author(surname: "Котельников",
                               name: "Геннадий",
                               patronymic: "Петрович",
@@ -467,10 +473,10 @@ extension DataModel {
                     title: "Дом-рекордсмен",
                     location: Location(name: "Сквер им. В.И.Фадеева",
                                        address: "Проспект Ленина 1",
-                                       latitude: 53.205863,
-                                       longitude: 50.133248,
+                                       latitude: 53.207035,
+                                       longitude: 50.135816,
                                        photoFilename: "Сквер Фадеева",
-                                       activationRadius: 150,
+                                       activationRadius: 70,
                                        distance: 1200),
                     author: authors["Авдеев"]!,
                     questionText: "Дмитрий Ильич Козлов всю жизнь защищал Родину, причем в молодости ему пришлось делать это собственной кровью. 1 июля 1941 года студент пятого курса института Дмитрий Козлов добровольцем записался в народное ополчение, прошел всю Великую Отечественную войну, был трижды ранен и потерял руку. Получил несколько боевых наград. Медалью за оборону какого города был награжден Козлов?",
@@ -560,14 +566,14 @@ extension DataModel {
                     title: "На удачу",
                     location: Location(name: "Мемориальная доска\nА.М. Солдатенкову",
                                        address: "Молодогвардейская 218",
-                                       latitude: 53.203951,
-                                       longitude: 50.113508,
+                                       latitude: 53.203846,
+                                       longitude: 50.113640,
                                        photoFilename: "Мемориальная доска Солдатенкову",
                                        distance: 350),
-                    author: authors["Лазаренко"]!,
+                    author: authors["Даниленко"]!,
                     questionText: "У Сергея Павловича Королева был любимый головной убор, который он всегда носил с осени и до ранней весны. Сергей Павлович был также весьма суеверным человеком, и этот предмет непременно был на нем во время каждого старта. О каком головном уборе идет речь?",
-                    questionVideoUrl: nil,
-                    answerVideoUrl: nil,
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/bagCGPMIV6w?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/NhHXw_jSvqw?playsinline=1"),
                     answer: ["ШЛЯПА"],
                     answerCharacters: "ШСРАЕЗКПКЕПЯКОКЫБЛАРА"),
                 
@@ -729,8 +735,8 @@ extension DataModel {
                     title: "Секреты космонавтики",
                     location: Location(name: "Мемориальная доска С.Г. Хумарьяну",
                                        address: "Степана Разина 31",
-                                       latitude: 53.182427,
-                                       longitude: 50.083386,
+                                       latitude: 53.182121,
+                                       longitude: 50.083015,
                                        photoFilename: "Мемориальная доска Хумарьяну",
                                        distance: 1100),
                     author: authors["Артемьев"]!,
@@ -765,8 +771,8 @@ extension DataModel {
                                        distance: 0),
                     author: authors["Лазаренко"]!,
                     questionText: "В одной книге рассказывается о первых космических полетах. Автор шутит, что люди отправили в космос разделённый на части груз этого «плавательного средства». Оно отсылает нас к одной из священных книг. Назовите это плавательное средство, состоящее из двух слов.",
-                    questionVideoUrl: nil,
-                    answerVideoUrl: nil,
+                    questionVideoUrl: URL(string: "https://www.youtube.com/embed/zxHYsdLtgso?playsinline=1"),
+                    answerVideoUrl: URL(string: "https://www.youtube.com/embed/m_e3twMtEeo?playsinline=1"),
                     answer: ["НОЕВ", "КОВЧЕГ"],
                     answerCharacters: "НЕОККОЧГВДОВЕЛ"),
                 
@@ -1139,8 +1145,8 @@ extension DataModel {
                     title: "Минуты, изменившие мир",
                     location: Location(name: "Мост через пруд",
                                        address: "Парк культуры и отдыха имени Юрия Гагарина",
-                                       latitude: 53.228771,
-                                       longitude: 50.198803,
+                                       latitude: 53.229598,
+                                       longitude: 50.199556,
                                        photoFilename: "Мост через пруд",
                                        distance: 300),
                     author: authors["Королёва"]!,

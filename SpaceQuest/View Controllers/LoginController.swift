@@ -15,7 +15,13 @@ final class LoginController: UIViewController {
     
     // MARK: - IBOutlet
     
+    @IBOutlet private var dogImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
+    
+    @IBOutlet private var dogXConstraint: NSLayoutConstraint!
+    @IBOutlet private var dogYConstraint: NSLayoutConstraint!
+    @IBOutlet private var labelYConstraint: NSLayoutConstraint!
+    
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var loginButton: UIButton!
@@ -30,6 +36,9 @@ final class LoginController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        dogImageView.alpha = 0
+        titleLabel.alpha = 0
         cancelButton.layer.dropShadow(opacity: 0.3, radius: 7)
         titleLabel.layer.dropShadow(opacity: 0.7, radius: 10)
         nameTextField.setLeftImage(UIImage(systemName: "person"), imageWidth: 30, padding: 7)
@@ -48,8 +57,24 @@ final class LoginController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
         nameTextField.text = isInEditingMode ? DataModel.current.userName : ""
         emailTextField.text = isInEditingMode ? DataModel.current.email : ""
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            self.dogXConstraint.constant = 50
+            self.dogYConstraint.constant = -15
+            self.labelYConstraint.constant = 55
+            
+            UIView.animate(withDuration: 0.7, delay: 0, options: .curveEaseOut) {
+                self.dogImageView.alpha = 1
+                self.titleLabel.alpha = 1
+            }
+            UIView.animate(withDuration: 1.1, delay: 0, options: .curveEaseOut) {
+                self.view.layoutIfNeeded()
+            }
+        }
     }
     
     // MARK: - IBAction
@@ -57,7 +82,7 @@ final class LoginController: UIViewController {
     @IBAction func loginButtonPressed(_ sender: UIButton) {
         guard validateNameAndEmail(),
               let name = nameTextField.text,
-              let email = emailTextField.text
+              let email = emailTextField.text?.lowercased()
         else { return }
 
         if isInEditingMode {
@@ -92,7 +117,7 @@ final class LoginController: UIViewController {
     }
     
     private func trimCharacters(in textField: UITextField) {
-        textField.text = textField.text!.trimmingCharacters(in: [" "]).trimmingCharacters(in: [" "])
+        textField.text = textField.text!.trimmingCharacters(in: .whitespaces)
     }
     
     private func validateNameAndEmail() -> Bool {
@@ -121,7 +146,7 @@ extension LoginController: UITextFieldDelegate {
         if textField === nameTextField {
             emailTextField.becomeFirstResponder()
         } else {
-            view.endEditing(true)
+            emailTextField.resignFirstResponder()
         }
         return true
     }

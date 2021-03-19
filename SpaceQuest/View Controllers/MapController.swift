@@ -13,7 +13,15 @@ import CoreLocation
 
 final class MapController: UIViewController {
     
-    // MARK: IBOutlets
+    // MARK: - Types
+    
+    private enum OrientationMode {
+        case userDefined
+        case northOriented
+        case compass
+    }
+    
+    // MARK: - IBOutlets
     
     @IBOutlet weak var topGradientView: TopGradientView!
     @IBOutlet weak var mapView: MapView!
@@ -47,10 +55,12 @@ final class MapController: UIViewController {
             enableTrackingButton.backgroundColor = backgroundColorForButton(isEnabled: !isTrackingEnabled)
         }
     }
-    private var isNorthOriented = true {
+    private var orientationMode = OrientationMode.northOriented {
         didSet {
-            orientToNorthButton.isEnabled = !isNorthOriented
-            orientToNorthButton.backgroundColor = backgroundColorForButton(isEnabled: !isNorthOriented)
+            let isInCompassMode = orientationMode == .compass
+            orientToNorthButton.isEnabled = !isInCompassMode
+            orientToNorthButton.backgroundColor = backgroundColorForButton(isEnabled: !isInCompassMode)
+            orientToNorthButton.tintColor = tintColorForOrientToNorthButton(isInCompassMode: isInCompassMode)
         }
     }
     private var routeEndPoint: YMKPoint?
@@ -68,7 +78,7 @@ final class MapController: UIViewController {
         mapView.initialize()
         mapView.delegate = self
         mapView.isNightModeEnabled = DataModel.current.isMapNightModeEnabled
-        mapView.moveCamera(target: YMKPoint(latitude: 53.2001, longitude: 50.15),
+        mapView.moveCamera(point: YMKPoint(latitude: 53.2001, longitude: 50.15),
                            zoom: 11, azimuth: 0, tilt: 0, duration: 0)
         
         [questionLabel, distanceLabel, distanceUnitLabel].forEach {
@@ -83,11 +93,13 @@ final class MapController: UIViewController {
         zoomInButton.backgroundColor = backgroundColorForButton(isEnabled: true)
         zoomOutButton.backgroundColor = backgroundColorForButton(isEnabled: true)
         enableTrackingButton.backgroundColor = backgroundColorForButton(isEnabled: false)
-        orientToNorthButton.backgroundColor = backgroundColorForButton(isEnabled: false)
+        orientToNorthButton.backgroundColor = backgroundColorForButton(isEnabled: true)
         
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
         locationManager.requestWhenInUseAuthorization()
+        locationManager.headingFilter = 4
+        locationManager.startUpdatingHeading()
         
         firstIncompleteIndex = route.firstIncompleteIndex(for: routeVariation)
         addQuestionPlacemarks()
@@ -139,23 +151,30 @@ final class MapController: UIViewController {
     // MARK: - IBActions
     
     @IBAction func zoomInButtonPressed(_ sender: UIButton) {
-        mapView.zoomIn(step: 1.5, duration: 0.5)
+        mapView.zoomIn(step: 1.5)
     }
     
     @IBAction func zoomOutButtonPressed(_ sender: UIButton) {
-        mapView.zoomOut(step: 1.5, duration: 0.5)
+        mapView.zoomOut(step: 1.5)
     }
     
     @IBAction func enableTrackingButtonPressed(_ sender: UIButton) {
         isTrackingEnabled = true
         moveToUserLocation(withAnimationType: .smooth,
-                           zoom: mapView.map.cameraPosition.zoom < 13 ? 13 : nil,
-                           duration: 1)
+                           zoom: mapView.currentZoom < 13 ? 13 : nil)
     }
     
     @IBAction func orientToNorthButtonPressed(_ sender: UIButton) {
-        isNorthOriented = true
-        mapView.turnToNorth(duration: 0.5)
+        switch orientationMode {
+        case .userDefined:
+            orientationMode = .northOriented
+            mapView.turnToNorth()
+        case .northOriented:
+            orientationMode = .compass
+            mapView.moveCamera(azimuth: Float(locationManager.heading!.trueHeading), animationType: .smooth)
+        case .compass:
+            return
+        }
     }
     
     // MARK: - Private Functions
@@ -165,6 +184,14 @@ final class MapController: UIViewController {
             return UIColor.black.withAlphaComponent(isEnabled ? 0.8 : 0.35)
         } else {
             return UIColor.white.withAlphaComponent(isEnabled ? 1 : 0.5)
+        }
+    }
+    
+    private func tintColorForOrientToNorthButton(isInCompassMode: Bool) -> UIColor {
+        if mapView.isNightModeEnabled {
+            return isInCompassMode ? .systemYellow : .white
+        } else {
+            return isInCompassMode ? .systemBlue : .black
         }
     }
     
@@ -187,14 +214,13 @@ final class MapController: UIViewController {
         }
     }
     
-    private func moveToUserLocation(withAnimationType type: YMKAnimationType,
-                                    zoom: Float? = nil,
-                                    duration: Float) {
+    private func moveToUserLocation(withAnimationType type: YMKAnimationType, zoom: Float? = nil, duration: Float? = nil) {
         guard let coordinates = locationManager.location?.coordinate else { return }
-        mapView.moveCamera(target: YMKPoint(coordinate: coordinates),
-                           zoom: zoom,
-                           animationType: type,
-                           duration: duration)
+        mapView.moveCamera(
+            point: YMKPoint(coordinate: coordinates),
+            zoom: zoom,
+            animationType: type,
+            duration: duration)
     }
     
     private func addQuestionPlacemarks() {
@@ -291,9 +317,15 @@ extension MapController: CLLocationManagerDelegate {
             location.isVisited = true
             
             mapView.removeCallout()
-            mapView.map.mapObjects.remove(with: nextQuestionPlacemark!)
+            mapView.remove(mapObject: nextQuestionPlacemark!)
             addPlacemark(question: nextQuestion!, placemarkIndex: firstIncompleteIndex!)
             _ = mapView.onMapObjectTap(with: nextQuestionPlacemark!, point: YMKPoint(location: location))
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+        if orientationMode == .compass {
+            mapView.moveCamera(azimuth: Float(newHeading.trueHeading), animationType: .linear, duration: 1)
         }
     }
 }
@@ -305,7 +337,9 @@ extension MapController: MapViewDelegate {
     func mapView(_ mapView: MapView, didChange cameraPosition: YMKCameraPosition, userInitiated: Bool) {
         if userInitiated {
             isTrackingEnabled = false
-            isNorthOriented = cameraPosition.azimuth == 0
+            if cameraPosition.azimuth != 0 {
+                orientationMode = .userDefined
+            }
         }
         orientToNorthButton.transform = CGAffineTransform(rotationAngle: -CGFloat.pi * CGFloat(cameraPosition.azimuth) / 180)
     }
