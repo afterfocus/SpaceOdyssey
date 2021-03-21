@@ -5,7 +5,7 @@
 //  Created by Максим Голов on 27.12.2020.
 //
 
-import AVFoundation
+import AVKit
 import UIKit
 
 // MARK: - LocationCompleteController
@@ -19,7 +19,8 @@ final class LocationCompleteController: LocationFinishedController {
     // MARK: - Private Properties
     
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
-    private let audioPlayers = [
+    private let locationFinishedAudioPlayer = try? AVAudioPlayer(data: NSDataAsset(name: "location_finished")!.data)
+    private let starAudioPlayers = [
         try? AVAudioPlayer(data: NSDataAsset(name: "star")!.data),
         try? AVAudioPlayer(data: NSDataAsset(name: "star")!.data),
         try? AVAudioPlayer(data: NSDataAsset(name: "star")!.data)
@@ -38,6 +39,7 @@ final class LocationCompleteController: LocationFinishedController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
+        locationFinishedAudioPlayer?.play()
         var startTime: Double = 0
         
         for i in 0 ..< question.score {
@@ -53,7 +55,7 @@ final class LocationCompleteController: LocationFinishedController {
             } completion: {
                 [weak self] _ in
                 self?.feedbackGenerator.impactOccurred()
-                self?.audioPlayers[i]?.play()
+                self?.starAudioPlayers[i]?.play()
                 UIView.animate(withDuration: 0.1, delay: 0, options: [.curveEaseOut]) {
                     self?.starImageViews[i].transform = .identity
                 }

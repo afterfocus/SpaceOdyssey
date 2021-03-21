@@ -43,7 +43,7 @@ final class MapController: UIViewController {
     private var locationManager = CLLocationManager()
     private var nextQuestion: Question?
     
-    private var firstIncompleteIndex: Int? {
+    private lazy var firstIncompleteIndex: Int? = route.firstIncompleteIndex(for: routeVariation) {
         didSet {
             nextQuestion = firstIncompleteIndex == nil ? nil : route[routeVariation[firstIncompleteIndex!]]
         }
@@ -78,8 +78,6 @@ final class MapController: UIViewController {
         mapView.initialize()
         mapView.delegate = self
         mapView.isNightModeEnabled = DataModel.current.isMapNightModeEnabled
-        mapView.moveCamera(point: YMKPoint(latitude: 53.2001, longitude: 50.15),
-                           zoom: 11, azimuth: 0, tilt: 0, duration: 0)
         
         [questionLabel, distanceLabel, distanceUnitLabel].forEach {
             $0?.layer.dropShadow(opacity: 0.7, radius: 7)
@@ -98,7 +96,7 @@ final class MapController: UIViewController {
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
         locationManager.requestWhenInUseAuthorization()
-        locationManager.headingFilter = 4
+        locationManager.headingFilter = 3
         locationManager.startUpdatingHeading()
         
         firstIncompleteIndex = route.firstIncompleteIndex(for: routeVariation)
@@ -128,9 +126,7 @@ final class MapController: UIViewController {
             } else {
                 questionLabel.text = "Маршрут завершен"
             }
-            mapView.clearObjects()
             buildRoute()
-            addQuestionPlacemarks()
             moveToUserLocation(withAnimationType: .smooth, zoom: 16, duration: 2)
         }
     }
@@ -141,11 +137,6 @@ final class MapController: UIViewController {
         UIView.animate(withDuration: 0.3) {
             [weak self] in self?.tabBarController?.tabBar.alpha = 1
         }
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        startLocationTracking(status: CLLocationManager.authorizationStatus())
     }
     
     // MARK: - IBActions
@@ -171,7 +162,8 @@ final class MapController: UIViewController {
             mapView.turnToNorth()
         case .northOriented:
             orientationMode = .compass
-            mapView.moveCamera(azimuth: Float(locationManager.heading!.trueHeading), animationType: .smooth)
+            guard let heading = locationManager.heading?.trueHeading else { return }
+            mapView.moveCamera(azimuth: Float(heading), animationType: .smooth)
         case .compass:
             return
         }
@@ -207,7 +199,9 @@ final class MapController: UIViewController {
             moveToUserLocation(withAnimationType: .smooth, zoom: 16, duration: 2)
         }
         if mapView.needsToBuildRoute {
-            buildRoute()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                self.buildRoute()
+            }
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             self.locationManager.startUpdatingLocation()
@@ -271,7 +265,11 @@ final class MapController: UIViewController {
     
     private func buildRoute() {
         guard let coordinates = locationManager.location?.coordinate,
-              let question = nextQuestion else { return }
+              let question = nextQuestion else {
+            mapView.clearObjects()
+            mapViewNeedsToReloadPlacemarks(mapView)
+            return
+        }
     
         let startPoint = YMKPoint(coordinate: coordinates)
         routeEndPoint = YMKPoint(location: question.location)
@@ -335,13 +333,13 @@ extension MapController: CLLocationManagerDelegate {
 extension MapController: MapViewDelegate {
 
     func mapView(_ mapView: MapView, didChange cameraPosition: YMKCameraPosition, userInitiated: Bool) {
-        if userInitiated {
-            isTrackingEnabled = false
-            if cameraPosition.azimuth != 0 {
-                orientationMode = .userDefined
-            }
-        }
         orientToNorthButton.transform = CGAffineTransform(rotationAngle: -CGFloat.pi * CGFloat(cameraPosition.azimuth) / 180)
+        
+        guard userInitiated else { return }
+        isTrackingEnabled = false
+        if cameraPosition.azimuth != 0 {
+            orientationMode = .userDefined
+        }
     }
     
     func mapView(_ mapView: MapView, didSelect placemark: YMKPlacemarkMapObject) {
@@ -360,6 +358,10 @@ extension MapController: MapViewDelegate {
         questionVC.variation = routeVariation
         questionVC.questionIndex = questionIndex
         navigationController?.pushViewController(questionVC, animated: true)
+    }
+    
+    func mapViewFailedToBuildRoute(_ mapView: MapView) {
+        present(UIAlertController.tooFarFromLocationAlert, animated: true)
     }
     
     func mapView(_ mapView: MapView, didReceieved routingError: String) {

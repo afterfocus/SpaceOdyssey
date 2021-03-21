@@ -769,7 +769,7 @@ extension DataModel {
                                        photoFilename: "Ладья",
                                        activationRadius: 45,
                                        distance: 0),
-                    author: authors["Лазаренко"]!,
+                    author: authors["Даниленко"]!,
                     questionText: "В одной книге рассказывается о первых космических полетах. Автор шутит, что люди отправили в космос разделённый на части груз этого «плавательного средства». Оно отсылает нас к одной из священных книг. Назовите это плавательное средство, состоящее из двух слов.",
                     questionVideoUrl: URL(string: "https://www.youtube.com/embed/zxHYsdLtgso?playsinline=1"),
                     answerVideoUrl: URL(string: "https://www.youtube.com/embed/m_e3twMtEeo?playsinline=1"),

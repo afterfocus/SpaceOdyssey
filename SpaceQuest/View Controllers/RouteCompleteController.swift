@@ -5,7 +5,7 @@
 //  Created by Максим Голов on 04.01.2021.
 //
 
-import AVFoundation
+import AVKit
 import UIKit
 
 // MARK: RouteCompleteControllerDelegate
@@ -37,7 +37,7 @@ final class RouteCompleteController: UIViewController {
     // MARK: - Private Properties
     
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
-    private let audioPlayer = try? AVAudioPlayer(data: NSDataAsset(name: "route_complete")!.data)
+    private let audioPlayer = try? AVAudioPlayer(data: NSDataAsset(name: "location_finished")!.data)
     
     // MARK: - View Life Cycle
     

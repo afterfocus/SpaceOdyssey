@@ -5,7 +5,7 @@
 //  Created by Максим Голов on 23.12.2020.
 //
 
-import AVFoundation
+import AVKit
 import UIKit
 
 // MARK: AnswerButtonsViewDelegate
@@ -42,7 +42,7 @@ final class AnswerFieldView: UICollectionView {
     private var cellBackgroundColor = UIColor.answerCellDefault
     private var isFixed: [[Bool]]!
     
-    private let audioPlayer = try? AVAudioPlayer(data: NSDataAsset(name: "location_failed")!.data)
+    private let wrongAnswerAudioPlayer = try? AVAudioPlayer(data: NSDataAsset(name: "wrong_answer")!.data)
 
     // MARK: - Internal Functions
     
@@ -163,7 +163,7 @@ final class AnswerFieldView: UICollectionView {
             animation.fromValue = NSValue(cgPoint: CGPoint(x: center.x, y: center.y))
             animation.toValue = NSValue(cgPoint: CGPoint(x: center.x, y: center.y - 15))
         } else {
-            audioPlayer?.play()
+            wrongAnswerAudioPlayer?.play()
             animation.fromValue = NSValue(cgPoint: CGPoint(x: center.x - 10, y: center.y))
             animation.toValue = NSValue(cgPoint: CGPoint(x: center.x + 10, y: center.y))
         }

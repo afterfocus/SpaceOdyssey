@@ -1265,16 +1265,16 @@
                                                 </constraints>
                                             </view>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="EPD-ap-DXZ" userLabel="Yandex Terms Stack View">
-                                                <rect key="frame" x="104.33333333333333" y="2264.3333333333335" width="219.66666666666669" height="70.666666666666515"/>
+                                                <rect key="frame" x="70.666666666666657" y="2264.3333333333335" width="286.66666666666674" height="70.666666666666515"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Звуки предоставлены авторами mativve и matrixxx" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Le-yl-U3t">
-                                                        <rect key="frame" x="0.0" y="0.0" width="219.66666666666666" height="40.666666666666664"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Звуки предоставлены авторами mativve, matrixxx и Themusicalnomad" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Le-yl-U3t">
+                                                        <rect key="frame" x="0.0" y="0.0" width="286.66666666666669" height="40.666666666666664"/>
                                                         <fontDescription key="fontDescription" type="system" weight="light" pointSize="17"/>
                                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cZI-eN-F02">
-                                                        <rect key="frame" x="0.0" y="40.666666666666515" width="219.66666666666666" height="30"/>
+                                                        <rect key="frame" x="0.0" y="40.666666666666515" width="286.66666666666669" height="30"/>
                                                         <state key="normal" title="https://freesound.org"/>
                                                         <connections>
                                                             <action selector="audioAuthorsButtonPressed:" destination="bta-UT-AsD" eventType="touchUpInside" id="uwQ-rf-Cwy"/>
@@ -2122,7 +2122,9 @@
                             <constraint firstItem="l1b-fN-Xv1" firstAttribute="centerX" secondItem="KEn-md-bhD" secondAttribute="centerX" id="o0l-02-WXq"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="f9e-dV-jqo"/>
+                    <navigationItem key="navigationItem" id="f9e-dV-jqo">
+                        <barButtonItem key="backBarButtonItem" title=" " id="g8k-Bi-bfB"/>
+                    </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
                     <connections>
                         <outlet property="distanceLabel" destination="3eD-sK-gRm" id="zbU-Su-Xd4"/>

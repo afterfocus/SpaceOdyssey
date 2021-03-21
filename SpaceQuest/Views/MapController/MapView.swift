@@ -15,6 +15,7 @@ protocol MapViewDelegate: class {
     func mapView(_ mapView: MapView, didSelect placemark: YMKPlacemarkMapObject)
     func mapView(_ mapView: MapView, didReceieved routingError: String)
     func mapViewNeedsToReloadPlacemarks(_ mapView: MapView)
+    func mapViewFailedToBuildRoute(_ mapView: MapView)
 }
 
 // MARK: - MapView
@@ -49,7 +50,7 @@ final class MapView: UIView {
     private let pedestrianRouter = YMKTransport.sharedInstance()!.createPedestrianRouter()
     private var masstransitSession: YMKMasstransitSession?
     
-    private var selectedPlacemark: YMKPlacemarkMapObject! {
+    private var selectedPlacemark: YMKPlacemarkMapObject? {
         willSet {
             newValue?.zIndex = 100
             selectedPlacemark?.zIndex = 1
@@ -62,7 +63,7 @@ final class MapView: UIView {
             }
         }
     }
-    private var targetCameraPosition = YMKCameraPosition()
+    private var targetCameraPosition = YMKCameraPosition(target: YMKPoint(latitude: 53.2001, longitude: 50.15), zoom: 11, azimuth: 0, tilt: 0)
     
     // MARK: - Public methods
     
@@ -70,6 +71,7 @@ final class MapView: UIView {
         map.addCameraListener(with: self)
         map.addInputListener(with: self)
         map.mapObjects.addTapListener(with: self)
+        map.move(with: targetCameraPosition)
         
         let userLocationLayer = YMKMapKit.sharedInstance().createUserLocationLayer(with: mapView.mapWindow)
         userLocationLayer.setVisibleWithOn(true)
@@ -130,11 +132,7 @@ final class MapView: UIView {
         masstransitSession = pedestrianRouter.requestRoutes(with: requestPoints, timeOptions: .init()) {
             routesResponse, error in
             if let routes = routesResponse {
-                self.map.mapObjects.clear()
-                self.delegate?.mapViewNeedsToReloadPlacemarks(self)
-                let polyline = self.map.mapObjects.addPolyline(with: routes[0].geometry)
-                polyline.strokeColor = self.map.isNightModeEnabled ? .systemYellow : .lightBlue
-                self.needsToBuildRoute = false
+                self.onRoutesSuccess(routes: routes)
             } else {
                 self.onRoutesError(error!)
             }
@@ -166,6 +164,18 @@ final class MapView: UIView {
     }
     
     // MARK: - Private methods
+    
+    private func onRoutesSuccess(routes: [YMKMasstransitRoute]) {
+        needsToBuildRoute = false
+        clearObjects()
+        delegate?.mapViewNeedsToReloadPlacemarks(self)
+        if routes.isEmpty {
+            delegate?.mapViewFailedToBuildRoute(self)
+        } else {
+            let polyline = map.mapObjects.addPolyline(with: routes[0].geometry)
+            polyline.strokeColor = map.isNightModeEnabled ? .systemYellow : .lightBlue
+        }
+    }
     
     private func onRoutesError(_ error: Error) {
         let routingError = (error as NSError).userInfo[YRTUnderlyingErrorKey] as! YRTError
