@@ -3631,8 +3631,8 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3dU-pi-q6Q">
                                 <rect key="frame" x="64" y="299.66666666666669" width="300" height="367.00000000000006"/>
                                 <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="dog_sleep" translatesAutoresizingMaskIntoConstraints="NO" id="elN-L5-0qj">
-                                        <rect key="frame" x="0.0" y="-90.000000000000028" width="300" height="170"/>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="dog_sad" translatesAutoresizingMaskIntoConstraints="NO" id="elN-L5-0qj">
+                                        <rect key="frame" x="0.0" y="-100.00000000000003" width="300" height="165"/>
                                     </imageView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YSm-le-mES">
                                         <rect key="frame" x="25" y="70" width="250" height="50"/>
@@ -3793,7 +3793,7 @@
                                 <color key="backgroundColor" name="DarkAccent"/>
                                 <constraints>
                                     <constraint firstItem="Ovm-KQ-zia" firstAttribute="leading" secondItem="3dU-pi-q6Q" secondAttribute="leading" constant="10" id="1U3-9B-0Nv"/>
-                                    <constraint firstItem="elN-L5-0qj" firstAttribute="top" secondItem="3dU-pi-q6Q" secondAttribute="top" constant="-90" id="1g4-bZ-9Mn"/>
+                                    <constraint firstItem="elN-L5-0qj" firstAttribute="top" secondItem="3dU-pi-q6Q" secondAttribute="top" constant="-100" id="1g4-bZ-9Mn"/>
                                     <constraint firstAttribute="trailing" secondItem="yCk-bt-ygM" secondAttribute="trailing" constant="-10" id="4wz-eT-MOr"/>
                                     <constraint firstItem="elN-L5-0qj" firstAttribute="leading" secondItem="3dU-pi-q6Q" secondAttribute="leading" id="79T-V1-iQP"/>
                                     <constraint firstAttribute="trailing" secondItem="F1T-DS-drK" secondAttribute="trailing" constant="25" id="9Q9-op-gG4"/>
@@ -3807,7 +3807,7 @@
                                     <constraint firstItem="F1T-DS-drK" firstAttribute="top" secondItem="Ovm-KQ-zia" secondAttribute="bottom" constant="15" id="fAE-DA-pt6"/>
                                     <constraint firstAttribute="trailing" secondItem="VBq-I8-2Pd" secondAttribute="trailing" constant="25" id="h8h-2V-PgK"/>
                                     <constraint firstAttribute="bottom" secondItem="VBq-I8-2Pd" secondAttribute="bottom" constant="27" id="kg9-IP-Spa"/>
-                                    <constraint firstItem="elN-L5-0qj" firstAttribute="bottom" secondItem="3dU-pi-q6Q" secondAttribute="top" constant="80" id="lqY-OH-P69"/>
+                                    <constraint firstItem="elN-L5-0qj" firstAttribute="bottom" secondItem="3dU-pi-q6Q" secondAttribute="top" constant="65" id="lqY-OH-P69"/>
                                     <constraint firstItem="YSm-le-mES" firstAttribute="top" secondItem="3dU-pi-q6Q" secondAttribute="top" constant="70" id="mK3-Cg-ZLn"/>
                                     <constraint firstItem="yCk-bt-ygM" firstAttribute="top" secondItem="3dU-pi-q6Q" secondAttribute="top" constant="-15" id="oQP-bF-d8N"/>
                                     <constraint firstAttribute="trailing" secondItem="Ovm-KQ-zia" secondAttribute="trailing" constant="10" id="p3M-XC-7N9"/>
@@ -4667,6 +4667,7 @@
         <image name="dog_complete" width="520" height="550"/>
         <image name="dog_load" width="526" height="560"/>
         <image name="dog_login" width="618" height="457"/>
+        <image name="dog_sad" width="334" height="386"/>
         <image name="dog_sleep" width="765" height="506"/>
         <image name="instagram" width="24" height="24"/>
         <image name="lightbulb.fill" catalog="system" width="113" height="128"/>
