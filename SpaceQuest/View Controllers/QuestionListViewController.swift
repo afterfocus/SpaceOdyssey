@@ -31,8 +31,12 @@ final class QuestionListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         navigationItem.titleView = UILabel.titleLabel(with: route.title)
+        
         questionsCollectionView.backgroundView = UIImageView(withImageNamed: route.imageFileName, alpha: 0.75)
+        questionsCollectionView.contentInset.top = 20
+        
         startButton.isHidden = route.isVariationComplete(routeVariation)
         startButton.layer.dropShadow(opacity: 0.3, offset: CGSize(width: 0, height: 3), radius: 7)
         
@@ -55,6 +59,7 @@ final class QuestionListViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
         if DataModel.current.isRouteFirstTimeLaunched {
             guard let videoAnswerVC = storyboard!.instantiateViewController(withIdentifier: "VideoAnswerController") as? VideoAnswerController else { return }
             videoAnswerVC.videoURL = URL(string: "https://www.youtube.com/embed/yvkINNzNnlU?playsinline=1")
@@ -140,6 +145,16 @@ extension QuestionListViewController: UICollectionViewDataSource {
                        index: indexPath.row + 1,
                        isLocked: indexPath.row > firstIncompleteIndex ?? 100)
         return cell
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        viewForSupplementaryElementOfKind kind: String,
+        at indexPath: IndexPath) -> UICollectionReusableView {
+        
+        let header: QuestionCollectionViewHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, for: indexPath)
+        header.setSpacing(cellSpacing)
+        return header
     }
 }
 

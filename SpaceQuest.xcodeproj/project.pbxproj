@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2986A9CA1D3746A5C61D859F /* Pods_SpaceQuest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 606595FA560EA01E18AD5594 /* Pods_SpaceQuest.framework */; };
+		B50D3B2B262E15B900063C38 /* QuestionCollectionViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50D3B2A262E15B900063C38 /* QuestionCollectionViewHeader.swift */; };
 		B510A18525D45A2000D905D5 /* LocationInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B510A18425D45A2000D905D5 /* LocationInfoController.swift */; };
 		B510A18925D5CA7800D905D5 /* ProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B510A18825D5CA7800D905D5 /* ProfileController.swift */; };
 		B510A18C25D90CFD00D905D5 /* OurHeroesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B510A18B25D90CFC00D905D5 /* OurHeroesTableViewCell.swift */; };
@@ -69,6 +70,7 @@
 		1287940696F57534413CA409 /* Pods-SpaceQuest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpaceQuest.debug.xcconfig"; path = "Target Support Files/Pods-SpaceQuest/Pods-SpaceQuest.debug.xcconfig"; sourceTree = "<group>"; };
 		4FADCF94CCA1726A9DD5D3DF /* Pods-SpaceQuest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpaceQuest.release.xcconfig"; path = "Target Support Files/Pods-SpaceQuest/Pods-SpaceQuest.release.xcconfig"; sourceTree = "<group>"; };
 		606595FA560EA01E18AD5594 /* Pods_SpaceQuest.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SpaceQuest.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B50D3B2A262E15B900063C38 /* QuestionCollectionViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionCollectionViewHeader.swift; sourceTree = "<group>"; };
 		B510A18425D45A2000D905D5 /* LocationInfoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationInfoController.swift; sourceTree = "<group>"; };
 		B510A18825D5CA7800D905D5 /* ProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileController.swift; sourceTree = "<group>"; };
 		B510A18B25D90CFC00D905D5 /* OurHeroesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OurHeroesTableViewCell.swift; sourceTree = "<group>"; };
@@ -203,6 +205,7 @@
 				B51F50F9256302D300A9AA53 /* RouteTableViewCell.swift */,
 				B51F51002563040D00A9AA53 /* DifficultyView.swift */,
 				B5BDDC39256828A60043737B /* QuestionCollectionViewCell.swift */,
+				B50D3B2A262E15B900063C38 /* QuestionCollectionViewHeader.swift */,
 				B514B013257BF08600F587B6 /* AnswerButtonCollectionViewCell.swift */,
 				B5F95351258884B100E4344E /* AnswerCollectionViewCell.swift */,
 				B5F953542588853100E4344E /* AnswerStubCollectionViewCell.swift */,
@@ -470,6 +473,7 @@
 				B5F95358258887E700E4344E /* StringExtension.swift in Sources */,
 				B5BF7AAB257BD2A5009AA0A3 /* CALayerExtension.swift in Sources */,
 				B5373E6425BCA0A400F91820 /* MapPlacemarkView.swift in Sources */,
+				B50D3B2B262E15B900063C38 /* QuestionCollectionViewHeader.swift in Sources */,
 				B5373E7325D1C64100F91820 /* UIViewExtension.swift in Sources */,
 				B510A18C25D90CFD00D905D5 /* OurHeroesTableViewCell.swift in Sources */,
 			);
@@ -627,7 +631,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.5.3;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = MaximGolov.SpaceQuest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -649,7 +653,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.5.3;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = MaximGolov.SpaceQuest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

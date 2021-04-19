@@ -280,7 +280,11 @@ final class MapController: UIViewController {
         } else {
             mapView.needsToBuildRoute = false
             if !DataModel.current.isRoutingDisabled {
-                present(UIAlertController.tooFarFromLocationAlert, animated: true)
+                let alert = UIAlertController.tooFarFromLocationAlert {
+                    DataModel.current.isRoutingDisabled = true
+                    self.presentQuestionVC(for: self.firstIncompleteIndex ?? 0)
+                }
+                present(alert, animated: true)
             }
         }
     }
@@ -361,7 +365,11 @@ extension MapController: MapViewDelegate {
     }
     
     func mapViewFailedToBuildRoute(_ mapView: MapView) {
-        present(UIAlertController.tooFarFromLocationAlert, animated: true)
+        let alert = UIAlertController.tooFarFromLocationAlert {
+            DataModel.current.isRoutingDisabled = true
+            self.presentQuestionVC(for: self.firstIncompleteIndex ?? 0)
+        }
+        present(alert, animated: true)
     }
     
     func mapView(_ mapView: MapView, didReceieved routingError: String) {

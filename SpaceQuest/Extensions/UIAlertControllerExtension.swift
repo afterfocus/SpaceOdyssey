@@ -69,12 +69,6 @@ extension UIAlertController {
             title: "Ошибка изменения данных",
             message: "Пользователь с таким именем и электронной почтой уже зарегистрирован на устройстве.\nПожалуйста, осуществите вход в профиль данного пользователя или укажите другую комбинацию имени и электронной почты.")
     }
-
-    public static var tooFarFromLocationAlert: UIAlertController {
-        return okAlert(
-            title: "Ошибка построения маршрута",
-            message: "Не удалось построить пешеходный маршрут, так как Вы находитесь слишком далеко от нужной локации.\nДля пользователей из других городов рекомендуется включить режим «‎На диване» в разделе «‎Профиль».")
-    }
     
     public static var registrationPrizesNotSendWithUndefinedError: UIAlertController {
         return okAlert(
@@ -110,6 +104,14 @@ extension UIAlertController {
         return okAlert(
             title: "YandexMapKit Error",
             message: message)
+    }
+    
+    public static func tooFarFromLocationAlert(onConfirm: @escaping () -> Void) -> UIAlertController {
+        return confirmAlert(
+            title: "Слишком далеко от маршрута",
+            message: "Для пользователей из других городов рекомендуем включить режим «‎На диване» в разделе «‎Профиль».\nВключить режим «‎На диване» сейчас?",
+            confirmButtonTitle: "Включить",
+            onConfirm: onConfirm)
     }
     
     public static func useHintAlert(remainingHints: Int, onHintUse: @escaping () -> Void) -> UIAlertController {
